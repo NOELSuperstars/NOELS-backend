@@ -120,7 +120,18 @@ noels.get('/loginFiles', (req, res) => { // goes to wwwroot/public/login // call
 });  //WebView receives login.html just like a browser would, and renders it
 noels.use('/public', express.static(path.join(__dirname, '../wwwroot/public'))); //If the browser requests any file (HTML, CSS, JS, images, etc.) under 'public' folder, serve it automatically
 
+import Redis from "ioredis";
+// Assuming you're using environment variable REDIS_URL
+const redis = new Redis(process.env.REDIS_URL);
 
+// Example to check if the connection works
+redis.on('connect', () => {
+  console.log('Connected to Redis!');
+});
+
+redis.on('error', (err) => {
+  console.error('Redis connection error:', err);
+});
 noels.use((req, res, next) => { //This will log every incoming request and show whether the request is actually reaching your route.  // 2. Logging middleware
   console.log(`===========Incoming request=============: ${req.method} ${req.path}`);
   //console.log("Incoming cookies (raw):", req.headers.cookie);
@@ -2844,6 +2855,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
