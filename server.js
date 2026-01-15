@@ -348,8 +348,8 @@ import crypto from 'crypto'; //const crypto = require('crypto');  //MUST HAVE. p
 
 
 
-import dotenv from 'dotenv';
-dotenv.config();//require('dotenv').config(); // need to 'npm install dotenv', can access .env values
+//import dotenv from 'dotenv';
+//dotenv.config();//require('dotenv').config(); // need to 'npm install dotenv', can access .env values
 
 
 import axios from 'axios'; //added this because endpoint /attest was using it even though I didn't call it from login.js
@@ -2842,6 +2842,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
