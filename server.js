@@ -86,7 +86,7 @@ Aug 16: Commands to install all npm packages
 npm install express express-session express-validator csurf cookie-parser jsonwebtoken dotenv bcrypt express-rate-limit bn.js @peculiar/x509 cbor node-forge axios asn1.js mysql2 jose
 
 */
-noels.get('/health', (req, res) => res.send('OK'));
+
 // package.json needs "type": "module",   /* needed when using ES module syntax like 'import' 'from' */
 import session from 'express-session'; //Middleware that manages session storage (where your challenge is stored)
 // Define the port the server will run on (http://localhost:2160) Ports below 1024 are reserved (like 80 for HTTP, 443 for HTTPS, 22 for SSH)
@@ -112,7 +112,7 @@ const CERT_TOKEN_SECRET    = process.env.CERT_TOKEN_SECRET;
 const noels = express();// Create an Express application (this "noels" will define routes and behavior)
 noels.use(express.json({ limit: '1mb' }));// Middleware: Tells Express to automatically parse incoming JSON in requests, in other words turn the string to an object and store it in req.body // // 3. Parse JSON
 noels.use(cookieParser());  // 1. Parse cookies FIRST
-
+noels.get('/health', (req, res) => res.send('OK'));
 
 noels.get('/loginFiles', (req, res) => { // goes to wwwroot/public/login // called from form1.cs     webView21.Source = new Uri("http://localhost:2160/content");
   res.sendFile(path.join(__dirname, "../wwwroot/public/loginFiles/login.html")); // login.html is coded to ask server for css and js files
@@ -2830,6 +2830,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
