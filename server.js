@@ -86,7 +86,7 @@ Aug 16: Commands to install all npm packages
 npm install express express-session express-validator csurf cookie-parser jsonwebtoken dotenv bcrypt express-rate-limit bn.js @peculiar/x509 cbor node-forge axios asn1.js mysql2 jose
 
 */
-
+noels.get('/health', (req, res) => res.send('OK'));
 // package.json needs "type": "module",   /* needed when using ES module syntax like 'import' 'from' */
 import session from 'express-session'; //Middleware that manages session storage (where your challenge is stored)
 // Define the port the server will run on (http://localhost:2160) Ports below 1024 are reserved (like 80 for HTTP, 443 for HTTPS, 22 for SSH)
@@ -2830,6 +2830,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
