@@ -394,8 +394,8 @@ import https from 'https';
 
 const PORT = process.env.PORT || 3000;
 const options = {
-  key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
-  cert: process.env.CERT.replace(/\\n/g, '\n')
+  key: process.env.PRIVATE_KEY,
+  cert: process.env.CERT
 };
 https.createServer(options, noels).listen(PORT, () => { //Creates an HTTPS server, not HTTP, Enables TLS for every connection to https://localhost:2160
   console.log(`N.⬠.E.L.S. Server is running on https://localhost:${PORT}`);
@@ -2844,6 +2844,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
