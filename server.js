@@ -86,7 +86,7 @@ Aug 16: Commands to install all npm packages
 npm install express express-session express-validator csurf cookie-parser jsonwebtoken dotenv bcrypt express-rate-limit bn.js @peculiar/x509 cbor node-forge axios asn1.js mysql2 jose
 
 */
-noels.get('/health', (req, res) => res.send('OK'));
+
 // package.json needs "type": "module",   /* needed when using ES module syntax like 'import' 'from' */
 import session from 'express-session'; //Middleware that manages session storage (where your challenge is stored)
 // Define the port the server will run on (http://localhost:2160) Ports below 1024 are reserved (like 80 for HTTP, 443 for HTTPS, 22 for SSH)
@@ -102,7 +102,8 @@ const __dirname = path.dirname(__filename); // gives the folder containing serve
 import express from 'express'; //const express = require('express');// Import the Express library (a web framework for Node.js) // for cookieParser
 import cookieParser from "cookie-parser"; //const cookieParser = require('cookie-parser'); //for secure cookie-based token delivery on web
 import jwt from 'jsonwebtoken'; //needed to make cookies
-
+import fs from 'fs';
+    
 
 
 const ACCESS_TOKEN_SECRET  = process.env.ACCESS_TOKEN_SECRET; // store in .env in production
@@ -112,14 +113,25 @@ const CERT_TOKEN_SECRET    = process.env.CERT_TOKEN_SECRET;
 const noels = express();// Create an Express application (this "noels" will define routes and behavior)
 noels.use(express.json({ limit: '1mb' }));// Middleware: Tells Express to automatically parse incoming JSON in requests, in other words turn the string to an object and store it in req.body // // 3. Parse JSON
 noels.use(cookieParser());  // 1. Parse cookies FIRST
-
+noels.get('/health', (req, res) => res.send('OK'));
 
 noels.get('/loginFiles', (req, res) => { // goes to wwwroot/public/login // called from form1.cs     webView21.Source = new Uri("http://localhost:2160/content");
   res.sendFile(path.join(__dirname, "../wwwroot/public/loginFiles/login.html")); // login.html is coded to ask server for css and js files
 });  //WebView receives login.html just like a browser would, and renders it
 noels.use('/public', express.static(path.join(__dirname, '../wwwroot/public'))); //If the browser requests any file (HTML, CSS, JS, images, etc.) under 'public' folder, serve it automatically
 
+import Redis from "ioredis";
+// Assuming you're using environment variable REDIS_URL
+const redis = new Redis(process.env.REDIS_URL);
 
+// Example to check if the connection works
+redis.on('connect', () => {
+  console.log('Connected to Redis!');
+});
+
+redis.on('error', (err) => {
+  console.error('Redis connection error:', err);
+});
 noels.use((req, res, next) => { //This will log every incoming request and show whether the request is actually reaching your route.  // 2. Logging middleware
   console.log(`===========Incoming request=============: ${req.method} ${req.path}`);
   //console.log("Incoming cookies (raw):", req.headers.cookie);
@@ -347,9 +359,8 @@ import crypto from 'crypto'; //const crypto = require('crypto');  //MUST HAVE. p
 
 
 
-import dotenv from 'dotenv';
-dotenv.config();//require('dotenv').config(); // need to 'npm install dotenv', can access .env values
-dotenv.config({ path: '/mnt/c/Users/kangh/source/repos/NOEL/server/.env' });
+//import dotenv from 'dotenv';
+//dotenv.config();//require('dotenv').config(); // need to 'npm install dotenv', can access .env values
 
 
 import axios from 'axios'; //added this because endpoint /attest was using it even though I didn't call it from login.js
@@ -391,19 +402,33 @@ noels.use(session({
 */
 import filesys from 'fs';
 import https from 'https';
-const options = {
-  key:  filesys.readFileSync('../cert/server.key'),   // your private key  // from folder server, go up a folder then into folder cert
-  cert: filesys.readFileSync('../cert/server.crt')   // your certificate
-};
+
 const PORT = process.env.PORT || 3000;
-/*
+const options = {
+  key: process.env.PRIVATE_KEY,
+  cert: process.env.CERT
+};
 https.createServer(options, noels).listen(PORT, () => { //Creates an HTTPS server, not HTTP, Enables TLS for every connection to https://localhost:2160
   console.log(`N.⬠.E.L.S. Server is running on https://localhost:${PORT}`);
 });
-*/
+if (!options.key || !options.cert) {
+  console.error('Missing PRIVATE_KEY or CERT environment variables!');
+  process.exit(1);
+}
+console.log('PRIVATE_KEY loaded?', !!process.env.PRIVATE_KEY);
+console.log('CERT loaded?', !!process.env.CERT);
+
+/*
 noels.listen(PORT, '0.0.0.0', () => {
   console.log(`N.⬠.E.L.S. Server is running on port ${PORT}`);
 });
+*/
+
+
+
+
+
+
 
 
 /*
@@ -2830,6 +2855,14 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
+
+
+
+
+
+
+
 
 
 
