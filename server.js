@@ -392,10 +392,7 @@ noels.use(session({
 */
 import filesys from 'fs';
 import https from 'https';
-const options = {
-  key:  filesys.readFileSync('../cert/server.key'),   // your private key  // from folder server, go up a folder then into folder cert
-  cert: filesys.readFileSync('../cert/server.crt')   // your certificate
-};
+
 const PORT = process.env.PORT || 3000;
 const options = {
   key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
@@ -2843,6 +2840,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
