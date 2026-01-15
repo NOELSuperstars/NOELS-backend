@@ -404,6 +404,8 @@ if (!options.key || !options.cert) {
   console.error('Missing PRIVATE_KEY or CERT environment variables!');
   process.exit(1);
 }
+console.log('PRIVATE_KEY loaded?', !!process.env.PRIVATE_KEY);
+console.log('CERT loaded?', !!process.env.CERT);
 
 /*
 noels.listen(PORT, '0.0.0.0', () => {
@@ -2842,6 +2844,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
