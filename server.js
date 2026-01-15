@@ -395,7 +395,8 @@ const options = {
   key:  filesys.readFileSync('../cert/server.key'),   // your private key  // from folder server, go up a folder then into folder cert
   cert: filesys.readFileSync('../cert/server.crt')   // your certificate
 };
-const PORT = 2160; //Ports already in use by other apps will throw an error (e.g. Error: listen EADDRINUSE)
+const PORT = process.env.PORT || 3000;
+
 https.createServer(options, noels).listen(PORT, () => { //Creates an HTTPS server, not HTTP, Enables TLS for every connection to https://localhost:2160
   console.log(`N.⬠.E.L.S. Server is running on https://localhost:${PORT}`);
 });
@@ -2823,4 +2824,5 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
