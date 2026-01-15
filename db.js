@@ -4,8 +4,6 @@ dotenv.config();
 
 const { DB_HOST, DB_PORT, DB_USER, DB_PASSWORD, DB_NAME } = process.env;
 
-console.log("NODE ENV VALUES:", { DB_HOST, DB_PORT, DB_USER, DB_NAME });
-
 // Ensure all required DB env variables are present
 if (!DB_HOST || !DB_PORT || !DB_USER || !DB_PASSWORD || !DB_NAME) {
   throw new Error('Missing required DB env variables');
@@ -53,3 +51,4 @@ export const query = async (sql, params) => {
     console.error('❌ MySQL pool connection failed:', err);
   }
 })();
+
