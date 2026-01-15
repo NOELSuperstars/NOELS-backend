@@ -505,7 +505,7 @@ import bcrypt from 'bcrypt'; //const bcrypt = require('bcrypt');
 
 import { body, header, /* query as queryValidator, queryValidator targets values in the URL query string*/ validationResult, matchedData } from 'express-validator';//const { body, header, query: queryValidator, validationResult, matchedData } = require('express-validator'); // grabs these properties which are tools from express-validator // 'query' renamed during destructuring because 'query' is already used
 
-import { query } from './config/db.js';  // Runs db.js (so any code in it executes, like creating the pool and testing the connection).//Promise-based MySQL query function using the connection pool(Imports the exported query function)
+import { query } from './db.js';  // Runs db.js (so any code in it executes, like creating the pool and testing the connection).//Promise-based MySQL query function using the connection pool(Imports the exported query function)
 
 import rateLimit from 'express-rate-limit'; //const rateLimit = require('express-rate-limit');
 import NodeRSA from 'node-rsa';  //for encrypting a secret with a public key // must install through bash: C:\Users\kangh\source\repos\NOEL\server> npm install node-rsa
@@ -2830,6 +2830,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
