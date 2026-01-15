@@ -102,7 +102,8 @@ const __dirname = path.dirname(__filename); // gives the folder containing serve
 import express from 'express'; //const express = require('express');// Import the Express library (a web framework for Node.js) // for cookieParser
 import cookieParser from "cookie-parser"; //const cookieParser = require('cookie-parser'); //for secure cookie-based token delivery on web
 import jwt from 'jsonwebtoken'; //needed to make cookies
-
+import fs from 'fs';
+    
 
 
 const ACCESS_TOKEN_SECRET  = process.env.ACCESS_TOKEN_SECRET; // store in .env in production
@@ -396,14 +397,26 @@ const options = {
   cert: filesys.readFileSync('../cert/server.crt')   // your certificate
 };
 const PORT = process.env.PORT || 3000;
-/*
+const options = {
+  key: process.env.PRIVATE_KEY.replace(/\\n/g, '\n'),
+  cert: process.env.CERT.replace(/\\n/g, '\n')
+};
 https.createServer(options, noels).listen(PORT, () => { //Creates an HTTPS server, not HTTP, Enables TLS for every connection to https://localhost:2160
   console.log(`N.⬠.E.L.S. Server is running on https://localhost:${PORT}`);
 });
-*/
+
+
+/*
 noels.listen(PORT, '0.0.0.0', () => {
   console.log(`N.⬠.E.L.S. Server is running on port ${PORT}`);
 });
+*/
+
+
+
+
+
+
 
 
 /*
@@ -2830,6 +2843,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
