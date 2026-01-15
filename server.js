@@ -350,7 +350,6 @@ import crypto from 'crypto'; //const crypto = require('crypto');  //MUST HAVE. p
 
 import dotenv from 'dotenv';
 dotenv.config();//require('dotenv').config(); // need to 'npm install dotenv', can access .env values
-dotenv.config({ path: '/mnt/c/Users/kangh/source/repos/NOEL/server/.env' });
 
 
 import axios from 'axios'; //added this because endpoint /attest was using it even though I didn't call it from login.js
@@ -401,7 +400,10 @@ const options = {
 https.createServer(options, noels).listen(PORT, () => { //Creates an HTTPS server, not HTTP, Enables TLS for every connection to https://localhost:2160
   console.log(`N.⬠.E.L.S. Server is running on https://localhost:${PORT}`);
 });
-
+if (!options.key || !options.cert) {
+  console.error('Missing PRIVATE_KEY or CERT environment variables!');
+  process.exit(1);
+}
 
 /*
 noels.listen(PORT, '0.0.0.0', () => {
@@ -2840,6 +2842,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
