@@ -377,6 +377,9 @@ document.getElementById('login-form').addEventListener('submit', async (e) => { 
   const data = await getDataToSend(e);
   if (!data) return; // registration or fingerprint failed
     console.log("data: ", data);
+    console.log("Outgoing request body:", data);
+  console.log("Outgoing request body (JSON):", JSON.stringify(data, null, 2));
+ 
   let response;
   try{
     response = await fetch('/loginStart', {  
@@ -654,7 +657,8 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
 
   const data = await getDataToSend(e);
   if (!data) return; // registration or fingerprint failed
-
+  console.log("Outgoing request body:", data);
+  console.log("Outgoing request body (JSON):", JSON.stringify(data, null, 2));
   let response;
   try{
     response = await fetch('/regisStart', {
