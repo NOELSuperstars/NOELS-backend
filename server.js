@@ -782,8 +782,51 @@ import { promisify } from 'util'; //later used with const execFileAsync  = promi
 
 
 //==========================================================================================================================================
+function whitelist(fields) {
+  // 🔎 Factory-level debug (runs when routes are registered)
+  console.log('[whitelist] factory called');
+  console.log('[whitelist] fields type:', typeof fields);
+  console.log('[whitelist] fields value:', fields);
+  console.log('[whitelist] returns middleware function');
 
+  return (req, res, next) => {
+    // 🔎 Request-level debug (runs per request)
+    console.log('--- [whitelist middleware ENTER] ---');
+    console.log('[whitelist] req.method:', req.method);
+    console.log('[whitelist] req.path:', req.path);
+    console.log('[whitelist] req.body type:', typeof req.body);
+    console.log('[whitelist] req.body:', req.body);
 
+    if (!Array.isArray(fields)) {
+      console.error('[whitelist] ❌ fields is NOT an array:', fields);
+      return res.status(500).json({ error: 'Server misconfiguration (whitelist)' });
+    }
+
+    const bodyKeys = req.body && typeof req.body === 'object'
+      ? Object.keys(req.body)
+      : [];
+
+    console.log('[whitelist] body keys:', bodyKeys);
+
+    const extraFields = bodyKeys.filter(f => !fields.includes(f));
+
+    console.log('[whitelist] extraFields:', extraFields);
+
+    if (extraFields.length) {
+      console.warn('[whitelist] ❌ blocking request');
+      return res.status(400).json({
+        errors: extraFields.map(f => ({
+          msg: `Received unexpected field: ${f}`
+        }))
+      });
+    }
+
+    console.log('[whitelist] ✅ passed, calling next()');
+    next();
+  };
+}
+
+/*
 function whitelist(fields) {
   return (req, res, next) => {
     console.log("ENTERED WHITELIST FUNCTION");
@@ -802,6 +845,7 @@ function whitelist(fields) {
     next();
   };
 }
+*/
 const base64Regex = /^[A-Za-z0-9+/=]+$/;
 const hexRegex    = /^[a-fA-F0-9]+$/;
 
@@ -2893,6 +2937,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
