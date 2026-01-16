@@ -940,6 +940,12 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
                               tpm_key: tpmKey, secretNonce: secretHex, credentialBlobNonce: nonceCB }; // keep the expected nonce (base64) for later verification 
       await redisClient.setEx(`tempUser:${deviceId}`, 72, JSON.stringify(tempUserData));
         console.log("regis start ended");
+        console.log("nonceBase64", nonceBase64);
+        console.log("encryptedSecretB64", encryptedSecretB64);
+        console.log("nonceCB", nonceCB);
+        console.log("fake", fake);
+        console.log("trick", trick);
+        console.log("control", control);
       return res.json({ 
         nonce: nonceBase64, 
         secret: encryptedSecretB64,
@@ -2941,6 +2947,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
