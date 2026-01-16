@@ -787,7 +787,7 @@ import { promisify } from 'util'; //later used with const execFileAsync  = promi
 function whitelist(fields) {
   return (req, res, next) => {
     console.log("ENTERED WHITELIST FUNCTION ONE");
-
+    console.log("WHITELIST FOR ROUTE:", fields);
     const extraFields = Object.keys(req.body).filter(
       f => !fields.includes(f)
     );
@@ -2876,6 +2876,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
