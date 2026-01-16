@@ -893,7 +893,7 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       const tempUserData = { username, email, hashedPW, device_fingerprint, subscriptionPlan, createdAt: Date.now(), deviceId,  nonceBase64, 
                               tpm_key: tpmKey, secretNonce: secretHex, credentialBlobNonce: nonceCB }; // keep the expected nonce (base64) for later verification 
       await redisClient.setEx(`tempUser:${deviceId}`, 72, JSON.stringify(tempUserData));
-
+        console.log("regis start ended);
       return res.json({ 
         nonce: nonceBase64, 
         secret: encryptedSecretB64,
