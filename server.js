@@ -541,9 +541,16 @@ import NodeRSA from 'node-rsa';  //for encrypting a secret with a public key // 
  
 import { createClient } from 'redis'; // Redis cache = super-fast in-memory storage for temporary data. Used for storing const tempUserData = {username, email, password, device_fingerprint, subscriptionPlan, createdAt: Date.now(),}; which will be saved permanently on DB once registration is successful
 //const redisClient = createClient({ url: 'redis://172.23.16.198:6379' });
-const redisClient = createClient({ url: 'redis://localhost:6379' });
+//const redisClient = createClient({ url: 'redis://localhost:6379' });
+// Use REDIS_URL from Railway, fallback to localhost for local dev
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisClient = createClient({ url: redisUrl });
 redisClient.on('error', (err) => console.error('Redis error', err));
 await redisClient.connect();
+
+
+
+
 /*  ssh noels@192.168.0.104    vm name: noels   pw: doorcode
 You can manually start Redis anytime with this command inside Ubuntu: wsl -d Ubuntu-22.04 sudo service redis-server start  // docker login
 pw: home front door
@@ -2859,6 +2866,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
