@@ -399,10 +399,10 @@ noels.use(session({
   saveUninitialized: false,
   cookie: { secure: false } // In production, set secure: true so cookies are only sent over HTTPS
 }));
-*/
+
+
 import filesys from 'fs';
 import https from 'https';
-
 const PORT = process.env.PORT || 3000;
 const options = {
   key: process.env.PRIVATE_KEY,
@@ -417,7 +417,11 @@ if (!options.key || !options.cert) {
 }
 console.log('PRIVATE_KEY loaded?', !!process.env.PRIVATE_KEY);
 console.log('CERT loaded?', !!process.env.CERT);
-
+*/
+const PORT = process.env.PORT || 3000;
+noels.listen(PORT, () => {
+  console.log(`Server running on http://localhost:${PORT}`);
+});
 /*
 noels.listen(PORT, '0.0.0.0', () => {
   console.log(`N.⬠.E.L.S. Server is running on port ${PORT}`);
@@ -2855,6 +2859,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
