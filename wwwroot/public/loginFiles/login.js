@@ -34,8 +34,8 @@ July 13 (1:00 am) timestamp on certToken, started registration page
 'use strict';
 
 const loginButton = document.querySelectorAll('.wrapper-login .btn');
-const publicURL = "https://localhost:2160";
-//const publicURL = "https://noels-backend-production.up.railway.app/";
+//const publicURL = "https://localhost:2160";
+const publicURL = "https://noels-backend-production.up.railway.app/";
 
 //loginButton[0].style.cursor = `url(../Images/rocket0.cur) 2 2, auto`;
 //const frames = ['../Images/rocket1.cur', '../Images/rocket2.cur', '../Images/rocket3.cur', '../Images/rocket4.cur', '../Images/rocket5.cur'];
