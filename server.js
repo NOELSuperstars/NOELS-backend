@@ -630,6 +630,7 @@ noels.post('/loginStart', // Use DB to verify user then send nonce. Hash tpm_key
   async (req, res) => { 
     console.error('Login attempt:', new Date().toISOString(), 'IP:', req.ip);
     console.log(req.ip, req.ips, req.headers['x-forwarded-for']); //This helps you debug exactly what the client’s connection path looks like.
+          console.log("======================= LOGIN START ==================================");
 
     /* console.error('ㄹ224 type: ' + req.body.type);  //type is login, registration, etc.*/
     const errors = validationResult(req); //It does not remove or block invalid fields — it just reports them, only says what’s wrong //collects the results of all the validation and sanitization rules that were defined earlier: body(), check(), etc.
@@ -914,6 +915,7 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
   ],
 
   async (req, res) => {
+      console.log("======================= REGIS START ==================================");
     const errors = validationResult(req);
     if (!errors.isEmpty()){ return res.status(400).json({ errors: errors.array() }); }//Username must be 3-20 characters long, Password must have at least 5 characters, Please choose a subscription plan
     try {
@@ -1385,6 +1387,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     try { //express.json() middleware, automatically parses that JSON text into a JavaScript object.
       const                 { certifyHMACB64, certifyHMACSigB64, appHashB64, pcrHashB64, publicKeyB64, decryptedText, HLAKPublicB64, windowsEkPublicPEM, srkNameB64, attestQbase64, sigQbase64, hmacB64, hlakSigB64, rsaSignatureB64 } = req.body;
       const packageFields = { certifyHMACB64, certifyHMACSigB64, appHashB64, pcrHashB64, publicKeyB64, decryptedText, HLAKPublicB64, windowsEkPublicPEM, srkNameB64, attestQbase64, sigQbase64, hmacB64, hlakSigB64 };
+          console.log("======================= LOGIN END ==================================");
 
 
 
@@ -1798,7 +1801,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
 ],
 
   async (req, res) => {
-    console.error('REGISEND ONE');
+  console.log("======================= REGIS END ==================================");
+
 
     const errors = validationResult(req);
     if (!errors.isEmpty()){ 
