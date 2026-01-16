@@ -798,7 +798,7 @@ function whitelist(fields) {
       
     if (extraFields.length) {
       console.log("ENTERED WHITELIST TWO");
-
+      console.log("EXTRA FIELDS:", extraFields.length);
       return res.status(400).json({
         errors: extraFields.map(f => ({
           msg: `Received unexpected field: ${f}`
@@ -2880,6 +2880,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
