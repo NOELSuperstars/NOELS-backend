@@ -791,7 +791,11 @@ function whitelist(fields) {
     const extraFields = Object.keys(req.body).filter(
       f => !fields.includes(f)
     );
+    console.log("BODY:", req.body);
+    console.log("BODY KEYS:", Object.keys(req.body));
+    console.log("EXTRA FIELDS:", extraFields);
 
+      
     if (extraFields.length) {
       console.log("ENTERED WHITELIST TWO");
 
@@ -2876,6 +2880,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
