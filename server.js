@@ -801,6 +801,7 @@ function (fields) {
 
     next();
   };
+}
 const base64Regex = /^[A-Za-z0-9+/=]+$/;
 const hexRegex    = /^[a-fA-F0-9]+$/;
 
@@ -2892,6 +2893,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
