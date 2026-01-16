@@ -603,7 +603,7 @@ const loginLimiter = rateLimit({
 noels.post('/loginStart', // Use DB to verify user then send nonce. Hash tpm_key for deviceId so loginEnd can recognize which user is logging in.
   loginLimiter,   // max 10 attempts / 15 min
   [ //body('email') means it will get email from req.body.email // body('email') grabs the email field from req.body.email 
-    ([ 'device_fingerprint', 'email', 'password', 'tpmKey' ]),  
+    whitelist([ 'device_fingerprint', 'email', 'password', 'tpmKey' ]),  
     body('email')
       .notEmpty().withMessage('Email is required').bail()
       .trim()
@@ -2893,6 +2893,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
