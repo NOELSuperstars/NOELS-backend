@@ -603,7 +603,7 @@ const loginLimiter = rateLimit({
 noels.post('/loginStart', // Use DB to verify user then send nonce. Hash tpm_key for deviceId so loginEnd can recognize which user is logging in.
   loginLimiter,   // max 10 attempts / 15 min
   [ //body('email') means it will get email from req.body.email // body('email') grabs the email field from req.body.email 
-    whitelist([ 'device_fingerprint', 'email', 'password', 'tpmKey' ]),  
+    ([ 'device_fingerprint', 'email', 'password', 'tpmKey' ]),  
     body('email')
       .notEmpty().withMessage('Email is required').bail()
       .trim()
@@ -783,8 +783,47 @@ import { promisify } from 'util'; //later used with const execFileAsync  = promi
 
 //==========================================================================================================================================
 
-
 function whitelist(fields) {
+  return (req, res, next) => {
+    console.log("=== WHITELIST START ===");
+    console.log("Route:", req.method, req.originalUrl);
+
+    // Defensive: body might be undefined
+    if (!req.body || typeof req.body !== "object") {
+      console.error("❌ req.body is missing or not an object:", req.body);
+      return res.status(400).json({
+        error: "Request body is missing or invalid"
+      });
+    }
+
+    console.log("Allowed fields:", JSON.stringify(fields));
+    console.log("Body keys:", Object.keys(req.body));
+    console.log("Full body:", req.body);
+
+    const extraFields = Object.keys(req.body).filter(
+      f => !fields.includes(f)
+    );
+
+    console.log("Extra fields detected:", extraFields);
+
+    if (extraFields.length > 0) {
+      console.error("❌ WHITELIST FAILED");
+
+      return res.status(400).json({
+        errors: extraFields.map(f => ({
+          msg: `Received unexpected field: ${f}`
+        }))
+      });
+    }
+
+    console.log("✅ WHITELIST PASSED");
+    console.log("=== WHITELIST END ===");
+
+    next();
+  };
+}
+/*
+function (fields) {
   return (req, res, next) => {
     console.log("ENTERED WHITELIST FUNCTION");
     const extraFields = Object.keys(req.body).filter(
@@ -801,7 +840,7 @@ function whitelist(fields) {
 
     next();
   };
-}
+}*/
 const base64Regex = /^[A-Za-z0-9+/=]+$/;
 const hexRegex    = /^[a-fA-F0-9]+$/;
 
@@ -2893,6 +2932,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
