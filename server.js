@@ -786,19 +786,12 @@ import { promisify } from 'util'; //later used with const execFileAsync  = promi
 
 function whitelist(fields) {
   return (req, res, next) => {
-    console.log("ENTERED WHITELIST FUNCTION ONE");
-    console.log("WHITELIST FOR ROUTE:", fields);
+    console.log("ENTERED WHITELIST FUNCTION");
     const extraFields = Object.keys(req.body).filter(
       f => !fields.includes(f)
     );
-    console.log("BODY:", req.body);
-    console.log("BODY KEYS:", Object.keys(req.body));
-    console.log("EXTRA FIELDS:", extraFields);
-
       
     if (extraFields.length) {
-      console.log("ENTERED WHITELIST TWO");
-      console.log("EXTRA FIELDS:", extraFields.length);
       return res.status(400).json({
         errors: extraFields.map(f => ({
           msg: `Received unexpected field: ${f}`
@@ -879,7 +872,6 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()){ return res.status(400).json({ errors: errors.array() }); }//Username must be 3-20 characters long, Password must have at least 5 characters, Please choose a subscription plan
-    console.error('ONE');
     try {
       const { username, email, password, subscriptionPlan, device_fingerprint, tpmKey } = matchedData(req); // holds sanitized and validated data
       // hashes the binary form of tpmKey, converts that hash to a hex string, slices that string to the first 32 characters  // 2 hex char = 1 byte. so 32 hex char = 16 bytes
@@ -901,7 +893,6 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       const tempUserData = { username, email, hashedPW, device_fingerprint, subscriptionPlan, createdAt: Date.now(), deviceId,  nonceBase64, 
                               tpm_key: tpmKey, secretNonce: secretHex, credentialBlobNonce: nonceCB }; // keep the expected nonce (base64) for later verification 
       await redisClient.setEx(`tempUser:${deviceId}`, 72, JSON.stringify(tempUserData));
-      console.error('TWO');
 
       return res.json({ 
         nonce: nonceBase64, 
@@ -1763,6 +1754,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
 ],
 
   async (req, res) => {
+    console.error('REGISEND ONE');
 
     const errors = validationResult(req);
     if (!errors.isEmpty()){ 
@@ -1790,6 +1782,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       const verifiedCertEnd = verifySignature(certifyInfoEnd, certifySigEnd, akPubBase64, 'certifyInfoEnd');
       if (!verifiedCert || !verifiedCertEnd)
         return res.status(400).json({ error: "Certify Creation verification failed" });    
+    console.error('REGISEND TWO');
 
       // --- 2️) Name, Magic, and Type verification ---
       const attestCertifyInfo    = parseAttest(Buffer.from(certifyInfo,    'base64')); //converts Base64-encoded string into raw bytes 
@@ -1800,6 +1793,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
           attestCertifyInfoEnd.objectName.length !== name_hiAK.length || !crypto.timingSafeEqual(attestCertifyInfoEnd.objectName, name_hiAK)){
         return res.status(400).json({ error: "Security Device mismatch" }); // the name of the HLAK from certifyInfo(End) does not match the name of HLAKPublicB64
       }
+            console.error('REGISEND THREE');
+
       /*console.log(" name_hiAK ✅:", name_hiAK);
       console.log(" attestCertifyInfo.objectName ✅:", attestCertifyInfo.objectName);
       console.log(" attestCertifyInfoEnd.objectName ✅:", attestCertifyInfoEnd.objectName);*/
@@ -1810,6 +1805,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       if (attestCertifyInfo.type !== 32794 || attestCertifyInfoEnd.type !== 32794) { //0x801A (decimal 32794) is permanently defined as the type for TPM_ST_ATTEST_CREATION - CertifyCreation command was performed.
         return res.status(400).json({ error: "Invalid attestation type" });
       }
+    console.error('REGISEND FOUR');
 
       // --- 3) Attributes verification ---
       const attributes = getAttrOfKey(Buffer.from(HLAKPublicB64, 'base64'));//HLAKPublicB64: names can be compared to verify this AK and the one in certifyInfo are the same // has data on attributes
@@ -1817,6 +1813,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
           console.error("Security Device is not hardware-backed or has invalid settings");
           return res.status(400).json({ error: "Security Device is not hardware-backed<br> or has invalid settings" });
       }//console.log("AK is hardware-backed and has correct key attributes ✅");
+    console.error('REGISEND FIVE');
 
 
       // --- 4) Creation Hash verification ---
@@ -1838,6 +1835,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       /*console.log("creationHashB64 ✅:       ", Buffer.from(creationHashB64, 'base64'));
       console.log("attestEnd.creationHash ✅:", attestCertifyInfoEnd.creationHash);
       console.log("creationHash ✅:          ", creationDataHash);*/
+    console.error('REGISEND SIX');
 
 
       // --- 5) Selected PCRs (0,1,2,7) and PCR hash verification ---
@@ -1860,6 +1858,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       //if (creationDataBuf[7] !== 0x87) { // I know selected PCRs are in the 8th byte(index 7). PCRs 0,1,2,7 in bits are  1 0 0 0  0 1 1 1 = 135 or 87 hex
       //  return res.status(400).json({ error: "PCRs don't match" });
       //}      
+            console.error('REGISEND SEVEN');
+
       const attestedPcrHash = creationDataBuf.slice(12, 44);
       if (pcrHashBuf.length !== attestedPcrHash.length || !crypto.timingSafeEqual(pcrHashBuf, attestedPcrHash)) {
         return res.status(400).json({ error: "Invalid PCR digests hash" });
@@ -1897,6 +1897,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         },
         secretTest
       );*/
+    console.error('REGISEND EIGHT');
 
 
       // --- 6) Ticket type and Hierarchy verification ---
@@ -1905,6 +1906,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       }  
       catch (err){ return res.status(400).json({ error: "Creation ticket verification failed:<br> " + err.message }); }
 
+    console.error('REGISEND NINCE');
 
       // --- 7) verify tempUserData.secretNonce equals decryptedText and tempUserData.credentialBlobNonce equals acSecret---
       // hashes the binary form of publicKeyB64, converts that hash to a hex string, slices that string to the first 32 characters  // 2 hex char = 1 byte. so 32 hex char = 16 bytes
@@ -1922,6 +1924,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       const now = new Date();
       if (now - createdAt > MAX_AGE_MS) { throw new Error('Time period expired, please try again.'); }  //nonce expired
 
+    console.error('REGISEND TEN');
 
       const decryptedTextBytes = Buffer.from(decryptedText, 'hex'); //convert hex string to bytes
       const expectedNonce     = Buffer.from(secretNonce, 'hex');
@@ -1930,6 +1933,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         return res.status(403).json({ error: 'Device integrity check failed' });
       }
 
+    console.error('REGISEND ELEVEN');
 
       const hlaKBytes = Buffer.from(HLAKPublicB64, 'base64'); // decode back to bytes
       const hlakTPMkey    = crypto.createHash('sha256').update(hlaKBytes).digest('base64');
@@ -1952,12 +1956,14 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       // --- 8) Quote verification ---
       if (!verifySignature(attestQbase64, sigQbase64, hlakPubBase64, 'attestQbase64'))
         return res.status(400).json({ error: "Quote signature verification failed" });
+    console.error('REGISEND TWELVE');
 
       const parsedQuote = parseAttestQ(Buffer.from(attestQbase64, 'base64'));
       const firstNonce = Buffer.from(tempUserData.nonceBase64, 'base64');  // nonceBase64 from register/initialFilter
       if (parsedQuote.extraData.length !== firstNonce.length || !crypto.timingSafeEqual(parsedQuote.extraData, firstNonce)) {
         return res.status(400).json({ error: "NonceQ mismatch" });
       }
+    console.error('REGISEND THIRTEEN');
 
 
       // console.log("PCR Selections:", JSON.stringify(parsedQuote.pcrSelections, null, 2));
@@ -1976,7 +1982,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
           return res.status(400).json({ error: "Quote PCRs don't match expected mask" });
       }
 
-      
+          console.error('REGISEND FOURTEEN');
+
       //const pcr0to7 = parsedQuote.pcrSelections[0].pcrSelect[0]; //pcrSelect[0] is the first byte of the buffer, which is 135 //You are not accessing a data array; you are directly indexing into the buffer itself
       //if (pcr0to7 !== 0x87) { // I know selected PCRs are in the 8th byte(index 7). PCRs 0,1,2,7 in bits are  1 0 0 0  0 1 1 1 = 135 or 87 hex
       //  return res.status(400).json({ error: "Quote PCRs don't match" });
@@ -1985,6 +1992,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       if (pcrHashBuf.length !== parsedQuote.pcrDigest.length || !crypto.timingSafeEqual(pcrHashBuf, parsedQuote.pcrDigest)) { //     pcrDigest: pcrDigest.value
         return res.status(400).json({ error: "pcrDigest mismatch" });
       }
+    console.error('REGISEND FIFTEEN');
 
       // --- 9) Qualifying Data (nonce and RSA hash) / ExtraData verification ---
       /* surgically extracting the data
@@ -2002,6 +2010,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       if (clientNonce.length !== firstNonce.length || !crypto.timingSafeEqual(clientNonce, firstNonce)) {
         return res.status(500).json({ error: 'Corrupt Data ❌' });
       }
+    console.error('REGISEND SIXTEEN');
 
       const clientHalfRSAhash = CertifyInfoExtraData.slice(16);   // from extraData
       try {
@@ -2015,6 +2024,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         console.log("Error caught:", err);
         return res.status(500).json({ error: 'Integrity check on Security Device failed' }); // Tampered key detected. clientHalfRSAhash certifyInfo does not match the initial clientHalfRSAhash
       }
+    console.error('REGISEND SEVENTEEN');
 
       const CertifyInfoEndExtraData = attestCertifyInfoEnd.extraData;     // TPM2B from parseAttest
       if (CertifyInfoEndExtraData.length < 2 + 32) {
@@ -2022,6 +2032,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       }
       const actualQualifyingEndData = CertifyInfoEndExtraData.slice(2); // skip 2-byte length // the first 2 bytes are the length
       const appHash = actualQualifyingEndData.slice(0, 32);
+    console.error('REGISEND EIGHTEEN');
 
       console.log("appHash         :", appHash);
       console.log("envAppHashBytes :", envAppHashBytes)
@@ -2030,7 +2041,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         console.log("appHash does NOT match ❌ also, AK and EK must be unique during production (public_key, signing_key)");
         //return res.status(400).json({ error: 'appHash does NOT match ❌' });
       }      
-      
+          console.error('REGISEND NINETEEN');
+
 
 
       const { username, email, hashedPW, device_fingerprint, subscriptionPlan } = tempUserData
@@ -2058,6 +2070,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         if (dbErr.code === 'ER_DUP_ENTRY') return res.status(409).json({ error: '😢 Email already in use.<br>Please enter another email.' });
         return res.status(500).json({ error: 'Database error during registration' });
       }
+    console.error('REGISEND TWENTY');
 
 
       /*
@@ -2880,6 +2893,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
