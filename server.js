@@ -900,8 +900,6 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       console.error('TWO');
 
       return res.json({ 
-          console.error('THREE');
-
         nonce: nonceBase64, 
         secret: encryptedSecretB64,
         credentialBlob: nonceCB,  // this will go into MakeCredential and output the secret. That secret will then go into ActivateCredential and ouput acSecret which is nonceCB
@@ -911,8 +909,6 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       });
     }
     catch (err) {
-        console.error('FOUR');
-
       console.error('Error encrypting secret:', err);
       return res.status(500).json({ error: '😲An unexpected internal server error occurred.<br>Please try again later.' });
     } 
@@ -2880,6 +2876,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
