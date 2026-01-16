@@ -116,9 +116,9 @@ noels.use(cookieParser());  // 1. Parse cookies FIRST
 noels.get('/health', (req, res) => res.send('OK'));
 
 noels.get('/loginFiles', (req, res) => { // goes to wwwroot/public/login // called from form1.cs     webView21.Source = new Uri("http://localhost:2160/content");
-  res.sendFile(path.join(__dirname, "../wwwroot/public/loginFiles/login.html")); // login.html is coded to ask server for css and js files
+  res.sendFile(path.join(__dirname, "wwwroot/public/loginFiles/login.html")); // login.html is coded to ask server for css and js files
 });  //WebView receives login.html just like a browser would, and renders it
-noels.use('/public', express.static(path.join(__dirname, '../wwwroot/public'))); //If the browser requests any file (HTML, CSS, JS, images, etc.) under 'public' folder, serve it automatically
+noels.use('/public', express.static(path.join(__dirname, 'wwwroot/public'))); //If the browser requests any file (HTML, CSS, JS, images, etc.) under 'public' folder, serve it automatically
 
 
 import { createClient } from 'redis'; // Redis cache = super-fast in-memory storage for temporary data. Used for storing const tempUserData = {username, email, password, device_fingerprint, subscriptionPlan, createdAt: Date.now(),}; which will be saved permanently on DB once registration is successful
@@ -325,7 +325,7 @@ noels.get('/contentFiles', requireAuth, async (req, res) => {
     return res.status(number).send(err.message);
   }
   //res.sendFile(path.join(__dirname, "../wwwroot/private/contentFiles/content.html"));
-  res.sendFile(path.join(__dirname, "../wwwroot/private/contentFiles/logo.html")); 
+  res.sendFile(path.join(__dirname, "wwwroot/private/contentFiles/logo.html")); 
 
 });
 
@@ -2865,6 +2865,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
