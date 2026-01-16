@@ -120,18 +120,26 @@ noels.get('/loginFiles', (req, res) => { // goes to wwwroot/public/login // call
 });  //WebView receives login.html just like a browser would, and renders it
 noels.use('/public', express.static(path.join(__dirname, '../wwwroot/public'))); //If the browser requests any file (HTML, CSS, JS, images, etc.) under 'public' folder, serve it automatically
 
-import Redis from "ioredis";
-// Assuming you're using environment variable REDIS_URL
-const redis = new Redis(process.env.REDIS_URL);
 
-// Example to check if the connection works
-redis.on('connect', () => {
-  console.log('Connected to Redis!');
-});
+import { createClient } from 'redis'; // Redis cache = super-fast in-memory storage for temporary data. Used for storing const tempUserData = {username, email, password, device_fingerprint, subscriptionPlan, createdAt: Date.now(),}; which will be saved permanently on DB once registration is successful
+//const redisClient = createClient({ url: 'redis://172.23.16.198:6379' });
+//const redisClient = createClient({ url: 'redis://localhost:6379' });
+// Use REDIS_URL from Railway, fallback to localhost for local dev
 
-redis.on('error', (err) => {
-  console.error('Redis connection error:', err);
-});
+import { createClient } from 'redis';
+const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisClient = createClient({ url: redisUrl });
+redisClient.on('connect', () => console.log('Connected to Redis!'));
+redisClient.on('error', (err) => console.error('Redis error:', err));
+await redisClient.connect();
+
+
+
+
+
+
+
+
 noels.use((req, res, next) => { //This will log every incoming request and show whether the request is actually reaching your route.  // 2. Logging middleware
   console.log(`===========Incoming request=============: ${req.method} ${req.path}`);
   //console.log("Incoming cookies (raw):", req.headers.cookie);
@@ -539,14 +547,7 @@ import { query } from './db.js';  // Runs db.js (so any code in it executes, lik
 import rateLimit from 'express-rate-limit'; //const rateLimit = require('express-rate-limit');
 import NodeRSA from 'node-rsa';  //for encrypting a secret with a public key // must install through bash: C:\Users\kangh\source\repos\NOEL\server> npm install node-rsa
  
-import { createClient } from 'redis'; // Redis cache = super-fast in-memory storage for temporary data. Used for storing const tempUserData = {username, email, password, device_fingerprint, subscriptionPlan, createdAt: Date.now(),}; which will be saved permanently on DB once registration is successful
-//const redisClient = createClient({ url: 'redis://172.23.16.198:6379' });
-//const redisClient = createClient({ url: 'redis://localhost:6379' });
-// Use REDIS_URL from Railway, fallback to localhost for local dev
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
-const redisClient = createClient({ url: redisUrl });
-redisClient.on('error', (err) => console.error('Redis error', err));
-await redisClient.connect();
+
 
 
 
@@ -2866,6 +2867,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
