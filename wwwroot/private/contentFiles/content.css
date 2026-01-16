@@ -1,0 +1,3422 @@
+/*  July 7 (1:00 am) issue was: pic in qtext not disappearing on mouseleave. soln: eventlisteners created from qText don't call handlevocableave  */
+
+
+/* features: 1) Reading   2) lighting up words  3) toggling words    4) pictures     5) compQs
+             
+             Aesthetics:
+             auto scroll, auto find current sentence, vertically resize of kUser-input with Q on as qText appears and disappears
+             when out of clientview and vocab clicked, auto view adjust to show vocab near the top of the clientHeight
+             prism spins, go on its side, spin 90 deg on the z-axis to show logo, sun always appears, mouse pointer is a rocket and when mouse moves fire blasts off 
+             sentence number displayed
+
+             1) sentence isolation: hili sentence, background yellow, font black. (can be mixed with blue)arrows button, keyboard (can turn rapid fire off), auto scroll up/down,
+                scroll bar part of design, click text, hili on/off with click
+                magnify button, if hili off and traverse with mag, scroll doesn't move. With hili on, auto find spot, fontsize adjsuts, 
+                sentence counter(for student: bookmark, seeing the end psychologically motivates you to keep going. For creator: handy tool, will explain later) right clicking magnify, 
+                mag and hili connected, hili off and scroll down, then hili on and scroll auto finds the spot
+             
+             (for presentation: TURN MAG and HILI OFF)
+             2) lightup words: ending off/on  works with hili too and MAG TOO. with mag you can see it slowly turns on
+                grammar rule individually lights up, can combine, or do it all
+             (TURN OFF EVERYTHING)
+             3) simplify words(white and underlined) - toggles only defn OR part of speech, OR syn, OR Korean.(meaning is embedded/melted into the text) 
+                same word can have different meanings, such as her 'drive' to succeed helped her 'drive' the team to victory.
+                mouse click and hold for wordType/antonym. only displays wordType/antonym for word, not meaning, syn, or Korean. 
+                  - spaceship/cursor disappears
+                  - fontsize adjusts depending on the .vocab fontsize but no smaller than 13?18?, moves down if top has no space
+                  - floatTag disappears with mouseleave or click
+                  - wordType/antn can appear with newlines (creator can do this by acutally writing on a new line or using underscores a_b_c), essentially a list. 
+                     This enables users to see all forms of the word: drive-base verb drove-past tense driving-present participle  driven-past participle  driven-adjective
+                  - If vocab appears multiple times in a sentence, qText, or a mult. choice, all of the identical vocabs will be toggled simultaneously unless a music note is added to the 
+                    word you don't want toggled. With the music note, the same word from the sentence, qText, or mult. choice can have different toggled info. 
+                    issue choiceA has >>>[[urban agriculture - meaning..]]<<<     choiceB has >>>urban<<< agriculture. This will cause an issue. They're the same .vocab but it can't be cut off.
+                    >>>urban<<< agriculture  -->   >>>urban agriculture<<< to match the declared vocab in choiceA. 
+                    even if user write with extra spaces such as 'u♪rban       agriculture(1).webp', save file name as 'u♪rban agriculture(1).webp'
+                    works with mag (lights up but faster than gm just to give a different feel) and hili and gm but might slow down because it's doing so many calculations 
+             (TURN OFF EVERYTHING)
+             4) pics embedded in the text and appears near the clicked vocab, (all can be done by the creator), can also have gif files, 
+                default pics available
+                mag pic can be different even though the word is the same, if there is no diff pic, it will be the pic embedded in the text, if text if latch.png
+                the code will attach latch.png and latch2.png. User must make sure there are 2 files (latch.png and latch2.png). If text is latch(noun).png then
+                there must be 2 files: latch(noun).png and latch(noun)2.png
+                mag default pic is different, pictures can turn on/off
+                left pictures - background of story scene
+                right pictures - character displaying emotion, click to see words of emotion and right click to change genders
+                
+             5) questions: container doesn't cover the text, the text container's width decreases so all text can still be read, 
+                          magSent are now cubes, pics are unchanged
+                          numbering Q numbers properly is important. The first Q brackets must be one, the 5th Q bracket must be 5 etc. Regardless of the number
+                          the nth Q bracket will be read as the nth question. i.e. 1 2 3 133 4 5.  133 will be read as 4, 4 as 5 and 5 as 6
+                        text can light up, simplify words can toggle:
+                            - partial starting answer in qTextfor paraphrasing purposes, 
+                            - cqaVocabs with multiple words such as 'urban farming'
+                              + can have multiple spaces. 'urban     farming' but will be automatically condensed to a single space 
+                              +  pics shown as well but only on hover. 
+                              + if the vocab doesn't have a pic, don't add .png etc to it. If so an error msg will be displayed in the console but everything will still work
+                              + IOW, don't add extension (.png) if there is no pic! 
+                                If you do, the default pic will be assigned later but pic shows after an error and a no pic symbol may be briefly shown
+                        cubes will have text that shrink and will be in one line. Only when it's too long even at min fontSize(13) will it go to the next line.
+                        check answer: - cubes can have variety of answers: letters -> words, words -> sentences, multiple choice questions, fill in the blank 
+                                      - answering with cubes force students to think of the answer then look for the answer manipulating the cubes. This is closer
+                                      to a free response answer but there is more control in what a student can output and the level of difficulty can be adjusted.
+                                      As of now, students just see the answer and decide which is the right one.
+                                      not case-sensitive, but spelling counts
+                                      - cubeface can accept multiple correct answers if creator uses pipe with multiple answers/words
+                                      - creator cannot create more the 16 cubes. 16 is the maximum.
+                                      - points won't be available if user looked at MC Qs first
+                        justify answer - left click, text gets highlighted in blue. Right clicked (cannot get points) wrong parts of the answer are crossed out. 
+                        >>><<< must be adjacent to letter. Creator must enclose entire .vocab in '>>><<<'. i.e. >>>[[urban agriculture... ]]<<<  NOT >>>[[urban<<< agriculture... ]] 
+                        If del tags not inserted by the creator, the default will be the whole wrong answer will be crossed out while the right answer has nothing crossed out.
+                        Can see English and Korean explanation. Creator can use underscore to make newlines or actually hit enter to make a new line. Will light up but no .vocabs
+                        (it can be included did not on purpose). the reasoning is, this is not actual text but notes from the teacher, so teacher can use simple words or give defn.
+                        qPic disappears when mouseleaves, has a default if fileName has no .extension such as .jpg. But if it does have the extension but is not found, a backup default image will appear
+             notes section
+              - italacized to show it's different from main text and divided by scrollbar
+              - hili text yellow, not hili background blue
+              - scrolls in sync with main text
+              - can be saved
+             TQA
+              - changes depending on sentNow
+              - scroll to see ans, next question, critical thinking question, did you know facts, etc
+              - same behavior as other text: lights, vocab with floatTags and circular pics
+             User can manually hili and unhili sentences
+              - stays hilighted throughout scrolling changing colors/vocab
+              - colors overlap with light/litUp sentence(very subtle) and blue justify sentences
+
+             percentage of words toggle to help with memorization
+             only need magSent and qContaienr to read a whole book with all the key features
+             elements shrink
+             type sentence number to instantly hili it
+             buttont to reveal pre-written notes
+             admin inputs text to make everthing happen
+             black: less strain on the eyes, easy to sees words lighting up, picture of space is relaxing, if too childish just have black, color of luxury
+
+             
+*/
+/*@import url('https://fonts.googleapis.com/css?family=Poppins:100,200,300,400,500,600,700,800,900'); /*This line is an @import rule that imports an external font from Google Fonts. It includes the "Poppins" font family with various font weights (100, 200, 300, 400, 500, 600, 700, 800, and 900). This font will be used for text elements in the HTML document. */
+/*@import url('https://fonts.googleapis.com/css2?family=Pacifico&display=swap');*/
+:root{
+  --ff-body: "Heebo", sans-serif;
+  --ff-heading: "Oswald", sans-serif;
+
+  --clr-primary-400: hsl(60 100% 50%);
+  --clr-neutral-900: hsl(0 0% 0%);
+  --clr-neutral-100: hsl(0 0% 100%);
+
+  --fs-xl: 5rem;
+  --fs-600: 34px;
+  --fs-500: 1.25rem;
+  --fs-400: 1rem;
+} 
+
+
+/* html, body {
+  height: 100%;
+  margin: 0;
+}
+
+html {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+body {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  background: url('spaceR.jpg');
+  width: 96vw;
+  height: 96vh;
+  border-radius: 1.2rem;
+}
+
+Explanation:
+html { display: flex; justify-content: center; align-items: center; }
+→ This makes <html> act as a flex container and centers <body> both horizontally and vertically.
+body { width: 96vw; height: 96vh; }
+→ This ensures <body> has a set size, making it visibly centered.
+margin: 0;
+→ Prevents unwanted spacing from default margins.
+Result:
+✅ The body will be centered inside html, and its content will also be centered.
+ */
+
+ * {   
+  user-select: none; /* prevents any text selection at all, including click-drag and double-click */
+  -webkit-user-select: none; /* Safari */
+  cursor: inherit; /* overrides so rocket cursor shows. <button>, <input>, <a>, etc. often have their own cursor style (typically pointer) set by the browser's default stylesheet */
+}
+
+
+/* html, body, * {
+  cursor: url('rocket1.cur') 2 2, auto;  // done by js dynamically
+}
+ */
+
+html{
+  /*background: url('../../../Images/spaceR.jpg');*/
+  background: url('https://content.app/spaceR.jpg'); /*accesses it from the local app*/
+
+  height: 100%; /*  */
+
+}
+
+html, body{
+  display: flex;
+  justify-content: center; /* Horizontally center the body */ /* w/o flex, .box is slightly shifted down and #kUser-input is not centered in <body> */
+  align-items: center;  /*Vertically center the body (optional) */
+  border-radius: 1.2rem;
+  
+  margin: 0;
+}
+
+body{   
+  font-weight: 700; /* all child elements except button and #k-Text inherits this 700 bold font */
+  position: relative; /* w/o this there's a gray background when you zoom out */
+  /* width: 100%;   already defined as 100vw vh
+  height: 100%; */
+  max-width: 3600px;
+  max-height: 2400px;
+  width: 100vw;
+  height: 100vh;
+  /*background: url('../../../Images/spacebg.jpg');    accesses it from the server*/
+  background: url('https://content.app/spacebg.jpg'); /*accesses it from the local app*/
+
+  /*background: url('black.png'); */
+  
+  overflow: hidden; /* Hides scrollbars */
+
+
+}
+
+h1{  height: 4%;}
+
+/*span[data-index] {
+   cursor: default; */
+  /* position: relative; 
+
+}*/
+
+
+
+
+.box{
+  
+  width: 100%;
+  height: 100%; 
+  max-width: 2000px;
+  max-height: 960px;
+  background: transparent;
+  display: flex;
+  flex-direction: column;
+  gap: 100px;
+  margin-bottom: 2%;/* to show bottom of magSent and all of magSentStats */
+  align-items: center;
+  position: relative;
+}
+
+.main-container {
+  display: flex;
+  flex-direction: row;
+  /*justify-content: space-between;  Place text-container and button-container side by side */
+  width: 89%; /* Takes up the full width */
+  height: 64%;
+  flex-wrap: wrap; /*needed to push button-container to next line  */
+  background: transparent;
+}
+
+#notification-display-container{
+  display: flex;
+  justify-content: center;
+  align-items: center;      
+  height: 9%;
+  width: 89%;
+  position: absolute;
+  margin-top: 1%;  /* to bring it down a little */
+  background-color: transparent;
+  padding: 8px 12px;
+  border-radius: 0 0 4px 4px;
+  text-align: center;   /* need to to center points box content */
+  z-index: 1000;             /* make sure it stays above other content */
+
+}
+
+
+
+#message-box{
+  top: 0;
+  left: 0;
+  width: 89%;              /* full width of viewport */
+  height: 100%;
+  margin-right: 2%;
+  margin-left: 2%;
+  
+  border-radius: 1.2rem;
+  --glow-line-color: #fff;
+  --glow-line-thickness: 2px;
+  --glow-line-length: 20px;
+  --glow-blur-color: #fff;
+  --glow-blur-size: 5px;
+  --glow-offset: 0px;
+  --animation-speed: 1440ms;
+  --container-offset: 36px; /* changes the size of the glow-container and holds element in the center. */
+}
+
+#message-content {
+  /* height: 2em; */
+  position: relative;
+  /* font-size: 24px; */
+  /* line-height: 2em;   taken out to show long text in the next line*/
+  /* width: 300px; */
+  /* border: 1px solid #ccc; */
+  /* margin: 50px auto; */
+  /* user-select: none; */
+
+
+  width: 100%;              /* full width of viewport */
+  height: 100%;
+  font-style: italic;
+  font-family: 'Baloo 2', 'Comic Sans MS', cursive, sans-serif;
+  /*  font-size: 32px; forces childre from inheriting a larger font base which made p element larger than its parent. adjustFontSize in js sets its default to 45 px*/
+  color: hsl(0, 0%, 72%);
+
+  overflow: hidden;
+  white-space: normal; /* default; allows wrapping */
+  word-break: break-word; /* ensures long strings can wrap */
+  min-height: 2.5em;   /* meant to show sliding animation on sentences but doesn't work */
+
+  /*height: 3em;  make sure this is set //  taken out to fit defaultQAmsg.  if not height set to 100%, p could not take up 100% of its parent's height*/ 
+  overflow: visible; /* to allow the shine to go beyond its container */
+}
+.all-points-box{
+  width: 11%;
+  display: flex;
+  align-items: center; 
+  justify-content: center;
+
+}
+
+
+.points-box{
+  display: flex;
+  align-items: center;  /* Aligns the triangle vertically centered with the text */
+  justify-content: right; /* flex-end; is another option */
+  width: 45%;
+  height: 100%;
+  padding: 10px;
+  border-radius: 4px;
+  font-size: 36px;
+  margin-right: 2%;
+  margin-left: 2%;
+}
+
+
+#plus-pts{
+  color: hsl(108, 100%, 89%);
+  animation: pop 0.3s ease;
+
+}
+
+#minus-pts{     /*{#minus-pts-box > span { Only targets a span that is a direct child */
+  color: hsl(300, 100%, 96%);
+  animation: pop 0.3s ease;
+}
+.minus-pts-label{
+  font-size: 16px;
+  color: hsl(300, 100%, 96%);
+}
+
+.plus-pts-label{
+  font-size: 16px;
+  color: hsl(108, 100%, 89%);
+  
+}
+
+.triangle{
+  width: 0;
+  height: 0;
+  border-left: 6px solid transparent;
+  border-right: 6px solid transparent;
+  display: inline-block;  /* Make the triangle inline with the text */
+  margin-right: 5px;  /* Space between triangle and text */
+  /*vertical-align: bottom;    Align the triangle vertically with the text Doesn't work under flex */
+  /*display: inline-block;   Make the triangle inline with the text */
+  
+
+}
+
+#minus-triangle {
+  border-top: 12px solid hsl(300, 100%, 96%);
+  animation: bounceDown 0.9s ease-in;
+
+}
+
+#plus-triangle {
+  border-bottom: 12px solid hsl(108, 100%, 89%);
+  animation: bounceUp 0.9s ease-in;
+}
+
+@keyframes bounceUp {
+0% { transform: translateY(-24px); }
+12% { transform: translateY(16px); }
+24% { transform: translateY(-16px); }
+36% { transform: translateY(8px); }
+45% { transform: translateY(-8px); }
+55% { transform: translateY(4px); }
+64% { transform: translateY(-4px); }
+72% { transform: translateY(2px); }
+89% { transform: translateY(-2px); }
+100% { transform: translateY(0px); }
+}
+
+@keyframes bounceDown {  /* 0 12 18 24 36 55 64 72 89 100 */
+                            /* 12        89 */
+0% { transform: translateY(24px); }
+12% { transform: translateY(-16px); }
+24% { transform: translateY(16px); }
+36% { transform: translateY(-8px); }
+45% { transform: translateY(8px); }
+55% { transform: translateY(-4px); }
+64% { transform: translateY(4px); }
+72% { transform: translateY(-2px); }
+89% { transform: translateY(2px); }
+100% { transform: translateY(0px); }
+
+
+}
+@keyframes pop {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+@keyframes pop-animation {
+  0%   { transform: scale(1); }
+  50%  { transform: scale(1.4); }
+  100% { transform: scale(1); }
+}
+
+.pops {
+  animation: pop 1.3s ease;
+}
+
+#bottom-container{
+  background: rgba(0, 0, 0, 0.17);
+  display: flex;
+  justify-content: space-between; /* Place text-container and button-container side by side */
+  width: 100%; /* Takes up the full width */
+  height: 32%;
+}
+
+#text-container {
+  display: flex;
+  flex-direction: column; /* Stack kUser-input and question-box vertically */
+  width: 88%; /* at 89%, auto font adjst doesn't work unless button-container's width decreases*/
+  height: 100%;
+
+  justify-content: space-between; /* Keeps B in place */
+  align-items: center; /* Centers vertically (if needed) */
+  position: relative;
+  
+  overflow: hidden; /* needed to make text-container not grow outside its parent */
+
+  background: transparent;
+  margin-bottom: 1rem;
+
+}
+
+
+
+/* #kUser-input {
+  line-height: 27px;
+  margin: 8px;
+  font-size: 1.2rem;
+  color: hsl(0, 0%, 72%);;
+  transition: color 1s ease-out; 
+  text-align: justify;
+  
+  box-sizing: border-box;
+  height: 64%;
+  width: 96%;
+  
+  display: flex;   * Fixes the issue * 
+   *flex-direction: row;  Ensures elements are in a row * 
+  
+  position: relative;
+  flex-grow: 1;
+  
+  justify-content: space-between;  * Ensures spacing * 
+  align-items: center;  * Aligns vertically * 
+  
+} */
+
+#question-text p {
+  white-space: pre-wrap;
+  word-wrap: break-word;
+  font-family: 'Playfair Display', Times, serif;
+  padding: 5px;
+  padding-left: 10px;
+  user-select: none;  /* stopped text from getting hili when user dbl clicked the arrow button */
+  -webkit-user-select: none; /* Safari */
+  position: relative /* to make float-tag stick to it */
+  
+
+}
+
+#kUser-input p {
+  width: 100%;
+  height: 100%;
+  box-sizing: border-box;
+  white-space: pre-wrap; /* text-align: justify; is already default property but don't know how*/
+  font-family: 'Playfair Display', Times, serif;
+  /* font-family: 'Times New Roman', Times, serif; */
+  position: relative;
+  display: block; /* inline-block is unnecessary in a flex container */
+  margin: 0;
+  overflow-y: scroll; /* Enable vertical scrolling ONLY inside <pre> */
+  scrollbar-width: none; /* Firefox: Hide scrollbar */
+  /*padding-top: 6px;   to match myForm that needs a min of 6 to show the white line at the top */
+  padding-left: 1px; /* to match #k-text which needs it to keep the blinking cursor */
+  font-size: 1.2rem;
+  font-weight: 700;
+  overflow-anchor: none; /* Prevents jumping due to content updates.Scroll bar was moving when text got updated. */
+  scroll-behavior: smooth;
+
+  color: hsl(0, 0%, 72%);;
+  user-select: none;
+  line-height: 1.3; /* Adjust as needed */
+  flex: 0 1 80%; /* Default width is 80%, can shrink but not grow. Without this, notes width will go from 100% to 0%*/
+                 /* note: strange behavior- flex: 0 10 80%;  here it's 10 but anything greater than 1 will make the text slightly not aligned with #k-text only when zoom is at 100% */
+  min-width: unset;  /*Prevents shrinking beyond this 1100px. unset lets it shrink as much as necessary*/
+  word-wrap: break-word; 
+
+  line-height: 24px;
+  word-break: break-word;
+
+}
+
+
+
+
+/* border-radius: 5px;
+font-size: 20px;
+font-family: 'Times New Roman', Times, serif;
+display: inline-block;
+font-weight: 700;
+box-sizing: border-box; */
+
+
+#kUser-input p::-webkit-scrollbar, #k-Text pre::-webkit-scrollbar {
+  display: none; /* Chrome, Safari: Hide scrollbar */
+}
+
+
+
+.hidden {
+  opacity: 0;  /* Invisible when the "hidden" class is added */
+}
+
+
+
+
+p {
+  white-space: pre-wrap;  /* with no wrap, qText gets no newlines */
+}
+
+/*  #myForm {
+  position: relative;
+  width: 100%;
+  height: 100%;
+  margin: 0 auto;
+  border: 1px solid #ccc;
+  border-radius: 10px;
+  background-color: #000000;
+  color: hsl(0, 0%, 72%);;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto;  * Enable vertical scrollbar if content exceeds max-height * 
+  display: flex;
+  flex-direction: column;
+  overflow: hidden;  * hides scroll * 
+  box-sizing: border-box;
+}
+ 
+#textarea-container {
+  width: 100%;
+  height: 80%;
+  display: flex;
+  flex-direction: row;
+}
+
+#k-Text {
+  width: 80%;
+  height: 100%;
+  max-width: calc(100% - 22px);  * Adjusted for padding and border * 
+  padding: 10px;
+  border: 1px solid #ccc;
+  background-color: #212121;
+  color: hsl(0, 0%, 72%);;
+  border-radius: 5px;
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+  display: inline-block;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+.notes{
+  width: 10%;
+  height: 100%;
+  max-width: calc(10% - 2px);  * Adjusted for padding and border * 
+  padding: 10px;
+  background-color: transparent;
+  color: hsl(0, 0%, 72%);;
+  border-radius: 5px;
+  font-size: 20px;
+  font-family: 'Times New Roman', Times, serif;
+  display: inline-block;
+  font-weight: 700;
+  box-sizing: border-box;
+}
+
+*/
+
+
+
+
+#circles, #circle {
+  width: 180px;
+  height: 180px;
+  background-position: center; /* Centers the background image */
+  border-radius: 50%;
+  shape-outside: circle();
+  margin: 55px 0px 55px 0px; /* Default margin, will adjust below [top] [right] [bottom] [left];*/
+}
+
+/* Use img#circle if:
+You have multiple elements with different types, and you only want to style the img with that ID.
+<img id="circle" src="image.jpg">
+<div id="circle">Some text</div> 
+
+You want to override another rule that uses just #circle and make it more specific.
+#circle { width: 100px; }
+img#circle { width: 150px; }*/
+
+#circles  {
+  float: right;
+  margin-left: 19px; /* Only adjust right margin for #circle2 img */
+
+}
+
+#circle {
+  float: left;
+  /*margin-left: 30px;  Only adjust left margin for #circle img */
+
+}
+
+
+
+
+#text {
+  font-size: 24px;
+  line-height: 1.5;
+  border: 20px solid blue;
+  padding: 40px;
+  width: 450px;
+
+}
+
+
+
+
+
+
+
+
+
+
+
+.image-container {
+  display: none;
+  position: absolute;
+  top: 0;
+  
+  left: 50%; /* Position it to the right of the word */
+
+
+}
+
+.image-container img {
+  max-width: 200px; /* Adjust size as needed */
+  border-radius: 0%;
+  border: 20px;
+}
+
+:root{
+  --background-color: #202020; /* lush green nature: 082909   clear blue sky: 2cbafc   deep blue ocean: 070830 sunrise ff8808   sunset ff5500*/
+  --secondary-color: #212121; /*highest-level element of the document (usually the <html> element). */
+}
+.dark-theme{
+  --background-color: #082909;
+  --secondary-color: #fff;
+}
+
+*{
+  margin:0;
+  padding:0;
+
+}
+
+.hero{
+  height: 110vh;
+  width: 100%;
+  background: var(--background-color);
+  font-family: sans-serif;
+  position: relative;
+
+}
+
+/* span{  color: red;} */
+
+.logo{
+  width: 100px;
+  cursor: pointer;
+}
+
+nav ul li{
+  display: inline-block;
+  list-style: none;
+  margin: 10px 20px;
+}
+
+nav ul li a{
+  text-decoration: none;
+  color: #f48414;
+}
+
+nav ul li a:hover{
+  color: #6a0c95;
+}
+
+.info{
+  margin-left: 50%;
+  margin-top: 15%;
+}
+
+.info a{
+  background: #212121;
+  padding: 10px 18px;
+  text-decoration: none;
+  color: #fff;
+  display: inline-block;
+  margin: 30px 0;
+  border-radius: 5px;
+}
+
+.info h1{
+  font-size: 70px;
+  color: #212121;
+}
+
+nav{
+  width: 84%;
+  margin: auto;
+  padding: 20px 0;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  position: relative;
+}
+
+.img-box{
+  width: 30%;
+  height: 60%;
+  position: absolute;
+  bottom: 0;
+  right: 100px;
+}
+
+.img-box img{
+  height: 50%;    
+  position: absolute;
+  bottom: 0;
+  left: 50px;
+  transform: translateX(-50%);
+  transition: bottom 1s, left 1s;
+}
+
+.img-box:hover .back-img{
+  bottom: 40px;
+}
+
+.img-box:hover .main-img{
+  left: 54%;
+}
+
+.social-links{
+  margin-left: 18%;
+  margin-top: 100px;
+}
+
+.social-links a{
+  font-size: 30px;
+  color: #606163;
+  margin-right: 20px;
+}
+
+.social-links a:hover{
+  color:#ff4321;
+}
+
+#icon{
+  width: 30px;
+  cursor: pointer;
+  display: inline;
+}
+
+
+.magSent-container:before, #question-container:before{                  /*.box:before: This selector targets a pseudo-element ::before that is created as a child of an element with the class .box. 
+                              The ::before pseudo-element is used to insert content before the content of the selected element. */
+
+z-index: -1;                /*z-index: -1;: This property controls the stacking order of elements on the z-axis. 
+                            Setting it to -1 means that the pseudo-element will be positioned behind its parent .box element (and any other elements with higher z-index values).
+                            In summary, this CSS code creates a white border-like effect around the .box element by using a ::before pseudo-element that is absolutely positioned and 
+                            extends beyond the edges of the .box. The z-index ensures that it appears behind the .box element.*/
+                            
+
+} 
+.magSent-container:after, #question-container:after{
+z-index: -2;
+filter: blur(8px);
+
+
+}
+.magSent-container:before, .magSent-container:after,
+#question-container:before, #question-container:after {
+background: linear-gradient(288deg, #373c3c, #809090, #909090);
+position:absolute;          /*position: absolute;: This property defines the positioning of the pseudo-element. 
+                              It's set to absolute, meaning the pseudo-element will be positioned relative to its nearest positioned ancestor (in this case, the .box element).*/
+top: -2px;                  /*top: -2px;, left: -2px;, right: -2px;, bottom: -2px;: These properties set the positioning of the pseudo-element with respect to its parent .box element.*/ 
+left: -2px;                 /* It's effectively offsetting the pseudo-element by 2 pixels in all directions, creating an effect of expanding beyond the boundaries of the .box element.*/
+right: -2px;
+bottom: -2px;
+content: '';   
+border-radius: 1.2rem;
+mix-blend-mode: overlay; /* Forces it to interact visually */
+}
+
+body:before {                  /*.box:before: This selector targets a pseudo-element ::before that is created as a child of an element with the class .box. 
+  The ::before pseudo-element is used to insert content before the content of the selected element. */
+
+z-index: -1;                /*z-index: -1;: This property controls the stacking order of elements on the z-axis. 
+Setting it to -1 means that the pseudo-element will be positioned behind its parent .box element (and any other elements with higher z-index values).
+In summary, this CSS code creates a white border-like effect around the .box element by using a ::before pseudo-element that is absolutely positioned and 
+extends beyond the edges of the .box. The z-index ensures that it appears behind the .box element.*/
+
+
+} 
+body:after {
+z-index: -2;
+filter: blur(8px);
+
+
+}
+body:before,body:after{
+background: linear-gradient(144deg, #3c3737, #809090, #909090);
+position:absolute;          /*position: absolute;: This property defines the positioning of the pseudo-element. 
+  It's set to absolute, meaning the pseudo-element will be positioned relative to its nearest positioned ancestor (in this case, the .box element).*/
+top: -2px;                  /*top: -2px;, left: -2px;, right: -2px;, bottom: -2px;: These properties set the positioning of the pseudo-element with respect to its parent .box element.*/ 
+left: -2px;                 /* It's effectively offsetting the pseudo-element by 2 pixels in all directions, creating an effect of expanding beyond the boundaries of the .box element.*/
+right: -2px;
+bottom: -2px;
+content: '';   
+border-radius: 1.2rem;
+}
+
+button {
+  background-color: #4cae4f;
+  color: white;
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  font-size: 18px;
+  transition: background-color 0.3s;
+  font-weight: 700; 
+  
+}
+
+
+
+#start-BTN{
+  width: 16%;
+  margin-left:auto;
+  margin-right: auto;
+}
+
+/* Hover effect for the button */
+button:hover {
+  color: hsl(64, 100%, 48%);
+}
+  
+.content, .content2{  /*buttons that makes text light up*/
+  padding: 0px;
+  box-sizing: border-box;
+  color: hsl(0, 0%, 72%);;    
+  display: inline-block;  
+  margin-top: 8px;    
+  width: 40%;
+  vertical-align: top;
+  margin-left: 3%;
+  /*background-color: #ffffff;*/
+  /* box-shadow: 0px 2px 4px rgba(0, 0, 0, 0.1); creates a shadow but can't be seen with the blue background */
+  /*padding: 20px;*/
+  /*height: 90vh;  Set a fixed height for the container
+  display: flex;  
+  align-items: center; 
+  flex-direction: column;
+  padding: 8px;
+  position: relative;
+  
+  background: white;
+  margin-bottom: 34px;border-radius: 8px; */
+}     
+
+
+
+
+
+
+
+.fancy {
+  background-image: linear-gradient(to right, #f9989f, #fccb8f, #faf096);
+  border-radius: 6px;
+  padding: 0px 0px;  /*1st value is height, 2nd value is width*/
+  transition: background-image 1.5s ease-in-out;
+  color: blue;
+
+  background-color: yellow; /* Set the background color */
+  
+  transition: background-color 15.5s ease-in-out;
+
+ /* Neon Red: RGB(255, 0, 0)
+Neon Yellow: RGB(255, 255, 0)
+Neon Green: RGB(0, 255, 0)
+Neon Blue: RGB(0, 0, 255)
+Neon Purple: RGB(128, 0, 128) or RGB(148, 0, 211) (depending on the shade)
+Neon Orange: RGB(255, 165, 0)
+Neon Pink: RGB(255, 105, 180)
+*/
+}
+
+.blank {
+  background-color: rgb(17, 201, 186); /* Set the background color */
+  
+  
+}
+
+.lightUpSentence, .litUpSentence{  /* only ones to have a white halo and animation */
+  background-size: 288% 100%;
+  box-shadow: 0 0 20px rgba(255, 255, 255, 0.8); /* Soft glow effect */
+
+}
+.lightUpSentence{ /* only one to have animation but litUpSentence can do it if overlapped with litUpJustify*/
+  animation: gradient 0.72s ease-in-out backwards, gradientSlide 7.2s 0.2s infinite linear alternate; /* 0.2 delay makes the transition not choppy */
+}
+.litUpSentence{ /* gradient not needed because it fills up the sentence yellow from left to right */
+  animation: gradientSlide 7.2s 0.2s infinite linear alternate;
+}
+@keyframes gradientSlide {
+  0% {
+    background-position: left;
+    color: rgb(32,32,32);/* hsl(0, 0%, 85%); */ /*#FFFFE0;  rgb(32,32,32);*/
+  }
+  100% {
+    background-position: right;
+    color: rgb(32,32,32);/* hsl(0, 0%, 85%); */ /*#FFFFE0;  rgb(32,32,32);*/
+  }
+}
+
+
+.lightUpSentence, .litUpSentence, .litUpManually, .litUpJustify {
+  border-radius: 6px; /* Rounded corners */
+  padding: 2.45px 0px;  /*1st value is height, 2nd value is width*/
+}
+
+.lightUpSentence, .litUpSentence {
+  background-image: linear-gradient(to right, rgba(240, 240, 0, 0.9), rgba(240, 240, 0, 0.55), rgba(240, 240, 0, 0.9)); /* Transparent gradient */
+  color: rgb(32,32,32); /*#FFFFE0;  rgb(32,32,32);*/
+}
+.litUpManually {
+  background-image: linear-gradient(to right, rgba(240, 240, 0, 0.9), rgba(240, 240, 0, 0.72), rgba(240, 240, 0, 0.9));
+  color: rgb(32,32,32);
+}
+.litUpJustify {
+  background-image: linear-gradient(to right, hsla(240, 100%, 45%, 0.9), hsla(240, 100%, 45%, 0.4), hsla(240, 100%, 45%, 0.9)); /* Transparent gradient */
+  color: hsl(300, 100%, 96%); /*do this with blue*/
+}
+
+
+.litUpJustify.lightUpSentence, .litUpJustify.litUpSentence, .litUpJustify.litUpManually {
+  background-image: linear-gradient(to right, hsla(60, 100%, 48%, 0.64), /* hsl(144, 100%, 36%), */ hsla(240, 100%, 45%, 0.9));
+}
+.litUpJustify.lightUpSentence {
+  animation: gradient 0.72s ease-in-out backwards, gradientSlide2 7.2s 0.2s infinite linear alternate;
+}
+.litUpJustify.litUpSentence { /* gradient not needed because it fills up the sentence yellow from left to right */
+  animation: ease-in-out backwards, gradientSlide2 7.2s 0.2s infinite linear alternate;
+}
+@keyframes gradientSlide2 {
+  0% {
+    background-position: left;
+    color: hsl(300, 100%, 96%);/* hsl(0, 0%, 85%); */ /*#FFFFE0;  rgb(32,32,32);*/
+  }
+  100% {
+    background-position: right;
+    color: hsl(300, 100%, 96%);/* hsl(0, 0%, 85%); */ /*#FFFFE0;  rgb(32,32,32);*/
+  }
+}
+
+
+@keyframes scrollGradient {
+  0%   { background-position: 0% 0%; }
+  100% { background-position: 100% 0%; }
+}
+
+@keyframes gradient {
+  from, to {color: rgb(32, 32, 32);}
+   0% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.9),  rgba(0, 0, 0, 0.6),      rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6));}
+  12% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.85), rgba(42, 42, 0, 0.65),   rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.6));}
+  24% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.8),  rgba(85, 85, 0, 0.7),    rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6));}
+  34% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.75), rgba(127, 127, 0, 0.75), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.6));}
+  45% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.7),  rgba(170, 170, 0, 0.8),  rgba(0, 0, 0, 0.65), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));}
+  55% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.65), rgba(212, 212, 0, 0.85), rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.85), rgba(0, 0, 0, 0.6));}
+  64% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.6),  rgba(255, 255, 0, 0.9),  rgba(0, 0, 0, 0.55), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6));}
+  72% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.55), rgba(255, 255, 0, 0.9),  rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.9), rgba(0, 0, 0, 0.6));}
+  89% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.6),  rgba(255, 255, 0, 0.9),  rgba(42, 42, 0, 0.65), rgba(0, 0, 0, 0.8), rgba(0, 0, 0, 0.6));}
+  96% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.65), rgba(255, 255, 0, 0.9),  rgba(85, 85, 0, 0.7), rgba(0, 0, 0, 0.7), rgba(0, 0, 0, 0.6));}
+ 100% {background-image: linear-gradient(to right, rgba(255, 255, 0, 0.7),  rgba(255, 255, 0, 0.9),  rgba(127, 127, 0, 0.75), rgba(0, 0, 0, 0.75), rgba(0, 0, 0, 0.6));}
+}
+
+
+
+.color {
+  position: relative;
+  font-size: 1em;
+  color: #0e3742;
+  text-align: center;
+  -webkit-box-reflect: below 1px linear-gradient(transparent, #0002);
+  line-height: 0.70em;
+  outline: none;
+  display: inline;  /* replaced with inline-block, need this for text in lightupall to work properly with del tags in MCs. w/o it, toggling del won't work on .vocab that's colored, colored words don't get crossed out*/
+  white-space: nowrap;
+  text-decoration: inherit; /* allows text to be crossed out */
+}
+
+
+
+
+
+
+
+/* Keyframe animation for the glowing effect */
+@keyframes vocabEffect {
+  0% {
+    box-shadow: 0 0 15px 5px rgba(255, 255, 255, 0.6), 0 0 25px 10px rgba(255, 255, 255, 0.5), 0 0 40px 15px rgba(255, 255, 255, 0.4);
+  }
+  100% {
+    box-shadow: 0 0 25px 10px rgba(255, 255, 255, 0.8), 0 0 35px 15px rgba(255, 255, 255, 0.7), 0 0 50px 20px rgba(255, 255, 255, 0.6);
+  }
+}
+
+
+
+/* @keyframes vocabEffect {
+  0% {
+      text-shadow: 0 0 5px white, 0 0 10px white, 0 0 20px white;
+  }
+  100% {
+      text-shadow: 0 0 10px white, 0 0 20px white, 0 0 30px white;
+  }
+} */
+
+@keyframes animateWhite {
+  0% {
+    color: hsl(0, 0%, 72%);; /* Dark grayish-white */
+    text-shadow: none;
+  }
+  100% { 
+    color: #FFFFFF; /* Fully bright white */
+    text-shadow: 
+      0 0 5px rgba(255, 255, 255, 0.5), 
+      0 0 15px rgba(255, 255, 255, 0.4), 
+      0 0 30px rgba(255, 255, 255, 0.3), 
+      0 0 60px rgba(255, 255, 255, 0.2), 
+      0 0 120px rgba(255, 255, 255, 0.1); /* Soft halo effect */
+  }
+}
+
+@keyframes animateHalo {
+  0% {
+    color: hsl(0, 0%, 72%);; /* Light grayish text */
+    text-shadow: none;
+    background: transparent;
+  }
+  100% { 
+    color: hsl(0, 0%, 72%);; /* Keep text color the same */
+    text-shadow: none;
+    background: radial-gradient(circle, rgba(255, 255, 255, 0.2), rgba(255, 255, 255, 0.6), rgba(255, 255, 255, 1));
+  }
+}
+
+
+
+
+
+.lightOrange {animation: animateOrange 1s linear forwards;}
+.litOrange {animation: animateOrange 0s linear forwards;}
+
+.lightCyan {animation: animateCyan 1s linear forwards;}
+.litCyan {animation: animateCyan 0s linear forwards;}
+
+
+
+.lightPurple, .lightPurple2 {animation: animatePurple 1s linear forwards;} /* need .lightPurple2, w/o it some infinitives in MCs doesn't turn purple */
+.litPurple,   .litPurple2   {animation: animatePurple 0s linear forwards;}
+/*.litPurple,   .litPurple2,  .lightPurple, .lightPurple2 {  need all four, w/o litPurple2, toggling del won't work on .vocab that's purple* /
+  display: inline;  w/o it lightPurple will shine through del tags               display: inline placed in .color
+  white-space: nowrap;
+}*/
+
+.lightPink, .lightPink2 {animation: animatePink 1s linear forwards;} /* without lightPink2, some infinitives in MCs doesn't turn pink, goes to the default .color value of color: #0e3742; */
+.litPink,   .litPink2   { animation: animatePink 0s linear forwards; }
+
+
+.lightGreen {animation: animateGreen 1s linear forwards;} 
+.litGreen   { animation: animateGreen 0s linear forwards; }
+/*.litPink,   .litPink2,  .lightPink, .lightPink2 { need lightPink so might need lightPink2 * /
+  display: inline;  /*Ensures inline display w/o it lightPink will shine through del tags.* /
+  /* white-space: nowrap; Prevents line breaks 
+}*/
+
+@keyframes animateOrange{
+  0% {
+    color: #FFFFE0;  /*initial color of the text*/
+    /*text-shadow: none;*/
+            }
+  100%{ 
+    color: #ffffff;
+    /*font-weight: 700;  font-weight: 400; is equivalent to normal, and font-weight: 700; is equivalent to bold.*/
+    text-shadow:  0 0 10px hsl(36, 100%, 48%), 0 0 20px hsl(36, 100%, 48%), 0 0 40px hsl(36, 100%, 48%), 0 0 80px hsl(36, 100%, 48%), 0 0 160px hsl(36, 100%, 48%);
+  }}
+/*
+  @keyframes animateOrange2 {
+    0% {
+        color: #FFFFE0; /* Initial text color 
+        opacity: 0.8; /* Optional fade-in effect 
+        transform: translate(0, 0); /* No movement initially 
+    }
+    100% {
+        color: #FFA500; /* Final text color 
+        opacity: 1; /* Fully visible 
+        transform: translate(2px, 2px); /* Simulated shadow movement 
+    }
+}
+
+.text {
+    position: relative; /* Necessary for pseudo-elements 
+    display: inline-block; /* Ensures alignment 
+    animation: animateOrange 2s infinite;
+}
+
+.text::after {
+    content: '';
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    z-index: -1;
+    background: #FFA500; /* Shadow color 
+    opacity: 0.5;
+    filter: blur(3px); /* Shadow-like effect 
+    transform: translate(0, 0); /* Matches the keyframes 
+    animation: animateOrange 2s infinite;
+}
+*/
+
+
+
+@keyframes animateCyan{
+  0% {
+    color: #FFFFE0;  /*initial color of the text*/
+    text-shadow: none;
+            }
+  100%{ 
+    color: #ffffff;
+    /*font-weight: 700;  font-weight: 400; is equivalent to normal, and font-weight: 700; is equivalent to bold.*/
+    text-shadow:  0 0 10px #03bcf4, 0 0 20px #03bcf4, 0 0 40px #03bcf4, 0 0 80px #03bcf4, 0 0 160px #03bcf4; 
+  }}
+
+@keyframes animatePurple{
+  0% {
+    color: #FFFFE0;  /*initial color of the text*/
+    text-shadow: none;
+            }
+  100%{ 
+    color: #ffffff;
+    /*font-weight: 700;  font-weight: 400; is equivalent to normal, and font-weight: 700; is equivalent to bold.*/
+    text-shadow:  0 0 10px #6A0DAD, 0 0 20px #6A0DAD, 0 0 40px #6A0DAD, 0 0 80px #6A0DAD, 0 0 160px #6A0DAD; 
+  }}
+
+@keyframes animatePink{
+  0% {
+    color: hsl(60, 100%, 96%);  /*initial color of the text*/
+    text-shadow: none;
+            }
+  100%{ 
+    color: #ffffff;
+    /*font-weight: 700;  font-weight: 400; is equivalent to normal, and font-weight: 700; is equivalent to bold.*/
+    text-shadow:  0 0 10px #FF69B4, 0 0 20px #FF69B4, 0 0 40px #FF69B4, 0 0 80px #FF69B4, 0 0 160px #FF69B4; 
+  }}
+  
+@keyframes animateGreen{
+  0% {
+    color: hsl(60, 100%, 96%);  /*initial color of the text*/
+    text-shadow: 0 0 0.5px rgba(0, 0, 0, 0.1);
+
+    text-shadow: none;
+            }
+  100%{ 
+    color: #ffffff;
+    /*font-weight: 700;  font-weight: 400; is equivalent to normal, and font-weight: 700; is equivalent to bold.*/
+    text-shadow:  0 0 10px hsl(128, 100%, 34%), 0 0 20px hsl(128, 100%, 34%), 0 0 40px hsl(128, 100%, 34%), 0 0 80px hsl(128, 100%, 34%), 0 0 160px hsl(128, 100%, 34%); 
+  }}
+
+@keyframes animateWhite{
+  0% {
+    color: #FFFFE0;  /*initial color of the text*/
+    text-shadow: none;
+  }
+  100%{ 
+    color: #ffffff;
+    /*font-weight: 700;  font-weight: 400; is equivalent to normal, and font-weight: 700; is equivalent to bold.*/
+    text-shadow:  0 0 10px #ffffff,  0 0 20px #ffffff99,  0 0 40px #ffffff4d, 0 0 80px #ffffff4d, 0 0 160px #ffffff4d;
+  }}  
+                  
+
+.vocab {
+  color: white; /* Text color */
+  /* cursor: pointer; */
+  display: inline; /* Ensures element behaves as part of the text flow */
+  position: relative;
+  transition: text-shadow 400ms ease-in-out; /* Smooth transition for text-shadow */
+  border-bottom: 2px solid rgba(255, 255, 255, 0.6); /* Underline effect */
+  padding-bottom: 2px; /* Adjust spacing to ensure the underline is visible */
+
+}
+
+
+.vocab::after {/* gives details to the underline */
+  content: ""; /* Creates the underline */
+  position: absolute;
+  left: 0;
+  bottom: -2px; /* Adjust to control underline distance */
+  width: 100%;
+  height: 2px; /* Thickness of the underline */
+  background: rgba(255, 255, 255, 0.6); /* Base underline color */
+  transition: box-shadow 1s ease-in-out; /* Smooth transition for the glow effect */
+  
+}
+
+.vocab:hover {
+ /*  box-shadow: 0 0 20px #ffffff,
+              0 0 40px #ffffff99,
+              0 0 80px #ffffff4d; Glow effect for the underline */
+  animation: animateWhite 96ms linear forwards;      
+  text-shadow: none; /* No glow effect on text itself */        
+}
+
+
+
+
+.fire{
+position: relative;
+color: hsl(0, 0%, 72%); /* White - bright and clean */
+font-size: 1.5em;
+/*-webkit-box-reflect: below -21px linear-gradient(transparent, #0003); #0008 is how strongly the reflection is. 1 would be weaker*/
+text-shadow:  0 0 10px hsl(0, 0%, 72%),  /* White glow */
+                0 0 40px hsl(0, 0%, 72%),
+                0 0 80px hsl(0, 0%, 72%),
+                0 0 160px hsl(0, 0%, 72%),
+                0 0 240px hsl(0, 0%, 72%); /* Glowing white effect */
+
+filter: url(#flames);
+display: flex;
+justify-content: left;
+width: 100%; /* Takes up the full width */
+height: 60%;
+}
+
+
+
+/*  svg{
+width: 0;
+height: 0;
+}  */
+.flame-rect {
+  fill: orange;
+  filter: url(#flames);
+  opacity: 0.6;
+}
+
+/* .highlight-subject {
+  animation: animate 1s linear forwards; 
+  font-weight: 700;
+}
+
+.highlight-verb {
+  animation: animate 1s linear forwards; 
+  font-weight: 700;
+}
+ */
+
+
+
+
+/*p{
+    vertical spacing between the lines*/
+                        /*font-size: 13px;  had to take this out because it was showing higher specificty than element by ID (#single-sentence) even though
+                         element by ID, it's more specific than the first rule, which targets all <p> elements
+}*/
+.boxed-span {
+  padding: 0px; /* Add padding to create space around the content */
+  display: inline; /* Make the boxes inline */
+  position: relative; /* Position relative for absolute positioning of borders */
+}
+
+/* Apply gradient border to the boxes */
+.gradient-border {
+  border: 2px solid transparent; /* Transparent border */
+  border-image: linear-gradient(to right, white, pink); /* Gradient border from black to pink */
+  border-image-slice: 1; /* Slice the border image */
+}
+
+.gradient-borderr {
+  border: 2px solid transparent; /* Transparent border */
+  border-image: linear-gradient(to right, pink, white); /* Gradient border from black to pink */
+  border-image-slice: 1; /* Slice the border image */
+}
+
+/* Apply gradient background to specific words within the boxed-span class */
+.gradient-text-blue {
+  background: linear-gradient(to right, white, pink); /* Blue to red gradient */
+  -webkit-background-clip: text; /* Clip the gradient to the text */
+  background-clip: text;
+  color: transparent; /* Make the text color transparent */
+}
+
+.gradient-text-red {
+  background: linear-gradient(to right, pink, white); /* Red to blue gradient */
+  -webkit-background-clip: text; /* Clip the gradient to the text */
+  background-clip: text;
+  color: transparent; /* Make the text color transparent */
+}
+
+/* Apply gradient border to the boxes */
+
+.radient-border {
+  border: 1px solid transparent; /* Transparent border */
+  border-image: linear-gradient(to right, white, white); /* Gradient border from black to pink */
+  border-image-slice: 1; /* Slice the border image */
+}
+
+.radient-borderr {
+  border: 1px solid transparent; /* Transparent border */
+  border-image: linear-gradient(to right, white, white); /* Gradient border from black to pink */
+  border-image-slice: 1; /* Slice the border image */
+}
+
+/* Apply gradient background to specific words within the boxed-span class */
+.radient-text-blue {
+  background: linear-gradient(to right, white, white); /* Blue to red gradient */
+  -webkit-background-clip: text; /* Clip the gradient to the text */
+  background-clip: text;
+  color: transparent; /* Make the text color transparent */
+}
+
+.radient-text-red {
+  background: linear-gradient(to right, white, white); /* Red to blue gradient */
+  -webkit-background-clip: text; /* Clip the gradient to the text */
+  background-clip: text;
+  color: transparent; /* Make the text color transparent */
+}
+
+/*
+.SVbtn{ 
+  opacity: 0.9;
+  transition: opacity 0.15s, background-color 0.15s, color 0.15s;
+  box-shadow: 5px 5px 5px 1px rgba(0, 0, 0, 0.3);   
+}
+
+.SVbtn:hover {
+opacity: 1;
+}
+
+.SVbtn:active {
+background-color:white;
+color: rgb(78, 53, 22);  
+
+}
+*/
+.PTbtn:hover {
+  opacity: 1;
+  }
+  
+  .PTbtn:active {
+  background-color:white;
+  color: rgb(78, 53, 22);  
+  }
+
+
+  #Endings-BTN,#HvBv-BTN,#Article-BTN, #Inf-BTN/* , #Sv-BTN */{
+    width: 96px;
+    height: 96px;
+    padding-top: 10px;
+    padding-bottom: 10px;
+    padding-left: 16px;
+    padding-right: 16px;
+    margin-left: 0px;
+    margin-top: 16px;
+    transition: margin-top 1s; 
+    transition: margin-bottom 1s;
+    /* cursor: pointer; */
+    border: none;
+    border-radius: 50%;
+    color: rgb(3, 64, 92);
+    text-align: center;
+
+  }
+
+  #Sv-BTN{ 
+    width: 96px;
+    height: 96px;
+    padding: 10px 16px;
+    margin: 16px 0 0 0;
+    border: none;
+    border-radius: 50%;
+    /* cursor: pointer; */
+  
+    background: linear-gradient(135deg, #48b459, #3aa04b);
+    color: rgb(3, 64, 92);
+  
+    font-family: 'Poppins', sans-serif;
+    font-weight: 600;
+    font-size: 1em;
+  
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    text-align: center;
+  
+    box-shadow: 0 0 5px #48b459, 0 0 25px #48b459;
+    transition: all 0.3s ease;
+    position: relative;
+    overflow: hidden;
+  }
+
+  #Sv-BTN:hover{
+    transform: scale(1.05);
+    box-shadow:
+      0 0 10px #48b459,
+      0 0 20px #48b459,
+      0 0 40px #48b459,
+      0 0 80px #48b459;
+    }
+
+
+
+    #Sv-BTN .shine {
+      content: '';
+      position: absolute;
+      top: -50%;
+      left: -50%;
+      width: 200%;
+      height: 200%;
+      background: linear-gradient(
+        120deg,
+        transparent,
+        rgba(255, 255, 255, 0.4),
+        transparent
+      );
+      transform: translateX(-100%);
+      transition: transform 0.5s ease;
+      pointer-events: none;
+    }
+    
+    #Sv-BTN:hover .shine {
+      transform: translateX(100%);
+    }
+
+    
+  
+#Endings-BTN{ 
+
+  box-shadow: 0 0 5px #00F0F0, 0 0 25px #00F0F0;
+  background-color: #00F0F0;
+  
+  
+  /*vertical-align: top;  aligns button to the top*/
+  }
+  #Endings-BTN:hover{
+  margin-bottom: 0px;
+  box-shadow: 0 0 5px #00F0F0, 0 0 25px #00F0F0, 0 0 50px #00F0F0, 0 0 100px #00F0F0, 0 0 200px #00F0F0;
+  }
+
+
+
+#HvBv-BTN{ 
+  box-shadow: 0 0 5px #c8b4f0, 0 0 25px #c8b4f0;
+  background-color: #c8b4f0;
+  /*vertical-align: top;  aligns button to the top*/
+  }
+  #HvBv-BTN:hover{
+  margin-bottom: 0px;
+  box-shadow: 0 0 5px #c8b4f0, 0 0 25px #c8b4f0, 0 0 50px #c8b4f0, 0 0 100px #c8b4f0, 0 0 200px #c8b4f0;
+  }
+
+
+#Article-BTN{ 
+  box-shadow: 0 0 5px #f0b464, 0 0 25px #f0b464;
+  background-color: #f0b464;
+  vertical-align: bottom;  /*aligns button to the top*/
+  }
+  #Article-BTN:hover{
+  margin-bottom: 0px;
+  box-shadow: 0 0 5px #f0b464, 0 0 25px #f0b464, 0 0 50px #f0b464, 0 0 100px #f0b464, 0 0 200px #f0b464;
+  }
+
+
+ /*arrow changes to a hand when hovering over the button height: 36px;
+width: 105px;*/
+
+#Inf-BTN{ 
+
+  box-shadow: 0 0 5px #f06ca0, 0 0 25px #f06ca0;
+  background-color: #f06ca0;
+  
+  /*vertical-align: top;  aligns button to the top*/
+  }
+  #Inf-BTN:hover{ 
+  margin-bottom: 0px;
+  box-shadow: 0 0 5px #f06ca0, 0 0 25px #f06ca0, 0 0 50px #f06ca0, 0 0 100px #f06ca0, 0 0 200px #f06ca0;
+  
+  }
+
+  #Inf-BTN:active{
+    margin-bottom: 0px;
+    background-color: #F04890;
+    opacity: 0.0;
+    }
+
+
+
+
+#highlight-BTN, #magnify-BTN, #text-BTN, #Q-BTN{
+  height: 64px;
+  width: 105px;
+  border-radius: 0.5vw;
+  /* cursor: pointer; */
+  border: none;
+  font-size: 1.2rem;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  transition: margin-top 1s; 
+  transition: margin-bottom 1s; 
+  background-image: linear-gradient(to right, #f9989f, #fccb8f, #faf096);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+#highlight-BTN{ 
+background-color: #8b4513;  /*221, 195, 158 */
+color: hsl(60, 89%, 48%);     /*text color*/
+}
+
+#magnify-BTN{ 
+background-color: #8B4513;  /*221, 195, 158 */
+color: #e147f2     /*text color*/
+}
+
+#text-BTN{ 
+color: #8B4513;     /*text color*12, 116, 26, 0.7*/
+}
+#Simplify-BTN, #Q-BTNSDFSDF{ 
+box-shadow: 0 0 5px #f0f0c8, 0 0 25px #f0f0c8;
+background-color: #f0f0c8;
+border: none;
+border-radius: 0.5vw;
+padding-top: 10px;
+padding-bottom: 10px;
+padding-left: 10px;
+padding-right: 10px;
+width: 105px;
+/*vertical-align: top;  aligns button to the top*/
+color:hsl(0, 0%, 100%);
+vertical-align: top;
+-webkit-user-select: none; /* Safari */
+-moz-user-select: none; /* Firefox */
+-ms-user-select: none; /* Internet Explorer/Edge */
+user-select: none; /* Standard syntax */
+/* animation: animateWhite 1s linear forwards;*/
+background-image: linear-gradient(to right, #f9989f, #fccb8f, #faf096);
+
+
+transition: background-image 1.5s ease-in-out;
+
+}
+#Simplify-BTN:hover{
+
+box-shadow: 0 0 5px #f0f0c8,
+            0 0 25px #f0f0c8, 
+            0 0 50px #f0f0c8,
+            0 0 100px #f0f0c8, 
+            0 0 200px #f0f0c8;
+}
+#Q-BTNSDFSDF {
+  font-size: 1.0rem;
+  width: 100%;
+  color: hsl(0, 0%, 72%);;
+  margin-top: 5px;
+  margin-bottom: 5px;
+  margin-left: 5px; /* Adjust as needed */
+  margin-right: 5px; /* Adjust as needed */
+
+  
+  border: 3px solid #009090;
+  padding: 1px;
+  border-radius: 8px;
+  /*background-image: url('spacebg.jpg'); /* Replace with your space background image */
+  background-size: cover;
+  background-position: center;
+  overflow: auto;
+ /* display: inline-block; //inline-block is ignored due to the float */
+  vertical-align: top;
+  float: right;
+}
+
+.pic{
+width: 200px;
+display: block;
+border-width: 2px;
+object-fit: contain;
+border-style: solid;
+border-color: rgb(46,27,20);
+margin-bottom: 20px;
+}
+
+.ex{
+
+display: block;
+}
+
+nav ul{
+  flex: 1;
+  text-align: right;
+}
+
+
+
+/* body {
+font-family: Arial, sans-serif;
+margin: 0;
+padding: 20px;
+background-color: rgb(54,69,79);
+
+
+} already created at the top*/
+
+
+/*
+#single-sentence { 
+
+font-size: 34px;
+height: 89px; /j* Set the desired height for the sentence container *j/
+overflow: auto; /j* Add scrollbars if the sentence exceeds the container height *j/
+margin-top: 5px;
+margin-bottom: 5px;
+
+border: 8px solid #009090; /* Add a border property with desired color *j/
+padding: 0px; /* Add padding to create space between text and border *j/
+border-radius: 8px; /j* Add border-radius for rounded corners 
+
+}*/
+
+
+ 
+
+
+#magSent-box{
+  height:100%;
+  width:80%;
+  display: flex;   /* need flex line its children horizontally. */
+  flex-direction: column;
+  position:relative; /* to peg float-tag to it */
+}
+
+
+
+
+
+#magSent, #magSent-stats{
+  font-family: 'Playfair Display', Times, serif;
+  color: hsl(0, 0%, 72%);; 
+  
+  background-size: cover;  /* background pic won't stretch */
+  background-position: center;
+  float: left;
+  transition: width 1s, height 1s, opacity 1s, top 1s, left 1s;
+  position: relative;
+  /*white-space: pre-wrap;  Preserves spaces and line breaks without it, 'have to' becomes 'haveto' when hvbv is on*/
+   
+  vertical-align: top;
+  align-items: baseline;/**/
+  justify-content: flex-start; /* Align buttons to the left (or you can use 'center' or 'flex-end') */
+  flex-wrap: wrap;/*  Allow cubes to wrap to the next line if needed */
+  /* gap: 10px;Space between cubes */
+   /* overflow: hidden;  Prevent overflow of content outside the container */
+  box-sizing: border-box; /* Ensures padding/borders are inside the container's size transform: rotateX(30deg) translateZ(36px);*/
+  
+  /* perspective: 600px; */
+  transform-style: preserve-3d;
+    
+      /*position: fixed;  Ensures the box stays in full screen even if the page is scrolled 
+      top: 40%;
+      left: 2%;
+      z-index: 9999; /* Ensures the box is on top of other elements 
+  */
+  /*font-family: 'Pacifico', cursive;*/
+}
+#magSent{
+
+  height:100%;
+  width: 100%; /* Fixed width for the sentence container */
+  padding-bottom: 0px;
+  padding-top: 0px;
+  user-select: none; /* turns off text being highlighted from a db click */
+
+  position: relative; /* Needed for child to position relative to this */
+  overflow: hidden;  /* if window shrinks and mult-choice text cannot get any smaller, it will overflow, so it will be set to hidden. dynamically by js set to visible when floatTag appears */
+
+
+
+}
+
+
+
+#magSent p{  /* if it's p  , floatTag appears across the bottom magSent box, if it's div, there is no padding*/
+  position: relative;  /* adds floatTag to the far right of #magSent p when .vocab wrap*/
+  padding-left: 27px;
+  padding-right: 27px;
+
+}
+
+#magSent-stats{
+  font-size: 16px;
+  /*display: flex;  Make it a flex container */
+  /*justify-content: center;  Center horizontally */
+  align-items: center; /* Center vertically */
+  text-align: right; /* Ensure text inside <p> is centered */
+  
+  font-family: 'Pacifico', cursive;
+  padding-bottom: 0px;
+  padding-top: 0px;
+  padding-right: 6px; /* to create space between it and rightPic */
+  /* cursor: pointer;  */
+  user-select: none;  /* Prevents text selection */
+
+
+  position: absolute;   /* This lets it overlap */
+  bottom: 3%;           /* Moves it *above* the parent */
+  left: 0;
+  width: 100%;
+  height: 11%;    /* max height is 11% if top is 89% */
+  z-index: 10;          /* Make sure it's in front if needed */
+
+}
+
+
+
+#magSentL-box, #magSentR-box {
+  width: 10%;
+  height: 100%; /* Ensure it has enough height for vertical centering */
+    /* background-image: url('global population2.webp'); */
+    min-width: 180px; /* Ensures it doesn’t get too small */
+    min-height: 180px;
+  /*background-size: contain;  Adjusts size to fill the div */
+  /*background-repeat: no-repeat;  Prevents tiling */
+  /*background-position: center;  Centers the image */
+  user-select: none;
+  /* cursor: pointer;  */
+
+
+}
+
+#magSentL-img{
+  width: 100%;
+  height: 100%;
+  border-top-left-radius: 1.2rem;   /* Round top-left corner */
+  border-bottom-left-radius: 1.2rem; /* Round bottom-left corner */
+}
+#magSentR-img{
+  width: 100%;
+  height: 100%;
+  border-top-right-radius: 1.2rem;     /* Square top-right corner */
+  border-bottom-right-radius: 1.2rem;  /* Square bottom-right corner */
+    will-change: transform;    /* supposed to stop gif from restarting */
+    transform: translateZ(0);  /* but doesn't seem to work */
+}
+
+.magSent-container{
+  display: flex;  /* need flex to line its children horizontally */
+  transform: translateX(0);
+  border-radius: 1.2rem;
+  /*perspective: 0px;  optional if you want 3D depth */
+/*   transform: translateZ(0);
+will-change: transform;
+backface-visibility: hidden; */
+
+
+  /* 
+  --glow-line-color: #fff;
+  --glow-line-thickness: 2px;
+  --glow-line-length: 20px;
+  --glow-blur-color: #fff;
+  --glow-blur-size: 5px;
+  --glow-offset: 0px;
+  --animation-speed: 1200ms;
+  --container-offset: 100px; changes the size of the glow-container and holds element in the center. */
+  margin-top: 1%;    
+  /*background: url('../../../Images/spaceRmagCnt.jpg');*/
+  background: url('https://content.app/spaceRmagCnt.jpg'); /*accesses it from the local app*/
+
+  width: 2000px;
+  height: 180px;
+   /* position: relative !important; */
+  /* z-index: 9999 !important;
+ */
+    /* Create the glowing border effect 
+    box-shadow: */
+    /*0 0 15px 5px rgba(255, 255, 255, 0.5),    Soft glow on the outside */
+    /*0 0 25px 10px rgba(255, 255, 255, 0.7);    Brighter spot effect */
+}
+
+.disabled-arrow {
+  color: transparent;
+  pointer-events: none;
+  /* cursor: default; */
+} 
+
+#question-arrowL{
+  border-top-left-radius: 1.2rem;   /* Round top-left corner */
+  border-bottom-left-radius: 1.2rem; /* Round bottom-left corner */
+
+}
+
+/* Hover effect for the button */
+.question-arrows:hover {
+  color: hsl(64, 100%, 48%);
+}
+
+
+
+.question-arrows.disabled-arrow { /* Even if it’s being hovered, don’t do anything if it's disabled */
+  color: transparent;
+  /* cursor: default; */
+  pointer-events: none;
+}
+
+#question-arrowR{
+  border-top-right-radius: 1.2rem;   /* Round top-left corner */
+  border-bottom-right-radius: 1.2rem; /* Round bottom-left corner */
+}
+.question-arrows{
+  width: 3%;
+  height: 100%;
+  background-color: transparent;
+  /* cursor: pointer; */
+  display: flex;         /* display: flex + flex-direction: row = horizontal layout  */
+  flex-direction: row; /* or column if you want vertical layout */
+  align-items: center;
+  justify-content: center;  /* spreads the 3 items across the width */
+  box-sizing: border-box;
+  font-size: 45px;
+  color: hsl(0, 0%, 72%);
+  user-select: none;  /* stops arrow from getting hili when user db clicks */
+
+  /* transition: background-color 0.3s ease;
+ */
+}  
+@keyframes flash {
+  0% { background-color: hsl(64, 100%, 48%); }
+  100% { background-color: transparent; }
+
+}
+
+.question-arrows.flash {
+  animation: flash 0.9s ease-out; /* starts faster, then slows down toward the end */
+}
+
+
+
+#question-text {
+  width: 89%;
+  height: 100%;
+  box-sizing: border-box;
+  position:relative;
+}
+
+#question-pic-wall {
+  width: 10%;
+  height: 100%;
+  background-color: transparent;
+  box-sizing: border-box;
+
+    /* background-image: url('./images/global population2.webp'); */
+  min-width: 128px; /* Ensures it doesn’t get too small */
+  min-height: 128px;
+/*   background-size: contain; /* Adjusts size to fill the div * /
+  background-repeat: no-repeat; /* Prevents tiling * /
+  background-position: center; /* Centers the image * / */
+  user-select: none;
+  /* cursor: pointer;  */
+
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+
+
+}
+.float-tag-circle{
+  position: absolute;
+  background: black;
+  border-radius: 50%;  /* makes it a circle */
+  z-index: 9999;
+  overflow: hidden;  /* if the overflow is visible, then the whole square picture is shown */
+}
+
+.float-tag {
+  position: absolute;
+  background: black;
+  border-radius: 10px;
+  font-size: 18px;
+  font-family: 'Orbitron', 'Exo', 'Rajdhani', 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Bubblegum Sans', sans-serif;
+
+  color: hsl(32, 100%, 60%);
+  white-space: nowrap;
+  /* animation: animateOrange 1s linear forwards; */
+  z-index: 9999;
+  pointer-events: none; /* mouseleave listener on vocab won’t be triggered when the mouse moves over the floatTag, because the browser will act as if the floatTag is invisible to the pointer */
+
+}
+
+.float-tag-expl{
+  position: absolute;
+  background: black;
+  border-radius: 10px;
+  font-size: 18px;
+  font-family: 'Orbitron', 'Exo', 'Rajdhani', 'Segoe UI', 'Roboto', sans-serif;
+  font-family: 'Bubblegum Sans', sans-serif;
+
+  color: hsl(200, 72%, 72%);
+  white-space: nowrap;
+  /* animation: animateOrange 1s linear forwards; */
+  z-index: 999;
+}
+
+
+/* #question-pic-wall-img { used the bottom one. background-size, background-repeat, and background-position
+                                                 only apply to background images, not <img> elements.
+  padding: 5px;
+  border-radius: 0.5rem;
+  width: 100%;
+  height: 100%;
+  background-size: contain; /* Adjusts size to fill the div * /
+  background-repeat: no-repeat; /* Prevents tiling * /
+  background-position: center; /* Centers the image * /
+}
+ */
+#question-pic-wall-img {
+  padding: 5px;
+  border-radius: 0.5rem;
+  width: 100%;
+  height: 100%;
+
+  object-fit: fill; /* image fills the container completely doesn't maintainfloat-tag its aspect ratio */
+  /* display: block; */
+  
+}
+
+
+
+
+
+#question-justify-ans::before, 
+#question-ans-check::before {   /* for glass effect */
+  content: '';
+  position: absolute;
+  background-color: transparent;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  pointer-events: none; /* So it doesn't block clicks */
+  background: linear-gradient(
+    120deg,
+    rgb(0, 0, 0) 16%,
+    rgba(255, 255, 255, 0.4) 60%,
+    rgb(0, 0, 0) 100%
+  );
+
+  transform: skewX(-13deg) rotateZ(0.2deg);
+
+  opacity: 0.4;
+  z-index: 1;
+
+  backdrop-filter: blur(2px);
+}
+
+
+
+.qTxtBtn.delOn {
+  border: 2px solid red;
+  top: 2px;
+  position: relative; /* needed for 'top' to work */
+}
+
+.qTxtBtn.textReferenceOn {
+  box-shadow:
+    inset 0 2px 4px hsl(240, 100%, 55%, 0.3),
+    0 0 10px hsl(240, 100%, 55%),
+    0 0 20px hsl(240, 100%, 55%);
+  top: 2px;
+  position: relative; /* needed for 'top' to work */
+}
+
+.qTxtBtn.whiteOn {
+  box-shadow:
+    inset 0 2px 4px hsla(0, 0%, 100%, 0.3),
+    0 0 10px hsl(0, 0%, 100%),
+    0 0 20px hsl(0, 0%, 100%);
+  top: 2px;
+  position: relative; /* needed for 'top' to work */
+}
+
+
+#question-justify-ans:hover::before,
+#question-ans-check:hover::before {
+  animation: glassShine 1.6s ease-in-out;
+
+  animation-fill-mode: forwards; 
+}
+
+@keyframes glassShine {
+  0% {
+    left: -100%;
+    opacity: 0.6;
+  }
+  26% {
+    left: 150%;
+    opacity: 0.6;
+  }
+  27% {
+    left: -100%;
+    opacity: 0; /* Hide during reset */
+  }
+  48% {
+    left: -100%;
+    opacity: 0;
+  }
+  55% {
+    opacity: 0.6; /* Fade in again for second shine */
+  }
+  72% {
+    left: 150%;
+    opacity: 0.6;
+  }
+  100% {
+    left: 150%;   /* 150% again to remain disappeared to the right */
+    opacity: 0; /* Optional: fade out at end */
+  }
+}
+
+#question-justify-ans, #question-ans-check {
+  flex: 1;
+  width: 100%;
+  box-sizing: border-box;
+  font-size: 20px;
+  font-family: sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+
+  background-size: 200% auto;
+  background-clip: text;
+  white-space: pre-line;  /* needed for newline */
+  padding: 0;
+  margin: 0;
+  border-radius: 0.4rem;
+
+/* for glass effect / Make sure your base elements allow stacking  */
+  position: relative;
+  z-index: 0;
+  overflow: hidden;
+}
+
+
+#question-justify-ans{
+  background: linear-gradient(to right, hsl(240, 100%, 55%) 13%, hsl(0, 0%, 72%) 72%);
+  -webkit-background-clip: text;/* can't put -webkit in a group, has to be put into each individual element*/
+  background-clip: text;  /* Modern browsers (that support the standard) will use background-clip */
+  color: transparent; /* For general cases */
+  -webkit-text-fill-color: transparent; /* For background-clip:text in WebKit browsers */
+}
+#question-ans-check{
+  background: linear-gradient(to left, hsl(128, 100%, 64%) 13%, hsl(0, 0%, 72%) 72%);
+  -webkit-background-clip: text;   /* Older or WebKit-based browsers (like Safari or Chrome) will use -webkit-background-clip */
+  background-clip: text;    
+  color: transparent; /* For general cases */
+  -webkit-text-fill-color: transparent; /* For background-clip:text in WebKit browsers */
+}
+
+#question-container:before, #question-container:after{
+  top: 0px;                  /*Originally set to -2px. If put in the negative, fontSize randomly and unnecessarily goes to min fontSize */ 
+  left: 0px;                  
+  right: 0px;
+  bottom: 0px;
+}
+
+ #question-container {
+  width: 96%;
+  height: 128px;
+  color: hsl(0, 0%, 72%);
+  border-radius: 1.2rem;
+  margin-left: 0;
+  margin-right: 0;
+  margin-top: 1%;    
+  margin-bottom: 10px; /* creates space between itself and magSentContainer */
+  transform: rotateX(90deg);
+  opacity: 0;
+  visibility: hidden; /* Prevents element from taking space */
+  transition: opacity 0.5s ease, visibility 0s 0.5s, transform 0.5s ease; /* Transitions opacity, with a delay for visibility */
+  position: relative;
+  /*background: url('../../../Images/qContainer.jpg');*/
+  background: url('https://content.app/qContainer.jpg'); /*accesses it from the local app*/
+
+  display: flex;         /* display: flex + flex-direction: row = horizontal layout  */
+  flex-direction: row; /* or column if you want vertical layout */
+  align-items: flex-start;
+  justify-content: space-between;  /* spreads the 3 items across the width */
+}
+
+
+
+
+
+
+#question-container.visible {
+  opacity: 1;
+  visibility: visible;
+  transform: rotateX(0deg); /* End rotation */
+  transition: opacity 0.5s ease, visibility 0s 0s, transform 0.5s ease; /* Visibility instantly changes when opacity is 1 */
+}
+
+#cqa-box {
+  display: flex;
+  gap: 50px;
+  flex-wrap: wrap;
+  justify-content: center;
+  width: 90%;
+  position: absolute;
+  bottom: 0;  /* Place the child at the bottom of the container */
+  z-index: -1;
+}
+span {
+  display: inline;/* doesn't do anything, at least not from I can see */
+}
+
+.button {
+  flex: 1 1 auto; /* Buttons will grow and shrink as needed */
+  min-width: 80px; /* Minimum width for buttons */
+  max-width: 150px; /* Maximum width for buttons */
+  padding: 10px 20px;
+  border: none;
+  border-radius: 5px;
+  /* cursor: pointer; */
+  background-color: #4cae4f;
+  color: white;
+  font-size: 18px;
+  transition: background-color 0.3s;
+
+  height: 25%;
+  display: flex; /* Use flexbox to center content */
+  justify-content: center; /* Centers content horizontally */
+  align-items: center; /* Centers content vertically */
+}
+
+#left-button, #right-button{
+
+  margin-top: 72px;
+}
+
+  
+
+.top{
+  font-family: sans-serif;
+  font-size: 10px;
+  width: 1200px;
+}
+
+.highlighted {
+background-color: #009090;
+}
+
+
+
+.U{
+text-decoration: underline;
+color: red !important;
+}
+
+.input{
+display: inline-block;
+}
+
+
+
+
+
+
+
+#output {
+  /*font-family: 'Pacifico', cursive;*/
+  font-size: 24px;
+  color: #333;
+  margin-top: 20px;
+}
+
+
+
+
+
+.content3{
+  display: inline;
+}
+
+
+
+
+
+
+.k-label {
+  color: hsl(0, 0%, 72%);;
+  font-size: x-large;
+  display: inline;
+
+}
+
+label {
+  display: block;
+  margin-bottom: 10px;
+  font-size: 18px;
+  color: #333;
+}
+
+
+/* Style the button */
+
+
+
+
+/*// ...
+
+// Function to highlight the current sentence in the text
+function highlightSentence(index) {
+// Remove previous highlighting
+sentenceElement.innerHTML = ''; // Clear the content of the "sentence" element
+
+// Highlight current sentence in the text
+var sentenceText = sentences[index];
+var highlightedSentence = document.createElement('span');
+highlightedSentence.classList.add('highlighted');
+highlightedSentence.textContent = sentenceText;
+
+// Define an array of phrases to be underlined
+var phrasesToUnderline = ['certain phrases', 'specific phrases'];
+
+// Iterate over the phrases and add underline markup
+phrasesToUnderline.forEach(function(phrase) {
+var regex = new RegExp(phrase.replace(/[.*+?^${}()|[\]\\]/g, '\\$&'), 'g');
+var replacement = '<u>' + phrase + '</u>';
+sentenceText = sentenceText.replace(regex, replacement);
+});
+
+// Set the modified sentence text as the content of the "sentence" element
+highlightedSentence.innerHTML = sentenceText;
+sentenceElement.appendChild(highlightedSentence);
+}
+
+// ...
+*/               
+
+
+
+
+
+
+.input-container {
+  margin-bottom: 20px;
+  text-align: center;
+}
+.input-container input {
+  font-size: 18px;
+  padding: 10px;
+  width: 300px;
+  margin: 10px;
+}
+.input-container button {
+  padding: 10px 20px;
+  font-size: 18px;
+  /* cursor: pointer; */
+}
+
+/* .scene-wrapper{  OBSOLETE
+  display: flex;
+  justify-content: center; /* center the scene-container * /
+  width: 100%;
+
+} */
+
+.scene-container {
+  display: flex;
+  padding-left: 27px;
+  gap: 12px;
+  flex-wrap: wrap;
+  justify-content: flex-start; /* align items to the left within the container */
+  /*transform-style: preserve-3d; added to have cubes appear normal again */
+
+}
+
+
+.scene {
+  width: 150px;
+  height: 75px;
+            /*DON'T USE THIS causes faces partially to become black perspective: 600px; */
+  /*transform-style: preserve-3d;   added to have cubes appear normal again */
+  /*with this, parts of the face become transparent, you get black square patches. perspective: 1000px; added to have cubes appear normal again */
+  perspective: 800px;/* to prevent gaps between face and face5/6 at certain angles */
+  perspective-origin: center; /* to prevent gaps between face and face5/6 at certain angles */
+}
+
+
+.cube {
+  width: 100%;
+  height: 100%;
+  position: relative;
+  transform-style: preserve-3d;
+  transition: transform 0.8s ease; /* w/o it cubes don't move, they become snapshot when rotating them*/
+  /* display: flex; */                /* taken out to prevent gaps between face and face5/6 at certain angles, not verified */
+  transform: scale3d(1, 1, 1);      /* to prevent gaps between face and face5/6 at certain angles, not verified */
+  will-change: transform;           /*    added to have cubes appear normal again * /
+
+  backface-visibility: visible;       /* conflicts with .cube-face backface-visibility // added to have cubes appear normal again * /
+  -webkit-backface-visibility: visible;    /* added to have cubes appear normal again * /
+  transform: scale3d(1, 1, 1);        /* added to have cubes appear normal again */
+ 
+}
+.cube-face {
+  position: absolute;
+  width: 144px;
+  height: 72px;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 0px 0px; /* 0px 10px caused rectangle face to not touch the sqaure face when it was randomly rotated*/
+
+  background-color: rgb(0, 0, 100); /* Soft pastel blue */
+  border: 1px solid hsl(0, 0%, 100%); 
+  box-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.8), 
+      0 0 20px rgba(255, 255, 255, 0.6), 
+      0 0 30px rgba(255, 255, 255, 0.4), 
+      0 0 40px rgba(255, 255, 255, 0.3); /* Glowing effect */
+  transition: box-shadow 0.3s ease-in-out;    
+  color: hsl(0, 0%, 72%);    
+  white-space: nowrap;   /* done by js    white-space: normal: line breaks at spaces or hyphens Text can wrap to a second line if needed   change this to nowrap and text will shrink to min size(12) set in adjustFontsize()*/
+  /*word-break: break-word; done by js    Long words break instead of overflowing */
+  text-align: center;        /* Text is centered horizontally (Flexbox handles vertical centering) */
+  /*Keep both justify-content: center and text-align: center — they do different things, and together they make sure all your text looks beautifully centered, no matter what. */  
+
+
+  box-sizing: border-box; /* Without this, padding and border don’t count toward width/height, which can make content overflow even when it "should" fit. */
+  font-family: 'Orbitron', 'Exo', 'Rajdhani', 'Segoe UI', 'Roboto', sans-serif;
+
+  backface-visibility: hidden;/* w/o this, some faces become transparent  added to have cubes appear normal again */
+  -webkit-backface-visibility: hidden; /* for Chrome & Edge */  /* added to have cubes appear normal again */
+  transform-style: preserve-3d;  /* lines look smoother added to have cubes appear normal again */
+  /*  z-index: 1; added to have cubes appear normal again *//* to prevent glitches on face 5 and 6 of other cubes when rotating on the x axis */
+
+}
+
+
+@keyframes pulse {
+  0%, 100% {
+    filter: drop-shadow(0 0 10px rgba(255,255,255,0.5));
+  }
+  50% {
+    filter: drop-shadow(0 0 32px rgba(255,255,255,1));
+  }
+}
+
+
+/* When the entire cube is hovered, apply the pulse animation to all faces */
+.cube:hover .cube-face {
+  animation: pulse 1.2s infinite;
+
+
+}
+
+/* Front face */
+.face1 { 
+  transform: rotateX(0deg) translateZ(36.5px);  /* cannot be 36, (exactly half of 72 or else, face will partially be black) */
+}
+/* Top face */
+.face2 { 
+  transform: rotateX(90deg) translateZ(36.5px);
+}
+/* Back face */
+.face3 { 
+  transform: rotateX(180deg) translateZ(36.5px);
+}
+/* Bottom face */
+.face4 { 
+  transform: rotateX(-90deg) translateZ(36.5px);
+}
+.face5 { 
+  transform: rotateY(-90deg) translateZ(36.5px);
+  width: 72px;
+  font-size: 2px;
+  background-color: rgb(100, 2, 2);  /* hsl(0, 96%, 21%) */
+}
+.face6 { 
+  transform: rotateY(-270deg) translateZ(108px);
+  /*transform: rotateY(90deg) translateZ(36px);  Faces opposite of .face5 */
+  width: 72px;
+  font-size: 2px;
+  background-color: rgb(2, 100, 45); /* hsl(144, 96%, 21%); */
+}
+
+
+
+.display-scene {
+  position: relative;
+  width: 100%;
+  height: 20%;
+  perspective: 600px;
+}
+
+.display-face {
+  position: relative;
+  width: 100%;
+  height: 20%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-size: 21px;
+  background-color: hsl(210, 100%, 20%); /* Soft pastel blue 001A64 */
+  border: 1px solid #ffffff; /* Slightly darker blue border */
+  box-shadow: 
+      0 0 10px rgba(255, 255, 255, 0.8), 
+      0 0 20px rgba(255, 255, 255, 0.6), 
+      0 0 30px rgba(255, 255, 255, 0.4), 
+      0 0 40px rgba(255, 255, 255, 0.3); /* Glowing effect */
+  transition: box-shadow 0.3s ease-in-out;    
+  color: white;    
+}
+
+/* .face7 { 
+  transform: rotateX(-30deg) translateZ(36px);
+  font-size: 22px;
+  background-color: #6b0101
+} */
+#cqaDisplay { 
+  transform: rotateX(30deg) translateZ(36px);
+  font-size: 22px;
+  background-color: #016b2a
+}
+
+
+
+
+
+
+
+.glow-container {
+  pointer-events: none;
+  position: absolute;
+  inset: calc(var(--container-offset) / -1);  /* divided by -2 was too much and lines would intersect all-points-box */
+  width: calc(89% + var(--container-offset)); 
+  height: calc(128% + var(--container-offset));
+  opacity: 0; /* keeps the rotating double lines of light invisible */
+
+  transition: opacity 0.3s ease-in-out;
+
+}
+
+
+.glow-blur, .glow-line {
+  width: calc(100% - var(--container-offset) + var(--glow-offset));
+  height: calc(100% - var(--container-offset) + var(--glow-offset));
+  x: calc((var(--container-offset) / 2) + calc(var(--glow-offset) / -2));
+  y: calc((var(--container-offset) / 2) + calc(var(--glow-offset) / -2));
+  fill: transparent;
+  stroke: black;
+  stroke-width: 5px;
+  stroke-dasharray: var(--glow-line-length) calc(50px - var(--glow-line-length));
+}
+
+#message-box:is(:hover, :focus) :is(.glow-line, .glow-blur) {
+  stroke-dashoffset: -80px;
+  transition: stroke-dashoffset var(--animation-speed) ease-in;
+  stroke-dashoffset: -80px;
+  transition: stroke-dashoffset var(--animation-speed) ease-in;
+}
+
+
+.glow-line {
+  stroke: var(--glow-line-color);
+  stroke-width: var(--glow-line-thickness);
+}
+
+.glow-blur {
+  filter: blur(var(--glow-blur-size));
+  stroke: var(--glow-blur-color);
+  stroke-width: var(--glow-blur-size);
+}
+
+#message-box:is(:hover, :focus) .glow-container{
+  animation: glow-visibility ease-in-out var(--animation-speed);
+}
+
+@keyframes glow-visibility {
+  0%,
+  100% {
+    opacity: 0;
+  }
+  25%,
+  75% {
+    opacity: 1;
+  }
+}
+
+#message-box[data-glow-animation="false"]{
+  --glow-line-length: 50px;
+}
+#message-box[data-glow-offset="true"]{
+
+  --glow-offset: 10px;
+}
+
+#message-box[data-glow-animation="grow"]:is(:hover, :focus) .glow-container{
+  scale: 1.3;
+  transition: scale var(--animation-speed) linear;
+}
+
+img {
+  display: block;
+  max-width: 100%;
+}
+
+
+
+
+#kUser-input::-webkit-scrollbar {
+  width: 0px;
+}
+
+
+
+
+
+
+
+
+.progressBar-Container {
+  height: 100%;
+  width: 10px;
+  background-color: hsl(0, 0%, 72%);;
+  display: inline-block;
+  position: relative; /* can't absolute, or else the right side goes to the left */
+  border-radius: 10px;
+  padding-left: 10px;
+  padding-right: 10px;
+  background: transparent;
+}
+
+
+
+.progressbar {
+  height: 10px; /* js will adjust this */
+  background: linear-gradient(to top, rgb(0, 144, 240), rgb(0, 240, 210));
+  animation: scrollColorChange 128s linear infinite;
+  border-radius: 10px;
+
+}
+.scrollPath {
+  height: 100%;
+  background: rgba(0, 0, 0, 0.05);
+}
+
+.scrollPath, .progressbar {
+  position: relative;  /* fixed will put the scrollbar on .box */
+  top: 0;
+  right: 0;
+  width: 10px;
+}
+
+
+/* #scrollPathL, #scrollPathR{
+  height: 100%;
+  background: rgba(0, 0, 0, 0.05);
+  position: absolute;
+  width: 12px;
+  z-index: 1;
+  border-radius: 5px !important;
+
+}
+
+#scrollPathL::before, 
+#scrollPathL::after, 
+#scrollPathR::before, 
+#scrollPathR::after  {
+  content: '';
+  position: absolute;
+  width: 20px;
+  height: 20px;
+  background-color: #ffffff; /* Color of the arrows 
+  border-radius: 50%;
+  display: block;
+  border-radius: 5px !important;
+
+}
+
+#scrollPathL::before, #scrollPathR::before {
+  top: -10px;  /* Adjust to position the up arrow 
+  left: 1px;
+  background-image: url('up.png'); /* Optionally add an image for the up arrow 
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+}
+
+#scrollPathL::after, #scrollPathR::after {
+  bottom: 5px;  /* Adjust to position the down arrow 
+  left: 0;
+  background-image: url('down.png'); /* Optionally add an image for the down arrow 
+  background-size: contain;
+  background-position: center;
+  background-repeat: no-repeat;
+} */
+
+
+
+
+
+/* Keyframes for animation */
+@keyframes scrollColorChange {
+  0%, 100% {
+    filter: hue-rotate(0deg);
+  }
+
+  50% {
+    filter: hue-rotate(360deg);
+  }
+}
+
+.progressbar:before,
+.progressbar:after  
+{
+  content: '';
+  position: absolute; /* must be absolute if kuser-input display:inline-flex */
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%; 
+  background: linear-gradient(to top, #008aff, #00ffe7);
+}
+
+.progressbar:before {
+  filter: blur(7px);
+}
+
+.progressbar:after {
+  filter: blur(7px);
+}
+
+
+
+
+
+
+
+#kUser-input {
+  line-height: 27px;
+  margin: 8px;
+  padding: 8px;
+  
+  font-size: 1.2rem;
+  color: hsl(0, 0%, 72%);;
+  transition: color 1s ease-out; 
+  text-align: justify;
+  
+  box-sizing: border-box;
+  height: 64%;
+  width: 100%;
+  
+  display: flex;  /* Fixes the issue */
+  /*flex-direction: row;  Ensures elements are in a row */
+  
+  position: relative;
+  flex-grow: 1;
+  
+  justify-content: space-between; /* Ensures spacing */
+  align-items: center; /* Aligns vertically */
+
+  background: transparent;
+
+  overflow: visible;
+
+}
+
+
+
+
+
+
+
+#myForm {
+  width: 80%;  /* Make the container take up the full window width */
+  display: flex;  /* Enable Flexbox layout */
+
+  position: relative;
+  height: 100%;
+  margin: 0 auto;
+
+  border-radius: 10px;
+  background-color: #000000;
+  color: hsl(0, 0%, 72%);;
+  box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+  overflow-y: auto; /* Enable vertical scrollbar if content exceeds max-height */
+  flex-direction: column;
+  /*overflow: hidden;  hides scroll */
+  box-sizing: border-box;
+  
+  justify-content: space-between; /* Ensures spacing */
+  align-items: center; /* Aligns vertically */
+
+
+  flex: 1 1 auto; /* Start at 80% width, can shrink */
+  min-width: 1100px; /* Prevent shrinking below 160px */
+  /*padding-top: 6px;  need a min of 6 to show the white line at the top */
+
+  background: transparent;
+}
+
+
+
+
+
+
+
+
+
+
+
+
+/* Parent container for B and C elements */
+#textarea-container {
+  display: flex;  /* Flexbox container for A */
+  width: 100%;    /* Make A take up the full width of the container */
+  height:100%;
+  flex-direction: row;
+  align-items: center;
+  white-space: pre-wrap; /* Preserves line breaks */
+}
+
+
+
+
+.notes {
+  flex: 1 10 10%; /* Can shrink, initial width is 10% */
+  height: 100%;
+  background-color: transparent;
+  padding-left: 1px; /* kept at 0 for it to disappear, changed to 1 to keep the blinking cursor */
+  padding-right: 0;
+  border-left: none;  /* makes sure notes disappears */
+  border-right: none; /* makes sure notes disappears */
+  color: hsl(0, 0%, 72%);;
+  border-radius: 5px;
+  font-size: 1.2rem;
+  font-family: 'Playfair Display', Times, serif;
+  font-style: italic;
+  font-weight: 700;
+  box-sizing: border-box;
+  overflow: hidden; /* Hides overflowing text /// overflow: clip;    will fix text appearing in padding but cannot use arrow keys to view overflowed text*/
+  /* removed because there is flex: display: inline-block; 
+    removed because although it disappears, it's width can't shrink. max-width: calc(10% - 2px);  
+  */
+  flex: 0 1 10%; /* Start at 10% width, can shrink */
+  min-width: 0; /* Allows shrinking to 0 */
+  line-height: 24px; /* must be the same as pElement/kuser-input p */
+ /*  vertical-align: top; */
+  box-sizing: border-box;
+  /*padding-top: 6px;  to match myForm that needs a min of 6 to show the white line at the top */
+
+   /*settings to extend .notes scrollHeight  */
+  display: block; /* Ensure it takes up vertical space */
+    min-height: 100%; /* Ensures height can expand */
+    overflow: hidden; /* Prevents extra scrollbars */
+
+
+  /*overflow-y: scroll;  Enable vertical scrolling  */
+  scrollbar-width: none; /* Firefox: Hide scrollbar */
+  overflow-anchor: none; /* Prevents jumping due to content updates.Scroll bar was moving when text got updated. */
+  /* scroll-behavior: smooth; take out to snyc faster with pElement*/
+
+
+  overflow-wrap: break-word;
+  word-break: break-word;
+  white-space: normal;
+
+  
+}
+
+.notes:focus { /* no white outline on the borders */
+  outline: none;
+  
+}
+.notes::selection { /* selection works in modern Chrome, Edge, Safari, and Firefox */
+  background: transparent;
+  color: rgba(240, 240, 0); 
+}
+.notes::-moz-selection { /* moz-selection is for older Firefox versions. */
+  background: transparent;
+  color: rgba(240, 240, 0); 
+}
+
+
+
+/* C element inside A */
+#k-Text {
+  width: 100%; /* myForm is 80% of its parent */
+  height: 100%;
+  box-sizing: border-box;
+  /* white-space: pre-wrap; not needed because <textarea> already preserves all whitespace and wraps text*/
+  font-family: 'Playfair Display', Times, serif;
+  /* font-family: 'Times New Roman', Times, serif; */
+  position: relative;
+  display: block; /* inline-block is unnecessary in a flex container */
+  margin: 0;
+  overflow-y: scroll; /* Enable vertical scrolling ONLY inside <pre> */
+  scrollbar-width: none; /* Firefox: Hide scrollbar */
+  /*padding-top: 6px;   to match myForm that needs a min of 6 to show the white line at the top */
+  padding-left: 1px; /* to match #k-text which needs it to keep the blinking cursor */
+  font-size: 1.2rem;
+  font-weight: 700;
+  overflow-anchor: none; /* Prevents jumping due to content updates.Scroll bar was moving when text got updated. */
+  scroll-behavior: smooth;
+
+  color: hsl(0, 0%, 72%);;
+  line-height: 1.3; /* Adjust as needed */
+  flex: 1 1 80%; /* Default width is 80%, can shrink but not grow. Without this, notes width will go from 100% to 0% */
+  min-width: 1100px;  /*Prevents shrinking beyond this */
+  background: transparent;
+  border: none;  /* automatically created a border of 1.5 */
+  text-align: justify;
+
+  outline: none;
+
+
+}
+
+
+ 
+
+
+
+
+
+@media (max-width: 1440px) {
+  #myForm, #k-Text, #kUser-input, #kUser-input p, .magSent-container, #message-box {
+    min-width: 0px; /* Allow shrinking */
+    /*width: 100%;  Make it fully responsive */
+    flex: 1 1 auto; /* Ensures it can shrink freely */
+  }
+/* Side elements shrink to 0 */
+  .notes {
+      flex: 0 1 0; /* Start at 10% width, can shrink */
+  }
+  
+}
+
+@media (max-height: 1020px) {
+  #text-container {
+      width: calc(80% + (1020px - 100vh) * 1.6);
+
+  }
+  .button-container {
+      width: calc(20% + (100vh - 1020px) * 0.3);
+
+  }
+}
+
+
+/*.button-container {
+  display: relative;
+  justify-content: space-between;
+  width: 20%;   space between buttons*/
+  /*margin-left: 40px;
+  margin-left: 10px;  Adds space */
+  /*flex: 0 1 auto; (tested but seems like it's not needed) Added for it to shrink when text container expands. */
+
+
+
+
+ 
+@keyframes animatePrismV
+{  0%{transform: rotateX(-12deg) rotateY(0deg);} /*  0deg to make it spin */
+ 100%{transform: rotateX(-12deg) rotateY(360deg);}}
+.button-container{
+  position: relative;
+  width: 100px;
+  height:100%;
+  transform-style: preserve-3d;
+  animation: none;
+  /* animation: animatePrismV 15s linear infinite; */
+  /* transform: rotateX(-12deg); */
+  transform: rotateX(-89.9deg);
+
+  transition: transform 2s ease;/* this will rotate smoothly */
+  left: 4%;
+
+ /* will-change: transform;   good hint to the browser that transform will change. */
+ /*  backface-visibility: hidden; prevents weird flickering/glitches during 3D transforms */
+
+}
+
+
+
+.animate-prism {
+  animation: animatePrismV 15s linear infinite;
+  transform-style: preserve-3d;
+  will-change: transform;
+}
+
+ .button-container .button-container-top {
+  position: absolute;/* if relative the lid is above the prism */
+  top: 0;
+  left: 0;
+  width: 164px; /* Match the side faces */
+  height: 164px; /* Match the side faces */
+  background: #ffffff; /* 37c0ff */
+  /* background-image: url('./images/logo.png'); */
+ /*  background-image: url('‌K​ooni.jpg'); */
+  
+  background-size: contain;
+  background-repeat: no-repeat;
+  background-position: center;
+    transform: rotateX(90deg)   translateZ(80px) translateX(-31px) translateY(-8px); 
+/*   clip-path: polygon(50% 1%, 100%  39%, 80% 98%,  18% 98%, -2% 38%);
+  clip-path: polygon(50% 1%, 100%  39%, 80% 98%,  18% 98%,  0% 38%); */
+  clip-path: polygon(50% 1%, 100%  39%, 80% 98%,  18% 98%, -1% 39%);
+  
+
+  /* 
+    display: flex;
+  align-items: center;
+  justify-content: center;
+  color: rgb(3, 201, 231);
+  font-size: 1.3em;
+  text-align: center;
+  position: absolute;
+  overflow: hidden;
+  user-select: none;
+  */
+}  
+
+
+.button-container div{
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  transform-style: preserve-3d;
+  
+}
+
+.button-container div div{/* This selector simply targets any div inside .button-container that is itself inside another div. targets div .face-1 through .button-container div .face-4*/
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 4%, rgba(0,0,0,1) 96%, rgba(255,255,255,1) 100%);
+                         /*at 72deg, vertical lines aren't visible  */
+  transform: rotateY(calc(72.1deg * var(--fifthCircle))) translateZ(70px); /* 300/2 = 150 */
+  outline: 1px solid white;
+  overflow: hidden;
+}
+
+/* <div class="button-container">     Targeted by .button-container div 
+  <div>                               This div is targeted by .button-container div div  
+    <div class="face-1">              .button-container div .face-1 targets this div  */
+.button-container div .face-1 {--fifthCircle: 0;} /* This selector looks for a div inside .button-container that contains an element with the face-1 class. */
+.button-container div .face-2 {--fifthCircle: 1;} /* 72 */
+.button-container div .face-3 {--fifthCircle: 2;} /* 144 */
+.button-container div .face-4 {--fifthCircle: 3;} /* 216 */
+.button-container div .face-5 {--fifthCircle: 4;} /* 288 */
+
+
+         
+
+
+
+
+
+@media (max-height: 890px) or (max-width: 1280px) {
+  .main-container {
+    display: flex;
+    flex-direction: column;
+    flex-wrap: nowrap;
+    height: 100%;
+    align-items: center;    /* Center horizontally */
+    justify-content: center;/* Center vertically */
+  }
+
+
+  #text-container {
+    flex: 4;
+    /*margin-bottom: 1rem;   Spacing between text and button */
+    height: 55%;
+  }
+
+  @keyframes animatePrismH   
+  {  0%{transform: rotateY(45deg)  rotateX(360deg);} /*  0deg to 360deg to make it spin */
+  100%{transform: rotateY(45deg)  rotateX(0deg);}}
+
+  .button-container{
+    height: 100px;
+    width: 55%;
+    animation: animatePrismH 15s linear infinite;  
+    
+
+    /*background-color: rgba(255, 0, 0, 0.2);   tomato */
+
+    /* This centers the container itself horizontally */
+    align-self: center;
+    order: 2;
+    margin-bottom: 36px;
+
+  }
+
+  .button-container div{
+    width: 100%;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+    
+  .button-container div div{/* This selector simply targets any div inside .button-container that is itself inside another div. targets div .face-1 through .button-container div .face-4*/
+    width: 100%;
+    background: linear-gradient(to bottom, rgba(255,255,255,1) 0%, rgba(0,0,0,1) 4%, rgba(0,0,0,1) 96%, rgba(255,255,255,1) 100%);
+    transform: rotateX(calc(72deg * var(--fifthCircle))) translateZ(68px); /* 300/2 = 150 */
+  }
+  
+  .button-container .button-container-top { 
+    transform: rotateY(269deg)  rotateX(1deg) rotateZ(54deg) translateZ(85px) translateX(-22px) translateY(-28px); /* Adjust translation to align snugly with the pentagon */
+  
+  }  
+ 
+
+  #bottom-container{
+    flex: 2;
+    order: 1;
+  }
+
+  .box{
+    gap: 0px; /* initially, 100px, there was too much space between button and bottom container */
+  }
+
+}
+
+
+.btn{
+  display: flex;
+  justify-content: center;   /* horizontal centering */
+  align-items: center;       /* vertical centering */
+  text-align: center;        /* center text inside the span */
+  width:100%;
+  height: 12%;
+  position: relative;
+  padding: 14px 6px;
+  margin-top: 20px;
+  margin-bottom: 20px;
+  font-size: 0.8em;
+  font-weight: 600;
+  font-family: 'Bubblegum Sans', sans-serif;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: hsl(210, 10%, 20%); 
+  border:none;
+  border-radius: 12px;
+  /* cursor: pointer; */
+  overflow: hidden;
+  z-index: 1;
+  transition: all 0.3s ease;
+
+}
+
+.btn::before{
+  content: '';
+  position: absolute;
+  inset: -2px;
+  border-radius: 14px;
+  z-index: -1;
+  transition: all 0.3 ease;
+}
+
+.btn::after{
+  content: '';
+  position: absolute;
+  inset: 4px;  /* borders decrease inward exposing background: linear-gradient */
+  background: hsl(0, 0%, 0%);
+  border-radius: 10px;
+  z-index: -1;
+}
+
+.btn:hover{
+  transform: translateY(-2px);
+
+}
+
+.btn:hover::before{
+  filter: blur(1px);
+}
+
+.btn:active{
+  transform: scale(0.95);
+  
+}
+
+
+
+.btn .shine {
+  content: '';
+  position: absolute;
+  top: -50%;
+  left: 0;
+  width: 200%;
+  height: 200%;
+  background: linear-gradient(
+    120deg,
+    transparent,
+    rgba(255, 255, 255, 0.1),
+    transparent
+  );
+  transform: translateX(0); /* Start at center */
+  transition: transform 0.1s ease;
+  pointer-events: none;
+}
+
+.btn:hover .shine {
+  transform: translateX(100%); /* Slide right */
+  transition: transform 0.8s ease;
+}
+
+/* #HBv-BTN.gray,#Word-Endings-BTN.gray,#Infinitives-BTN.gray,#Prepositions-BTN.gray {/* gray when button is off and not hovering * /
+  color:hsl(36, 100%, 48%);
+}
+ */
+#HBv-BTN.gray:hover,#Word-Endings-BTN.gray:hover,#Infinitives-BTN.gray:hover,#Prepositions-BTN.gray:hover,#Continuous-BTN.gray:hover{/* gray when button is off and hovering // #HBv-BTN.gray:hover has higher specificity than #HBv-BTN:hover*/ 
+  color: hsl(210, 10%, 20%);
+}
+
+
+#Prepositions-BTN { font-size: 0.72em; }
+
+#Prepositions-BTN { background: linear-gradient(100deg, hsl(36, 100%, 48%), hsl(210, 10%, 20%)); } /*   stays persistent to this color regardless of hover, clicks, or active. w/o it the broder is the default -> button { background-color: #4cae4f;  note there are button{...} and .button{...} */
+#Prepositions-BTN:hover   { color:hsl(36, 100%, 48%); }
+#Prepositions-BTN.clicked { color:hsl(36, 100%, 48%); background:hsl(36, 100%, 48%); }
+#Prepositions-BTN:active::after { background: hsl(36, 100%, 89%); }
+
+#Infinitives-BTN { background: linear-gradient(100deg, hsl(340, 89%, 64%), hsl(210, 10%, 20%)); } /*   stays persistent to this color regardless of hover, clicks, or active. w/o it the broder is the default -> button { background-color: #4cae4f;  note there are button{...} and .button{...} */
+#Infinitives-BTN:hover   { color:hsl(340, 89%, 64%); }
+#Infinitives-BTN.clicked { color:hsl(340, 89%, 64%); background:hsl(340, 89%, 64%); }
+#Infinitives-BTN:active::after { background: hsl(340, 89%, 89%); }
+
+#Word-Endings-BTN { background: linear-gradient(100deg, hsl(180, 100%, 48%), hsl(210, 10%, 20%)); } /*   stays persistent to this color regardless of hover, clicks, or active. w/o it the broder is the default -> button { background-color: #4cae4f;  note there are button{...} and .button{...} */
+#Word-Endings-BTN:hover   { color:hsl(180, 100%, 48%); }
+#Word-Endings-BTN.clicked { color:hsl(180, 100%, 48%); background:hsl(180, 100%, 48%); }
+#Word-Endings-BTN:active::after { background: hsl(180, 100%, 89%); }
+
+#HBv-BTN { background: linear-gradient(100deg, hsl(270, 96%, 72%), hsl(210, 10%, 20%)); } /*   stays persistent to this color regardless of hover, clicks, or active. w/o it the broder is the default -> button { background-color: #4cae4f;  note there are button{...} and .button{...} */
+#HBv-BTN:hover          { color: hsl(270, 96%, 72%); }  /* w/o it when hovering, color is yellow the default -> button:hover */
+#HBv-BTN.clicked        { color: hsl(270, 96%, 72%); background: hsl(270, 96%, 72%);} /* purple when button is ON and not hovering *//* border remains fully colored */
+#HBv-BTN:active::after  { background: hsl(270, 96%, 89%); }  /* when clicked the whole background turns purple, then goes back to its original state on mouseup*/
+
+#Continuous-BTN { background: linear-gradient(100deg, hsl(128, 100%, 34%), hsl(210, 10%, 20%)); }
+#Continuous-BTN:hover   { color:hsl(128, 100%, 34%); }
+#Continuous-BTN.clicked { color:hsl(128, 100%, 34%); background: hsl(128, 100%, 34%);}  
+#Continuous-BTN:active::after { background: hsl(128, 100%, 89%); }
+
+.damage-text {
+  position: absolute;
+  /* color: rgb(32, 144, 240);*/
+  font-weight: bold;
+  font-size: 45px;
+  font-family: 'Bubblegum Sans', sans-serif;
+  pointer-events: none;
+  animation: floatUp 2s ease-out forwards, animateWhite 96ms linear forwards;
+  z-index: 9999;
+
+}
+
+@keyframes floatUp {
+  0% {
+    opacity: 1;
+    transform: translateY(0) scale(1);
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-96px) scale(1.2);
+  }
+}
+
+#mc-container {
+  display: grid;
+  position: relative;
+  grid-template-columns: 1fr 1fr;  /* 2 columns */
+  gap: 9px 9px;                  /* row gap 9px, column gap 9px */
+  padding-left: 5px;
+  padding-right: 5px;
+  padding-top: 0px;
+  padding-bottom: 0px;
+  width: 100%; /* ensures it stretches to the full width of its containing block. Then its children, .mult-choices, can fill their space properly and fully*/
+}
+
+
+.mult-choices {
+  display: flex; /* <-- Makes children align horizontally */
+  align-items: top;      /* ← vertically centers content */
+  justify-content: left;
+  border: 2px solid #ccc;
+  padding: 0px 0px;  /* makes children vertically centered without faceCards overlapping one another */
+  border-radius: 8px;
+  
+  transition: border-color 0.3s, background-color 0.3s;
+  /*gap: 10px;  Optional: adds space between children, there will be space between the mult choice letter and the answer*/
+    position: static; /* or remove 'relative' if it's not essential */
+  overflow: visible;
+   height: 100%;       /* Fill grid cell height */
+  width: 100%;        /* Fill grid cell width */
+}
+
+
+#magSent .mult-choices p { 
+  padding-left: 0px;  /* takes away the default padding-left: 27px on #magSent, must be 0 for floatTag to be vertically aligned with text */
+  padding-right: 0px;
+
+
+}
+
+/* #magSent p:first-child {
+
+} */
+
+#magSent .mult-choices p:first-child {
+    padding-left: 5px; /* just for the letters A,B,C, and D */
+  padding-right: 5px;
+}
+
+.mult-choices:hover {
+  border-color: #007BFF;
+  background-color: hsl(210, 96%, 13%);
+}
+
+.mult-choices.selected {
+  border-color: #0056b3;
+  /* background-color: #cce0ff; */
+  font-weight: bold;
+}
+
+del {
+  text-decoration: line-through;
+ /*  text-decoration-line: line-through; */
+  text-decoration-color: hsl(0, 96%, 45%);
+  text-decoration-thickness: 3px;  
+  
+  /* text-decoration-style: wavy; */
+}
+
+/*del .color {
+  text-decoration: line-through;   need this to fix the problem of 'to do' which is part of the definition in 'challenge' not being crossed out when del tags are on and .lightPink goes from off to on * /
+} */
+
+.color.litCyan {
+  color: cyan; /* keep text cyan */
+}
+
+/* .cross-out {
+  text-decoration-line: line-through;
+  text-decoration-color: hsl(55, 93%, 45%);
+  text-decoration-thickness: 4px;
+  text-decoration-style: solid;
+
+  white-space: normal;
+} */
+
+.my-swal-popup * {
+  cursor: inherit !important;     /* selects all elements inside (descendants of) .my-swal-popup. to have rocket cursor */
+}
+
+.my-swal-popup {
+  background-color: black !important;/* the !important makes sure my background-color: overrides any inline styles or default SweetAlert2 */
+  color: silver !important;
+  border: 2px solid silver !important;  /* Silver border */
+  box-sizing: border-box;               /* Ensure border doesn't change size */
+  border-radius: 8px;                   /* Optional: keep SweetAlert2 style */
+  /* cursor: inherit !important;         works without it here, add it back if there is a problem*/
+}
+
+.my-swal-title,
+.my-swal-content {
+  color: silver !important;
+}
+
+.my-swal-button {
+  background-color: #444 !important; /* dark gray button */
+  color: silver !important;
+  border: none !important;
+}
+
+
+
+.my-swal-button:hover {
+  background-color: #666 !important;
+}
+
+/* sentence slots start*/
+
+#current, #next {
+  position: absolute;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  text-align: center;
+  white-space: normal; /* default; allows wrapping */
+  word-break: break-word; /* ensures long strings can wrap */
+  /* white-space: nowrap; */
+  transition: top 0.3s ease, opacity 0.3s ease;
+  overflow: visible;
+}
+
+
+
+/* Animation classes */
+.slide-up-current {
+  animation: slideUpOut 0.5s linear;
+}
+.slide-up-next {
+  animation: slideUpIn 0.5s linear;
+}
+.slide-down-current {
+  animation: slideDownOut 0.5s linear;
+}
+.slide-down-next {
+  animation: slideDownIn 0.5s linear;
+}
+
+@keyframes slideUpOut {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(-100%); opacity: 0; }
+}
+@keyframes slideUpIn {
+  from { transform: translateY(100%); opacity: 0; }
+  to   { transform: translateY(0);    opacity: 1; }
+}
+@keyframes slideDownOut {
+  from { transform: translateY(0);    opacity: 1; }
+  to   { transform: translateY(100%); opacity: 0; }
+}
+@keyframes slideDownIn {
+  from { transform: translateY(-100%); opacity: 0; }
+  to   { transform: translateY(0);     opacity: 1; }
+}
+
+/* sentence slots end*/
+
+/* @media (max-height: 720px) {
+
+  #text-container {
+    height: 100vh;
+    width: calc(80% + (1020px - 100vh) * 0.5);
+    flex: 1 0 auto;
+    
+    
+  }
+  .button-container {
+    height: 100vh;
+    flex: 0 1 100%;
+    margin-bottom: 100%;
+  }
+
+  } */
+
+
+/*   [[ʔ끊김=2]] [[ʔ끊김=3]] [[ʔ끊김=8]] R [[?=2]]   error if there is no space. Math version should not have img spans being added and deleted in syncListeners */
+
+
+
+
+#p-container {
+  height: 100%;  /* Or 64% if you prefer */
+  width: 80%;
+  overflow: hidden;
+  
+}
+
+.notes-container {
+  height: 100%;   
+  width: 10%;
+  overflow: hidden;
+}
+ 
+.scroll-content {
+  /* optional: stretch or style your content */
+  width: 100%;  /* must have no height so it can grow with its parent */
+}
+
+.scrollbar-track {  /* take out scroll bar provided by the library */
+  display: none !important;
+}
+
+
+.swal2-icon {/* This ensures the style works everywhere */
+  user-select: none;         /* Standard modern browsers */
+  -webkit-user-select: none; /* Old Safari / old Chrome */
+  -moz-user-select: none;    /* Old Firefox */
+  -ms-user-select: none;     /* IE10+ */
+}

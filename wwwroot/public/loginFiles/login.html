@@ -1,0 +1,152 @@
+<!--  
+  July 28 (11:25 am) device fingerprint stored in mySQL
+  July 23 (11:25 pm) adding CSRF protection
+  July 23 (11:35 pm) regis height adjust smoothly depending on h2's msg but needs to clean up code
+July 22 (11:15 pm) all messages to users go through const fadeoutin, regis inputs sanitized and validated
+July 22 (11:15 am) added inline block and padding to keep text from shifting during countdown
+July 21 (11:15 pm) countdowns don't reset on refresh, new tab, or when multiple tabs are open and user inputs on the 1st tab then 2nd
+July 20 (11:15 pm) countdown shows on refresh and on a new window but when 2 windows can accept inputs countdowns are not synchronized.  
+July 18 (11:05 pm) adding ratelimit (#4 of security checklist) to prevent bots from infinite login attempts. new msg: too many login attempts. favicon added.
+July 18 (2:30 am) toggling login and sign up now done by js and not html onclick(), thus don't need href="#", improved timings of messages (dis)appearing
+July 17 (11:05 pm) added animations and emojis on all scenarios of login and registration
+July 17 (11:05 am) messages on different scenarios fade in and out
+July 16 (11:05 pm) can't register if subscription plan is not checked. debugged autofill, msg given in registration page
+July 15 (11:05 pm) DBeaver connected, can create new column, can register user and store in DB
+July 13 (11:00 pm) added pricings and pic toggles  
+July 13 (12:30 pm) login and registration pages toggle  --> 
+<!-- July 7 (12:40 pm) token can be generated -->
+<!DOCTYPE html> 
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title> N.⬠.E.L.☆.</title>
+  <link rel="stylesheet" href="/public/loginFiles/login.css">
+  <!-- <script src="https://openfpcdn.io/fingerprintjs/v3" defer></script>     for Production-->
+  <script src="https://cdn.jsdelivr.net/npm/@fingerprintjs/fingerprintjs@3/dist/fp.min.js"></script> <!-- for local testing -->
+ 
+
+  <script src="/public/loginFiles/login.js" defer></script> <!-- Deferred scripts always run after the DOM is fully built, but before the DOMContentLoaded event fires -->
+  <!--<script type="module" src="login.js"></script>   tells the browser to treat login.js as an ES module, so it understands import.  ES modules are deferred by default-->
+  <script type="module" src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.esm.js"></script>
+  <script nomodule src="https://unpkg.com/ionicons@7.1.0/dist/ionicons/ionicons.js"></script>
+  <link href="https://fonts.googleapis.com/css2?family=Orbitron:wght@500&display=swap" rel="stylesheet"> <!-- for orbitron font -->
+ <!--  <link rel="icon" href="favicon.ico" type="image/x-icon"> -->
+  <!-- <link rel="icon" href="/Images/icon.ico" type="image/x-icon"> the small icon that appears in the browser tab -->
+ <link href="https://fonts.googleapis.com/css2?family=Bubblegum+Sans&display=swap" rel="stylesheet">
+ <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+
+
+
+</head>        
+<body>
+  <header class='header'>
+    <a href='#' class="logo">
+      <span class="spotlight">N.⬠.E.L.☆</span></a>
+    <nav class="nav">
+<!--       <a href="#">Home</a>
+      <a href="#">About</a>
+      <a href="#">Menu</a>
+      <a href="#">Review</a>
+      <a href="#">Contact</a> -->
+            <a href="#">Novel</a>
+      <a href="#">Modify Username</a>
+      <a href="#">Change Password</a>
+      <a href="#">Select New Plan</a>
+      <a href="#">Unsubscribe</a>
+    </nav>
+  </header>
+ 
+  <section class="home">
+    <div class="content">
+      <h2><span class="spotlight">Unlock Your<br>Potential</span></h2>
+      <p class="spotlight"><br><br>A novel approach to reading and understanding.<br>Interact and become more engaged with your text. 
+      <br>읽고 이해하는 새로운 접근 방식.<br>텍스트와 상호작용하며 더욱 몰입하세요.</p>
+      <a class="spotlight" href="#">Discover the revolution!</a>
+    </div>
+
+    <div class="wrapper-login">
+      <form id="login-form" class="active">
+        <h2 class="spotlight" style="visibility: hidden;">🤖 Initiating identity 🤖<br>verification protocol<span class="loading-dots orbitron">
+            <span>.</span><span>.</span><span>.</span>
+          </span>
+        </h2>
+
+        <div class="input-box">
+          <span class="icon">
+            <ion-icon name="mail"></ion-icon>
+          </span>
+          <!-- id="email"  added to fully match with label for="email"  -->
+            <input type="email" id="email" name="email" required
+              placeholder=" "  spellcheck="false"
+              pattern="^\w[\w.\-]*@\w[\w.]+\.\w[\w.]+$"/>
+          <label for="email">Enter e-mail to start your mission.</label>
+        </div>
+        <div class="input-box">
+          <span class="icon">
+            <ion-icon name="keypad-outline"></ion-icon>
+          </span>
+          <!-- <input type="password" required> -->
+          <input type="password" name="password" required placeholder=" "><label>Authorized access key</label>
+        </div>        
+        <div class="register-again">
+          <label><input type="checkbox">
+            Register again</label>
+            <a href="#">Forgot password?</a>
+        </div>
+        <button type="submit" class="btn">Blast Off!</button>
+        <div class="register-link">
+        <p class="spotlight" style="display: inline;">Not a member?</p>
+        <p style="display: inline;"><a href="" data-form="register-form" class="spotlight2">Sign up now</a></p>
+                                            
+        </div>
+      </form>
+
+      <!-- type="email" id="email" name="email" required
+              placeholder=" "  spellcheck="false" -->
+
+
+      <form id="register-form">
+        <h2 class="spotlight">Registration Form</h2>
+        <div class="input-box"><span class="icon"><ion-icon name="person-sharp"></ion-icon></span>
+          <input type="text" id="reg-text" name="username" required placeholder=" " spellcheck="false"
+          pattern="^[a-zA-Z0-9_]+$" title="Only letters, numbers, and underscores(_) are allowed." /><label for="reg-text">Name</label>
+        </div>        
+        <div class="input-box"><span class="icon"><ion-icon name="mail"></ion-icon></span>                                      
+          <input type="email" id="reg-email" name="email"  required placeholder=" " spellcheck="false" 
+            title="Only letters, numbers, dots(.), hyphens(-), and underscores(_)." 
+            pattern="^\w[\w.\-]*@\w[\w.]+\.\w[\w.]+$"/><label for="reg-email">E-mail</label>
+        </div>
+        <div class="input-box"><span class="icon"><ion-icon name="keypad-outline"></ion-icon></span>
+          <input type="password" name="password" required placeholder=" "><label>Password</label>
+        </div>        
+        <label class="plan-option"><input type="checkbox" name="subscriptionPlan" value="Essentials">
+          <span class="plan-label">Essentials</span>
+          <span class="plan-price">₩10,000/month</span>
+        </label>
+
+        <label class="plan-option"><input type="checkbox" name="subscriptionPlan" value="Standard">
+          <span class="plan-label">Standard</span>
+          <span class="plan-price">₩20,000/month</span>
+        </label>
+
+        <label class="plan-option"><input type="checkbox" name="subscriptionPlan" value="Premium">
+          <span class="plan-label">Premium</span>
+          <span class="plan-price">₩30,000/month</span>
+        </label>          
+        <button type="submit" name="register" class="btn">Register</button>
+        <div class="register-link">
+        <p class="spotlight" style="display: inline;">Already a member?</p>
+        <p style="display: inline;"><a href="" data-form="login-form" class="spotlight2">Log in</a></p>                                    
+        </div>                        
+      </form>
+
+    </div>
+
+  </section>
+</body>
+  
+</html>
+       <!--  <button type="submit"                 class="btn">Blast Off!</button>
+        <button type="submit" name="register" class="btn">Register</button> -->
