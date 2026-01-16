@@ -126,11 +126,16 @@ import { createClient } from 'redis'; // Redis cache = super-fast in-memory stor
 //const redisClient = createClient({ url: 'redis://localhost:6379' });
 // Use REDIS_URL from Railway, fallback to localhost for local dev
 
-import { createClient } from 'redis';
-const redisUrl = process.env.REDIS_URL || 'redis://localhost:6379';
+const redisUrl = process.env.REDIS_URL; // DO NOT fallback to localhost on Railway
+if (!redisUrl) {
+  console.warn("REDIS_URL not set. Redis won't connect.");
+}
+
 const redisClient = createClient({ url: redisUrl });
+
 redisClient.on('connect', () => console.log('Connected to Redis!'));
 redisClient.on('error', (err) => console.error('Redis error:', err));
+
 await redisClient.connect();
 
 
@@ -2867,6 +2872,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
