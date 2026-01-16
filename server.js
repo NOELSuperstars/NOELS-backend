@@ -865,7 +865,7 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
   async (req, res) => {
     const errors = validationResult(req);
     if (!errors.isEmpty()){ return res.status(400).json({ errors: errors.array() }); }//Username must be 3-20 characters long, Password must have at least 5 characters, Please choose a subscription plan
-    
+    console.error('ONE');
     try {
       const { username, email, password, subscriptionPlan, device_fingerprint, tpmKey } = matchedData(req); // holds sanitized and validated data
       // hashes the binary form of tpmKey, converts that hash to a hex string, slices that string to the first 32 characters  // 2 hex char = 1 byte. so 32 hex char = 16 bytes
@@ -887,8 +887,11 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       const tempUserData = { username, email, hashedPW, device_fingerprint, subscriptionPlan, createdAt: Date.now(), deviceId,  nonceBase64, 
                               tpm_key: tpmKey, secretNonce: secretHex, credentialBlobNonce: nonceCB }; // keep the expected nonce (base64) for later verification 
       await redisClient.setEx(`tempUser:${deviceId}`, 72, JSON.stringify(tempUserData));
-      
+      console.error('TWO');
+
       return res.json({ 
+          console.error('THREE');
+
         nonce: nonceBase64, 
         secret: encryptedSecretB64,
         credentialBlob: nonceCB,  // this will go into MakeCredential and output the secret. That secret will then go into ActivateCredential and ouput acSecret which is nonceCB
@@ -898,6 +901,8 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       });
     }
     catch (err) {
+        console.error('FOUR');
+
       console.error('Error encrypting secret:', err);
       return res.status(500).json({ error: '😲An unexpected internal server error occurred.<br>Please try again later.' });
     } 
@@ -2865,6 +2870,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
