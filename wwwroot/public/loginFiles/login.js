@@ -731,8 +731,9 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
   }
   else 
   {
-    if (attestationResult.includes("Email already in use")||attestationResult.includes("Time period expired")||
-        attestationResult.includes("Failed request")      ||attestationResult.includes("Please try again")){
+    if (attestationResult.includes("already in use") ||attestationResult.includes("Time period expired")||
+        attestationResult.includes("already taken")  ||attestationResult.includes("already registered")||
+        attestationResult.includes("Failed request") ||attestationResult.includes("Please try again")){
       console.log("attestationResult", attestationResult);
 
       regisBtn.disabled = false;  //regis button reactivated bc user didn't register successfully
