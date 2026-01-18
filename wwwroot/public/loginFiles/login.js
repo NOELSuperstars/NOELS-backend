@@ -644,8 +644,7 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
   if (isTransitioning || regisBtn.disabled) return;
   regisBtn.disabled = true; // disable immediately to prevent double submits
 
-  checkboxes.forEach(chk => { chk.disabled = true; }); // formData has data on checkbox and no err was caught, disable checkboxes
-  // variable to prevent clicking to go back to "registration form" header
+
   const messageWithDots = 'Registration in progress <span class="loading-dots poppins"><span>.</span><span>.</span><span>.</span></span>';
   await fadeOutIn(regisHeader, messageWithDots, 'white');
  
@@ -711,7 +710,8 @@ document.getElementById('register-form').addEventListener('submit', async (e) =>
       return;
     }
   }
-
+  checkboxes.forEach(chk => { chk.disabled = true; }); // formData has data on checkbox and no err was caught, disable checkboxes
+  // variable to prevent clicking to go back to "registration form" header
 
   let nonceBase64         = resData.nonce;// server-generated nonce
   let encryptedBase64     = resData.secret;
