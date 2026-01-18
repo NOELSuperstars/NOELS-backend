@@ -1916,7 +1916,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       }
 
       const hlaKBytes = Buffer.from(HLAKPublicB64, 'base64'); // decode back to bytes
-      const hlakTPMkey    = crypto.createHash('sha256').update(hlaKBytes).digest('base64');
+      const hlakTPMkey    = crypto.createHash('sha256').update(hlaKBytes).digest();
 
       const windowsEKbytes = Buffer.from(windowsEkPublicPEM, 'base64'); // decode back to bytes
       const windowsEK = crypto.createHash('sha256').update(windowsEKbytes).digest();          
