@@ -1919,8 +1919,9 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       const hlakTPMkey    = crypto.createHash('sha256').update(hlaKBytes).digest('base64');
 
       const windowsEKbytes = Buffer.from(windowsEkPublicPEM, 'base64'); // decode back to bytes
-      const windowsEK    = crypto.createHash('sha256').update(windowsEKbytes).digest('base64');
-      
+      const windowsEK = crypto.createHash('sha256').update(windowsEKbytes).digest();          
+      console.log("windowsEK      : ", windowsEK);
+      console.log("windowsEK lengt: ", windowsEK.length)
 
       /*
       if (hlakTPMkey !== windowsEK){ // if these keys are equal, then EK is not used as the deviceId which means MakeCredential and ActivateCredential with CredentialBlob couldn't have been used'
@@ -2204,7 +2205,6 @@ noels.post('/register/verify',
 
       const { tpmKey, signedNonce } = matchedData(req); // from client/frontend  // tpmKey is from the client and tpm_key is from the database
       const deviceID = crypto.createHash('sha256').update(tpmKey).digest(); // ← NO 'hex'
-      console.log(deviceID + "    length: " + deviceID.length);
       
       const tempUserJson = await redisClient.get(`tempUser:${deviceID}`);// Retrieve nonce + TPM key from Redis
       if (!tempUserJson)  { return res.status(400).json({ error: "No registration in progress for this device.<br>Please try again." }); }
@@ -2858,6 +2858,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
