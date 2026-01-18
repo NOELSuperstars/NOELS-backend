@@ -1391,7 +1391,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       const hlaKBytes      = Buffer.from(HLAKPublicB64, 'base64'); // decode back to bytes
       const hlakTPMkey     = crypto.createHash('sha256').update(hlaKBytes).digest();
       const device_ID      = (control === "code") ? hlakTPMkey : windowsEK;  // if control is "code" EK is OFF, it is ignored 
-      const sql = `SELECT signing_key, username, email, FROM users WHERE email = ? AND device_id = ? AND public_key = ? LIMIT 1`;   // LIMIT 1 -  return at most 1 row
+      const sql = `SELECT signing_key, username, email FROM users WHERE email = ? AND device_id = ? AND public_key = ? LIMIT 1`;   // LIMIT 1 -  return at most 1 row
       const rows = await query(sql, [email, device_ID, hlakTPMkey]);
       if (rows.length === 0) {  throw new Error("Device is unregistered");  } //Error during registration:Device is unregistered
       const userInDB = rows[0];
@@ -2866,6 +2866,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
