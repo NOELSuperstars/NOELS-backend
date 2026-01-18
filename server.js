@@ -173,8 +173,6 @@ noels.use((req, res, next) => { //This will log every incoming request and show 
 
 // Middleware to protect private content
 function requireAuth(req, res, next) {
-  console.log("requireAuth ENTERED");
-
   const token = req.cookies?.accessToken;
   if (!token) {
     console.log("❌ No token found → Unauthorized");
@@ -196,10 +194,7 @@ function requireAuth(req, res, next) {
   }
 } 
 async function verifyDevicePossession(req, res, next) {
-  console.log("verifyDevicePossession ENTERED");
-  const deviceID = req.auth.deviceID; //deviceID comes from req.auth (not cookies directly, so I know the cookie issued by my server was properly decoded ) //req.cookies?.accessToken;// 2. Identify the client using a unique cookie (accessToken)  
-    console.log("deviceID deviceID:", deviceID);
-  
+  const deviceID  = req.auth.deviceID; //deviceID comes from req.auth (not cookies directly, so I know the cookie issued by my server was properly decoded ) //req.cookies?.accessToken;// 2. Identify the client using a unique cookie (accessToken)  
   const userEmail = req.auth.userEmail;
   try {
     // 1. Headers must exist
@@ -638,9 +633,6 @@ noels.post('/loginStart', // Use DB to verify user then send nonce. Hash tpm_key
       })
   ], //these are just registering the rules, not applying them
   async (req, res) => { 
-    console.error('Login attempt:', new Date().toISOString(), 'IP:', req.ip);
-    console.log(req.ip, req.ips, req.headers['x-forwarded-for']); //This helps you debug exactly what the client’s connection path looks like.
-          console.log("======================= LOGIN START ==================================");
 
     /* console.error('ㄹ224 type: ' + req.body.type);  //type is login, registration, etc.*/
     const errors = validationResult(req); //It does not remove or block invalid fields — it just reports them, only says what’s wrong //collects the results of all the validation and sanitization rules that were defined earlier: body(), check(), etc.
@@ -878,7 +870,6 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
   ],
 
   async (req, res) => {
-      console.log("======================= REGIS START ==================================");
     const errors = validationResult(req);
     if (!errors.isEmpty()){ return res.status(400).json({ errors: errors.array() }); }//Username must be 3-20 characters long, Password must have at least 5 characters, Please choose a subscription plan
     try {
@@ -902,13 +893,6 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       const tempUserData = { username, email, hashedPW, device_fingerprint, subscriptionPlan, createdAt: Date.now(), deviceId,  nonceBase64, 
                               tpm_key: tpmKey, secretNonce: secretHex, credentialBlobNonce: nonceCB }; // keep the expected nonce (base64) for later verification 
       await redisClient.setEx(`tempUser:${deviceId}`, 72, JSON.stringify(tempUserData));
-        console.log("regis start ended");
-        console.log("nonceBase64", nonceBase64);
-        console.log("encryptedSecretB64", encryptedSecretB64);
-        console.log("nonceCB", nonceCB);
-        console.log("fake", fake);
-        console.log("trick", trick);
-        console.log("control", control);
       return res.json({ 
         nonce: nonceBase64, 
         secret: encryptedSecretB64,
@@ -1927,12 +1911,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
 
       const hlaKBytes = Buffer.from(HLAKPublicB64, 'base64'); // decode back to bytes
       const hlakTPMkey    = crypto.createHash('sha256').update(hlaKBytes).digest('base64');
-
       const windowsEKbytes = Buffer.from(windowsEkPublicPEM, 'base64'); // decode back to bytes
       const windowsEK = crypto.createHash('sha256').update(windowsEKbytes).digest('base64');          
-      console.log("windowsEK      : ", windowsEK);
-      console.log("windowsEK lengt: ", windowsEK.length)
-
       /*
       if (hlakTPMkey !== windowsEK){ // if these keys are equal, then EK is not used as the deviceId which means MakeCredential and ActivateCredential with CredentialBlob couldn't have been used'
         const acSecretBytes = Buffer.from(acSecret, 'base64');  //convert base64 string to bytes
@@ -2037,10 +2017,6 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         await query(sqlInsert, [
           username, email, hashedPW, device_fingerprint, subscriptionPlan, null, localLoginTime, windowsEK, hlakTPMkey, hlakPubBase64, 1
         ]);
-        console.log("Registered successfully");
-        const nonce2 = 'Registered successfully';
-        //res.json({ nonce2 });
-        //return res.json({ successMsg: `✅ Registered successfully!<br>Welcome aboard ${username}!` });
       } 
       catch (dbErr) {
         console.error(dbErr);
@@ -2868,6 +2844,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
