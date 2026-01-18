@@ -110,7 +110,15 @@ const ACCESS_TOKEN_SECRET  = process.env.ACCESS_TOKEN_SECRET; // store in .env i
 const REFRESH_TOKEN_SECRET = process.env.REFRESH_TOKEN_SECRET;
 const CERT_TOKEN_SECRET    = process.env.CERT_TOKEN_SECRET;
 
+
+
+// MUST be before rate limiting
+
+
+
 const noels = express();// Create an Express application (this "noels" will define routes and behavior)
+noels.set('trust proxy', 1); //Railway uses one proxy hop. 1 means “trust the first proxy in front of me”
+noels.use(limiter);
 noels.use(express.json({ limit: '1mb' }));// Middleware: Tells Express to automatically parse incoming JSON in requests, in other words turn the string to an object and store it in req.body // // 3. Parse JSON
 noels.use(cookieParser());  // 1. Parse cookies FIRST
 noels.get('/health', (req, res) => res.send('OK'));
@@ -2858,6 +2866,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
