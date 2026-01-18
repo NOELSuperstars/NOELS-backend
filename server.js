@@ -2024,6 +2024,26 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         return res.status(500).json({ error: 'Database error during registration' });
       }
 
+      catch (dbErr) {
+        if (dbErr.code === 'ER_DUP_ENTRY') {
+          const match = dbErr.sqlMessage.match(/for key '([^']+)'/); //MySQL gives a message like: Duplicate entry 'someone@example.com' for key 'uq_email'
+          const mySQLfield = match?.[1]; //[0] is the full match, [1] is the first captured group
+          const dupMsg = {
+            uq_username:    '😢 Username already taken',
+            uq_email:       '😢 Email already in use',
+            uq_device_id:   'This device is already registered',
+            uq_public_key:  'This device is already registered',
+            uq_signing_key: 'This device is already registered'
+          };
+          const msg = dupMsg[mySQLfield] || 'unknown';
+          return res.status(409).json({error: msg });
+        }
+        return res.status(500).json({ error: 'Database error during registration' });
+      }        
+
+
+
+    
       /*
       console.log("akPubBase64         : " + akPubBase64);
       console.log("ekPublicPem         : " + ekPublicPem);
