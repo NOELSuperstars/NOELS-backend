@@ -1430,13 +1430,12 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       const hlaKBytes      = Buffer.from(HLAKPublicB64, 'base64'); // decode back to bytes
       const hlakTPMkey     = crypto.createHash('sha256').update(hlaKBytes).digest('base64');
       const device_ID      = (control === "code") ? hlakTPMkey : windowsEK;  // if control is "code" EK is OFF, it is ignored 
-      const sql = `SELECT signing_key, username, email, k_device FROM users WHERE email = ? AND device_id = ? AND public_key = ? LIMIT 1`;   // LIMIT 1 -  return at most 1 row
+      const sql = `SELECT signing_key, username, email, FROM users WHERE email = ? AND device_id = ? AND public_key = ? LIMIT 1`;   // LIMIT 1 -  return at most 1 row
       const rows = await query(sql, [email, device_ID, hlakTPMkey]);
       if (rows.length === 0) {  throw new Error("Device is unregistered");  } //Error during registration:Device is unregistered
       const userInDB = rows[0];
       const hlakPubBase64 = userInDB.signing_key; // uploaded to DB during registration
       const userEmail = userInDB.email;
-      const k_device = userInDB.k_device;
       
       const subscription = userInDB.subscription;
 
@@ -2103,16 +2102,15 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       await redisClient.del(`tempUser:${deviceId}`);// Delete the key to clean up
 
       const localLoginTime = new Date().toLocaleString('sv-SE', { hour12: false }).replace('T', ' ');
-      const k_device = crypto.randomBytes(32); // 256-bit shared secret
 
       // Insert into permanent users table
       const sqlInsert = `INSERT INTO users 
-        (username, email, password, device_fingerprint, subscriptionPlan, last_login, created_at, device_id, public_key, signing_key, k_device, active)
+        (username, email, password, device_fingerprint, subscriptionPlan, last_login, created_at, device_id, public_key, signing_key, active)
         VALUES (?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?, ?)`;
 
       try {
         await query(sqlInsert, [
-          username, email, hashedPW, device_fingerprint, subscriptionPlan, null, localLoginTime, windowsEK, hlakTPMkey, hlakPubBase64, k_device, 1
+          username, email, hashedPW, device_fingerprint, subscriptionPlan, null, localLoginTime, windowsEK, hlakTPMkey, hlakPubBase64, 1
         ]);
         console.log("Registered successfully");
         const nonce2 = 'Registered successfully';
@@ -2947,6 +2945,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
