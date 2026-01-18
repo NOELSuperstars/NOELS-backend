@@ -2024,8 +2024,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
           const mySQLfield = match?.[1]; //[0] is the full match, [1] is the first captured group
           console.log("mySQLfield: ", mySQLfield);
             const dupMsg = {
-            username:    '😢 ${username} already taken.<br>Please enter another username.',
-            email:       '😢 ${email} already in use.<br>Please enter another email.',
+            username:    `😢 ${username} already taken.<br>Please enter another username.`,
+            email:       `😢 ${email} already in use.<br>Please enter another email.`,
             device_id:   `This device is already registered and cannot be registered again`,
             public_key:  `This device is already registered and cannot be registered again`,
             signing_key: `This device is already registered and cannot be registered again`
@@ -2355,6 +2355,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
