@@ -2203,8 +2203,7 @@ noels.post('/register/verify',
       if (!errors.isEmpty()) return res.status(400).json({ errors: errors.array() }); 
 
       const { tpmKey, signedNonce } = matchedData(req); // from client/frontend  // tpmKey is from the client and tpm_key is from the database
-      const deviceID = crypto.createHash('sha256').update(tpmKey).digest('hex');
-
+      const deviceID = crypto.createHash('sha256').update(tpmKey).digest(); // ← NO 'hex'
       const tempUserJson = await redisClient.get(`tempUser:${deviceID}`);// Retrieve nonce + TPM key from Redis
       if (!tempUserJson)  { return res.status(400).json({ error: "No registration in progress for this device.<br>Please try again." }); }
       const tempUserData = JSON.parse(tempUserJson);// Parse JSON back into an object
@@ -2857,6 +2856,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
