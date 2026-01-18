@@ -118,7 +118,7 @@ const CERT_TOKEN_SECRET    = process.env.CERT_TOKEN_SECRET;
 
 const noels = express();// Create an Express application (this "noels" will define routes and behavior)
 noels.set('trust proxy', 1); //Railway uses one proxy hop. 1 means “trust the first proxy in front of me”
-noels.use(limiter);
+noels.use(loginLimiter);
 noels.use(express.json({ limit: '1mb' }));// Middleware: Tells Express to automatically parse incoming JSON in requests, in other words turn the string to an object and store it in req.body // // 3. Parse JSON
 noels.use(cookieParser());  // 1. Parse cookies FIRST
 noels.get('/health', (req, res) => res.send('OK'));
@@ -573,7 +573,7 @@ If it replies PONG, Redis is up ✅
 
 
 
-/* const limiter = rateLimit({
+/* const ({
   windowMs: 15 * 60 * 1000, // 15 minutes
   max: 10, // limit to 10 requests per IP
   message: 'Too many attempts. Try again later.'
@@ -582,7 +582,7 @@ If it replies PONG, Redis is up ✅
 
 
 
-/* const loginLimiter = rateLimit({
+/* const login({
   windowMs: /* 15 * 60 * * / 10000, // 15 minutes
   max: 1,
   statusCode: 429 // optional, since 429 is the default
@@ -2866,6 +2866,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
