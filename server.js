@@ -2022,7 +2022,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
         if (dbErr.code === 'ER_DUP_ENTRY') {
           const match = dbErr.sqlMessage.match(/for key '([^']+)'/); //MySQL gives a message like: Duplicate entry 'someone@example.com' for key 'uq_email'
           const mySQLfield = match?.[1]; //[0] is the full match, [1] is the first captured group
-          const dupMsg = {
+          console.log("mySQLfield: ", mySQLfield);
+            const dupMsg = {
             uq_username:    '😢 Username already taken.<br>Please enter another username.',
             uq_email:       '😢 Email already in use.<br>Please enter another email.',
             uq_device_id:   `${username} is already registered under another device!`,
@@ -2354,6 +2355,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
