@@ -198,6 +198,8 @@ function requireAuth(req, res, next) {
 async function verifyDevicePossession(req, res, next) {
   console.log("verifyDevicePossession ENTERED");
   const deviceID = req.auth.deviceID; //deviceID comes from req.auth (not cookies directly, so I know the cookie issued by my server was properly decoded ) //req.cookies?.accessToken;// 2. Identify the client using a unique cookie (accessToken)  
+    console.log("deviceID deviceID:", deviceID);
+  
   const userEmail = req.auth.userEmail;
   try {
     // 1. Headers must exist
@@ -2866,6 +2868,7 @@ Signature on nonce is valid using transient AK public key.
 Successful verification → user is authentic.
 
 */
+
 
 
 
