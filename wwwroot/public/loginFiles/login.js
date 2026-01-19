@@ -469,7 +469,7 @@ document.getElementById('login-form').addEventListener('submit', async (e) => { 
   loginBtn.classList.remove('shake');
   const decoratedResult = userVerificationResult.includes("successfully") ? `<span class="spotlight3">${userVerificationResult}</span>` : userVerificationResult;
   await fadeOutIn(loginHeader, decoratedResult);
-  if (userVerificationResult.includes("Time period expired")||userVerificationResult.includes("Device is unregistered")||userVerificationResult.includes("Please try again")) {
+  if (userVerificationResult.includes("Time period expired")||userVerificationResult.includes("is unregistered")||userVerificationResult.includes("Please try again")) {
     loginBtn.disabled = false;  //login button reactivated bc user didn't register successfully
   }
   
