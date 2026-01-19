@@ -1379,7 +1379,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       const device_ID      = (control === "code") ? hlakTPMkey : windowsEK;  // if control is "code" EK is OFF, it is ignored 
       const sql = `SELECT signing_key, username, email FROM users WHERE email = ? AND device_id = ? AND public_key = ? LIMIT 1`;   // LIMIT 1 -  return at most 1 row
       const rows = await query(sql, [email, device_ID, hlakTPMkey]);
-      if (rows.length === 0) {  throw new Error("Device is unregistered");  } //Error during registration:Device is unregistered
+      if (rows.length === 0) {  throw new Error(`${email} is not registered on this device`);  } //Error during registration:Device is unregistered
       const userInDB = rows[0];
       const hlakPubBase64 = userInDB.signing_key; // uploaded to DB during registration
       const userEmail = userInDB.email;
@@ -2355,6 +2355,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
