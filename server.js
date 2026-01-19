@@ -598,11 +598,6 @@ const loginLimiter = rateLimit({
   }
 });
 noels.set('trust proxy', 1); //Railway uses one proxy hop. 1 means “trust the first proxy in front of me”
-noels.use(loginLimiter);
-
-
-
-
 
 // Define a POST route for user login at '/'  // - POST request (utilized to send data to the server)
 noels.post('/loginStart', // Use DB to verify user then send nonce. Hash tpm_key for deviceId so loginEnd can recognize which user is logging in.
@@ -2355,6 +2350,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
