@@ -584,16 +584,17 @@ If it replies PONG, Redis is up ✅
   statusCode: 429 // optional, since 429 is the default
 }); */
 
-const windowMs =  15 * 1 * 1000; // 15 minutes in milliseconds (or just 10 sec for testing)
-const loginLimiter = rateLimit({
-  windowMs: windowMs, // e.g. 15 minutes
+const windowMs =  2 * 60 * 1000; // 5 minutes in milliseconds (or just 10 sec for testing)
+const freezeFor = 5 * 60 * 1000;
+const loginLimiter = rateLimit({ //Express calls loginLimiter(req, res, next), If limit not exceeded → next() is called internally
+  windowMs: windowMs, // e.g. 15 minutes //Count requests over this time period
   max: 5,             // number of allowed attempts before lockout
   statusCode: 429,   //  optional (default is 429)
   standardHeaders: true, // adds Retry-After header
   legacyHeaders: false,  // disables deprecated X-RateLimit-* headers
 
-  handler: (req, res) => {
-    const retryUntil = Date.now() + windowMs; // number in ms represents the future time
+  handler: (req, res) => { //If limit exceeded → response is sent → chain stops
+    const retryUntil = Date.now() + freezeFor; // number in ms represents the future time
     return res.status(429).json({ retryUntil }); // Sends number (can also `String(retryUntil)` if needed)  // sends an object(key-value pair) { retryUntil(key/attribute): 1721563950000(value) }
   }
 });
@@ -2350,6 +2351,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
