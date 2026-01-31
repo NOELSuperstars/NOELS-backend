@@ -328,6 +328,7 @@ noels.get('/contentFiles', requireAuth, async (req, res) => {
     const number = err.status || 403;
     return res.status(number).send(err.message);
   }
+    console.log(userEmail)
   //res.sendFile(path.join(__dirname, "../wwwroot/private/contentFiles/content.html"));
   res.sendFile(path.join(__dirname, "wwwroot/private/contentFiles/logo.html")); 
 
@@ -2351,6 +2352,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
