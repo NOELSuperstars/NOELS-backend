@@ -600,6 +600,7 @@ form.addEventListener('click', (e) => {
     document.querySelectorAll("#HBv-BTN").forEach(element => {
       element.addEventListener("click", async () => {
         const value = parseInt(element.textContent, 10);
+        console.log(value);
         if (!Number.isInteger(value)) return;
 
         try {
