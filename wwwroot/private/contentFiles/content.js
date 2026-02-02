@@ -497,7 +497,7 @@ let gemstoneMonths = `<div id="k-Container">
 months.forEach((month, index) => {
   gemstoneMonths += `
     <div class="thumbnail">
-      <img src="${month} transparent.png" alt="Birthstone ${index + 1}">
+      <img src="${month}-transparent.png" alt="Birthstone ${index + 1}">
       <span class="label">${month}</span>
     </div>
   `;
@@ -552,7 +552,7 @@ form.addEventListener('click', (e) => {
     toInnerHTML(form, `
       <div id="k-Container">
         <div class="month-header">
-          <img src="${months[monthIndex]} transparent.png" alt="${months[monthIndex]}" class="month-header-img">
+          <img src="${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
           <h2>${months[monthIndex]} ${year}</h2>
         </div>
           
