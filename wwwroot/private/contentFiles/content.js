@@ -597,25 +597,27 @@ form.addEventListener('click', (e) => {
     monthsContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
 
 
-    element.addEventListener("click", async () => {
-      const value = element.textContent.trim();
-
-      try {
-        const response = await fetch('/weekClicked', {
-          method: 'POST',
-          headers: { 'Content-Type': 'application/json' },
-          credentials: 'include',
-          body: JSON.stringify({ week: value })
-        });
-        if (!response.ok) {
-          throw new Error(`Server error: ${response.status}`);
+    document.querySelectorAll("#HBv-BTN").forEach(element => {
+      element.addEventListener("click", async () => {
+        const value = element.textContent.trim();
+        console.log(value);
+        try {
+          const response = await fetch('/weekClicked', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            credentials: 'include',
+            body: JSON.stringify({ week: value })
+          });
+          if (!response.ok) {
+            throw new Error(`Server error: ${response.status}`);
+          }
+        } 
+        catch (err) {
+          console.error(err);
+          toInnerHTML(magSent, `<p>📡 Network Error. 🔌<br>Please check your connection.</p>`);
+          adjustFontsize(magSent);
         }
-      } 
-      catch (err) {
-        console.error(err);
-        toInnerHTML(magSent, `<p>📡 Network Error. 🔌<br>Please check your connection.</p>`);
-        adjustFontsize(magSent);
-      }
+      });
     });
   }, 720);
 
