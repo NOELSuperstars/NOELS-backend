@@ -748,17 +748,18 @@ maybe start a business to get experience while I keep researching and developing
 */
 //document.body.style.cursor = `url(/Images/rocket0.cur) 2 2, auto`;
 //const frames = ['/Images/rocket1.cur', '/Images/rocket2.cur', '/Images/rocket3.cur', '/Images/rocket4.cur', '/Images/rocket5.cur'];
-document.body.style.cursor = `url(Images/rocket0.cur) 2 2, auto`;
-const frames = ['Images/rocket1.cur', 'Images/rocket2.cur', 'Images/rocket3.cur', 'Images/rocket4.cur', 'Images/rocket5.cur'];
+//document.body.style.cursor = `url(Images/rocket0.cur) 2 2, auto`;
+document.body.style.cursor = `url(https://local.app/rocket0.cur) 2 2, auto`;
 
-document.body.style.cursor = `url("https://local.app/rocket0.cur") 2 2, auto`;
-const framessdfsdfd = [ //JS loads files from a virtual hostname, not /Images/
-  "https://local.app/rocket1.cur",
-  "https://local.app/rocket2.cur",
-  "https://local.app/rocket3.cur",
-  "https://local.app/rocket4.cur",
-  "https://local.app/rocket5.cur"
+//const frames = ['Images/rocket1.cur', 'Images/rocket2.cur', 'Images/rocket3.cur', 'Images/rocket4.cur', 'Images/rocket5.cur'];
+const frames = [
+  'https://local.app/rocket1.cur',
+  'https://local.app/rocket2.cur',
+  'https://local.app/rocket3.cur',
+  'https://local.app/rocket4.cur',
+  'https://local.app/rocket5.cur'
 ];
+
 
 let i = 0;
 let animationInterval = null;
@@ -777,7 +778,7 @@ function stopCursorAnimation() {
   animationInterval = null;
   //document.body.style.cursor = `url(/Images/rocket0.cur) 2 2, auto`;
   //document.body.style.cursor = `url("https://local.app/rocket0.cur") 2 2, auto`;
-  document.body.style.cursor = `url(Images/rocket0.cur) 2 2, auto`;
+  document.body.style.cursor = `url(https://local.app/rocket0.cur) 2 2, auto`;
 
 }
 
