@@ -599,8 +599,9 @@ form.addEventListener('click', (e) => {
 
     document.querySelectorAll("#HBv-BTN").forEach(element => {
       element.addEventListener("click", async () => {
-        const value = element.textContent.trim();
-        console.log(value);
+        const value = parseInt(element.textContent, 10);
+        if (!Number.isInteger(value)) return;
+
         try {
           const response = await fetch('/weekClicked', {
             method: 'POST',
@@ -608,11 +609,15 @@ form.addEventListener('click', (e) => {
             credentials: 'include',
             body: JSON.stringify({ week: value })
           });
+
           if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
-        } 
-        catch (err) {
+
+          const data = await response.json();
+          console.log('Server OK:', data);
+
+        } catch (err) {
           console.error(err);
           toInnerHTML(magSent, `<p>📡 Network Error. 🔌<br>Please check your connection.</p>`);
           adjustFontsize(magSent);
