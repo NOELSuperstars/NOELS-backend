@@ -126,7 +126,8 @@ noels.get('/loginFiles', (req, res) => { // goes to wwwroot/public/login // call
   res.sendFile(path.join(__dirname, "wwwroot/public/loginFiles/login.html")); // login.html is coded to ask server for css and js files
 });  //WebView receives login.html just like a browser would, and renders it
 noels.use('/public', express.static(path.join(__dirname, 'wwwroot/public'))); //If the browser requests any file (HTML, CSS, JS, images, etc.) under 'public' folder, serve it automatically
-
+noels.use('/private/contentFiles', express.static(path.join(__dirname, 'wwwroot/private/contentFiles'))
+);
 
 import { createClient } from 'redis'; // Redis cache = super-fast in-memory storage for temporary data. Used for storing const tempUserData = {username, email, password, device_fingerprint, subscriptionPlan, createdAt: Date.now(),}; which will be saved permanently on DB once registration is successful
 //const redisClient = createClient({ url: 'redis://172.23.16.198:6379' });
