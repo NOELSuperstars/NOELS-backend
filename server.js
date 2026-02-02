@@ -351,9 +351,13 @@ noels.post('/weekClicked', requireAuth,
       return res.status(400).json({ errors: errors.array() });
     }
 
-    const userId = req.user.id;
+    const deviceID = req.auth.deviceID;
+    const jti      = req.auth.jti;
+    const userEmail = req.auth.userEmail;
     const week = req.body.week;
-    console.log("userId ", userId);
+    console.log("deviceID ", deviceID);
+    console.log("jti ", jti);
+    console.log("userEmail ", userEmail);
     console.log("week: ", week);
     // safe DB write
     res.json({ ok: true });
@@ -2376,6 +2380,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
