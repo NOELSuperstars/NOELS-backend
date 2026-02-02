@@ -185,7 +185,7 @@ function requireAuth(req, res, next) {
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET); //jwt.verify recomputes signature from header+payload+ACCESS_TOKEN_SECRET, then compare with the signature already in the token
     
     req.auth = { //jwt has these properties: ,   role: userInDB.subscription,  loginTime,  device_id,   jti
-      : decoded.,
+      userEmail: decoded.userEmail,
       deviceID:  decoded.device_ID, // hased hlakTPMkey OR windowsEK
       jti:       decoded.jti
     };
@@ -2391,6 +2391,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
