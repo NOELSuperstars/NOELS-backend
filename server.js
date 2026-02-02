@@ -340,7 +340,7 @@ noels.get('/contentFiles', requireAuth, async (req, res) => {
 
 noels.post('/weekClicked', requireAuth,
   [
-    whitelist(['Week']), //Allows only the week field from req.body
+    whitelist(['week']), //Allows only the week field from req.body
     body('week') //validate req.body.week
       .isInt({ min: 1, max: 52 })
       .withMessage('Invalid week number')
@@ -353,8 +353,8 @@ noels.post('/weekClicked', requireAuth,
 
     const userId = req.user.id;
     const week = req.body.week;
-    consoele.log("userId ", userId);
-    consoele.log("week: ", week);
+    console.log("userId ", userId);
+    console.log("week: ", week);
     // safe DB write
     res.json({ ok: true });
   }
@@ -2376,6 +2376,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
