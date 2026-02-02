@@ -184,8 +184,8 @@ function requireAuth(req, res, next) {
   try {
     const decoded = jwt.verify(token, ACCESS_TOKEN_SECRET); //jwt.verify recomputes signature from header+payload+ACCESS_TOKEN_SECRET, then compare with the signature already in the token
     
-    req.auth = { //jwt has these properties: userEmail,   role: userInDB.subscription,  loginTime,  device_id,   jti
-      userEmail: decoded.userEmail,
+    req.auth = { //jwt has these properties: ,   role: userInDB.subscription,  loginTime,  device_id,   jti
+      : decoded.,
       deviceID:  decoded.device_ID, // hased hlakTPMkey OR windowsEK
       jti:       decoded.jti
     };
@@ -361,7 +361,17 @@ noels.post('/weekClicked', requireAuth,
     console.log("userEmail ", userEmail);
     console.log("week: ", week);
     // safe DB write
-    res.json({ ok: true });
+    const data = [
+      "Into Reading 3.3<br>Pop's Bridge",
+      "Debate<br>Winning an argument",
+      "Grammar<br>Articles",
+      "Writing<br>Brainstorm",
+      "TOEFL<br>Practice Test",
+      "Science<br>Light spectrum",
+      "Novel<br>Mr. Popper's Penguins"
+    ];
+
+    res.json(data); 
   }
 );
 
@@ -2381,6 +2391,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
