@@ -127,7 +127,8 @@ noels.get('/loginFiles', (req, res) => { // goes to wwwroot/public/login // call
 });  //WebView receives login.html just like a browser would, and renders it
 noels.use('/public', express.static(path.join(__dirname, 'wwwroot/public'))); //If the browser requests any file (HTML, CSS, JS, images, etc.) under 'public' folder, serve it automatically
 noels.use('/private/contentFiles', express.static(path.join(__dirname, 'wwwroot/private/contentFiles'))
-);
+);//noels.use('/private/contentFiles', express.static(path.join(__dirname, 'wwwroot/private/contentFiles'), {maxAge: '45d',   etag: true     
+//  })); // maxAge: keep in disk cache for 7 days  // etag: generate ETag for conditional requests //etag: true → server can respond 304 Not Modified if the file hasn’t changed, otherwise it sends a new version.
 
 import { createClient } from 'redis'; // Redis cache = super-fast in-memory storage for temporary data. Used for storing const tempUserData = {username, email, password, device_fingerprint, subscriptionPlan, createdAt: Date.now(),}; which will be saved permanently on DB once registration is successful
 //const redisClient = createClient({ url: 'redis://172.23.16.198:6379' });
@@ -2380,6 +2381,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
