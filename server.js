@@ -330,7 +330,7 @@ noels.get('/contentFiles', requireAuth, async (req, res) => {
   }
     console.log(userEmail)
   //res.sendFile(path.join(__dirname, "../wwwroot/private/contentFiles/content.html"));
-  if (userEmail === "kanghaji@hotmail.com)
+  if (userEmail === "kanghaji@hotmail.com")
     res.sendFile(path.join(__dirname, "wwwroot/private/contentFiles/content.html")); 
   else
     res.sendFile(path.join(__dirname, "wwwroot/private/contentFiles/logo.html")); 
@@ -2355,6 +2355,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
