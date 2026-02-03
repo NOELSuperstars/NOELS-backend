@@ -2976,7 +2976,7 @@ img {
 
 
 /* C element inside A */
-#k-Container {
+#k-Container { /* grid of go-back button and all 12 months*/
   width: 100%; /* myForm is 80% of its parent */
   height: 100%;
   box-sizing: border-box;
@@ -3023,7 +3023,7 @@ img {
 
 
 
-.months-container {
+.grid-container {
   display: grid; /*grid for the 12 months*/
   grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
   gap: 16px;
@@ -3733,7 +3733,7 @@ del {
 
 .futuristic-btn {
   position: relative;
-  padding: 24px 10px;
+  padding: 24px 36px;
   font-size: 0.9rem;
   font-weight: 700;
   letter-spacing: 0.15em;
@@ -3750,9 +3750,9 @@ del {
   text-transform: uppercase;
 
   box-shadow:
-    inset 0 0 12px rgba(127, 246, 255, 0.35),
-    0 0 25px rgba(0, 200, 255, 0.45),
-    0 0 60px rgba(0, 160, 255, 0.25);
+    inset 0 0 0px rgba(127, 246, 255, 0.35),
+    0 0 0px rgba(0, 200, 255, 0.45),
+    0 0 0px rgba(0, 160, 255, 0.25);
 
   transition: all 0.25s ease;
   overflow: hidden;
@@ -3794,19 +3794,19 @@ del {
 
 /* hover */
 .futuristic-btn:hover {
-  color: #bfffff;
+  transform: translateY(1px);
   box-shadow:
-    inset 0 0 18px rgba(127, 246, 255, 0.6),
-    0 0 40px rgba(0, 220, 255, 0.75),
-    0 0 90px rgba(0, 180, 255, 0.45);
+    inset 0 0 0px rgba(0, 255, 255, 0.8),
+    0 0 8px rgba(0, 200, 255, 0.6);
 }
 
 /* press */
 .futuristic-btn:active {
-  transform: translateY(1px);
+  color: #bfffff;
   box-shadow:
-    inset 0 0 30px rgba(0, 255, 255, 0.8),
-    0 0 30px rgba(0, 200, 255, 0.6);
+    inset 0 0 8px rgba(127, 246, 255, 0.6),
+    0 0 10px rgba(0, 220, 255, 0.75),
+    0 0 14px rgba(0, 180, 255, 0.45);
 }
 
 @keyframes spin {
