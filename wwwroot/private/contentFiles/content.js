@@ -512,7 +512,7 @@ const form = document.querySelector("#myForm");
 toInnerHTML(form, gemstoneMonths);
     const kContainer = document.getElementById('k-Container'); 
     attachColorScroll(kContainer); // manually triggers it
-    kContainer.style.display = 'block'; //default is "grid"
+    kContainer.style.display = 'grid'; //default is "grid"
 
 
 const attachColorScroll = (container) => {
