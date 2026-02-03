@@ -855,8 +855,9 @@ magSent.addEventListener('mousedown', (event) => {
     attachFloatTagDOWN(event, Origin.magSent); 
   }
 });
-
+let mouseIsDown = false;
 magSent.addEventListener('mouseup', (event) => { 
+  mouseIsDown = false;
   if (event.target.closest('.vocab'))  { 
     traverseOrToggleUP(event, Origin.magSent); 
   }
@@ -869,6 +870,7 @@ kUserInput.addEventListener('mousedown', (event) => {
 });
 
 kUserInput.addEventListener('mouseup', (event) => { 
+  mouseIsDown = false;
   if (event.target.closest('.vocab') || event.target.closest('.color') || event.target.hasAttribute('data-index'))  { 
     traverseOrToggleUP(event, Origin.pElement); 
   }
@@ -943,6 +945,7 @@ msgBox.addEventListener('mouseleave', () => {
 
   msgBox.addEventListener('mousedown', event => attachFloatTagDOWN(event, Origin.msgBox));
   msgBox.addEventListener('mouseup', (event) => { //toggle vocab or let teaxt appear/disappear
+    mouseIsDown = false;
     if (!kT) return; // kT is undefined which means user is in library/home and not reading the text
 
     if (event.target.closest('.vocab'))  { 
@@ -5753,6 +5756,8 @@ function traverseOrToggleUP(event, origin) { // if fromMag is null, then it came
 }
 
 function attachFloatTagDOWN(event, origin) { //const Origin = { pElement: 0, magSent: 1, msgBox: 2, qText: 3 };
+  if (mouseIsDown) return;
+  mouseIsDown = true;
   //const vList = fromMag !== null ? vocabList : tQAvocabList;  //the same vocabList is used in pElement and magSent-box
   pushDownTime = Date.now(); // need to know this for after mouseup, can configure how long the press was
 
