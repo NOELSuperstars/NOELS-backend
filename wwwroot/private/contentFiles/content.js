@@ -601,7 +601,7 @@ form.addEventListener('click', (e) => {
             throw new Error(`Server error: ${response.status}`);
           }
 
-          const data = await response.json();
+          let data = await response.json();
           console.log('Server OK:', data);
           if (value === 1) data = [...data, ...data, ...data, ...data, ...data];
 
