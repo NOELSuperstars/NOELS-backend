@@ -510,7 +510,9 @@ months.forEach((month, index) => {
 gemstoneMonths += `</div></div>`;
 const form = document.querySelector("#myForm");
 toInnerHTML(form, gemstoneMonths);
-
+    const kContainer = document.getElementById('k-Container'); 
+    attachColorScroll(kContainer); // manually triggers it
+    kContainer.style.display = 'block'; //default is "grid"
 
 
 const attachColorScroll = (container) => {
@@ -580,7 +582,7 @@ form.addEventListener('click', (e) => {
    
     const kContainer = document.getElementById('k-Container'); 
     attachColorScroll(kContainer); // manually triggers it
-    //kContainer.style.display = 'block'; //default is "grid"
+    kContainer.style.display = 'block'; //default is "grid"
 
     const gridContainer = document.querySelector(".grid-container");
     gridContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
