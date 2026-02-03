@@ -530,6 +530,7 @@ form.addEventListener('click', (e) => {
 
   if (thumb?.classList.contains('go-back-btn')) {
     toInnerHTML(form, gemstoneMonths);
+    toInnerHTML(magSent, '');
     const kContainer = document.getElementById('k-Container'); 
     kContainer.style.display = 'grid'; 
     attachColorScroll(kContainer); // manually triggers it
@@ -586,6 +587,7 @@ form.addEventListener('click', (e) => {
 
     document.querySelectorAll(".futuristic-btn").forEach(element => {
       element.addEventListener("click", async () => {
+        toInnerHTML(magSent, '');
         const value = parseInt(element.textContent.replace(/\D+/g, ''), 10);        
         if (!Number.isInteger(value)) return;
 
@@ -597,7 +599,7 @@ form.addEventListener('click', (e) => {
             body: JSON.stringify({ week: value })
           });
 
-          if (!response.ok) {
+          if (response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
 
