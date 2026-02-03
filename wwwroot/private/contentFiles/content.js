@@ -492,7 +492,7 @@ let gemstoneMonths = `<div id="k-Container">
       <img src="go back.png" alt="">
     </button>
   </div>
-  <div class="months-container"> `;
+  <div class="grid-container"> `;
  
 months.forEach((month, index) => {
   gemstoneMonths += `
@@ -569,7 +569,7 @@ form.addEventListener('click', (e) => {
             ${weeks.map(wk => `<button id="HBv-BTN">Week ${wk}</button>`).join("")}
           </div>              
         </div>
-        <div class="months-container" style="display: grid; grid-template-columns: ${gridTemplate}; gap: 16px;">
+        <div class="grid-container" style="display: grid; grid-template-columns: ${gridTemplate}; gap: 16px;">
           <!--
           <div class="kT-container">Nodfsdfsdfsddddddddddddddddddddddddddddddd1vel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
           <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
@@ -596,8 +596,8 @@ form.addEventListener('click', (e) => {
     attachColorScroll(kContainer); // manually triggers it
     kContainer.style.display = 'block'; 
 
-    const monthsContainer = document.querySelector(".months-container");
-    monthsContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
+    const gridContainer = document.querySelector(".grid-container");
+    gridContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
 
 
     document.querySelectorAll("#HBv-BTN").forEach(element => {
