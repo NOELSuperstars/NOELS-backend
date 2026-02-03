@@ -617,7 +617,8 @@ form.addEventListener('click', (e) => {
             
         } catch (err) {
           console.error(err);
-          toInnerHTML(magSent, `<p>📡 Network Error. 🔌<br>Please check your connection.</p>`);
+          const errMsg = `<p>📡 ${err || 'Network Error.'} 🔌<br>Please check your connection.</p>`;
+          toInnerHTML(magSent, errMsg);
           adjustFontsize(magSent);
         }
       });
