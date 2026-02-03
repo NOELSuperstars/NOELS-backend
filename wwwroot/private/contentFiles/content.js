@@ -499,7 +499,6 @@ months.forEach((month, index) => {
     <div class="thumbnail">
       <!--<img src="${month}-transparent.png" alt="Birthstone ${index + 1}">-->
       <img src="/private/contentFiles/${month}-transparent.png" alt="Birthstone ${index + 1}">
-      
       <span class="label">${month}</span>
     </div>
   `;
@@ -550,15 +549,14 @@ form.addEventListener('click', (e) => {
   setTimeout(() => {
     thumb.classList.remove('pressed');
     //const gridTemplate = weeks.length === 4 ? 'repeat(auto-fill, minmax(180px, 1fr))' : 'repeat(auto-fill, minmax(144px, 1fr))'; //makes sure 4 or 5 weeks are in one row
-    const gridTemplate = 'repeat(auto-fill, minmax(270px, 1fr))'; 
-    toInnerHTML(form, `
+    let gridItemsHTML = '';
+    
+    let monthTemplateHTML = `<!--// build the full container with header, buttons, but without grid-->
       <div id="k-Container">
         <div class="month-header">
-          <!--<img src="${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">-->
-          <img src="/private/contentFiles/${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
+          <img src="${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
           <h2>${months[monthIndex]} ${year}</h2>
         </div>
-          
         <div class="eachMonth-buttons-container">
           <div>
             <button class="thumbnail go-back-btn" aria-label="Go back">
@@ -566,44 +564,29 @@ form.addEventListener('click', (e) => {
             </button>
           </div>
           <div class="weeks-container">
-            ${weeks.map(wk => `<button id="HBv-BTN">Week ${wk}</button>`).join("")}
+            ${weeks.map(wk => `<button class="futuristic-btn">Week ${wk}</button>`).join('')}
           </div>              
+        </div> 
+        <div class="grid-container">
+            ${gridItemsHTML}
+          </div>
         </div>
-        <div class="grid-container" style="display: grid; grid-template-columns: ${gridTemplate}; gap: 16px;">
-          <!--
-          <div class="kT-container">Nodfsdfsdfsddddddddddddddddddddddddddddddd1vel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-          <div class="kT-container">No1vel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-          <div class="kT-container">No23vel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-          <div class="kT-container">Nov3213el <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-          <div class="kT-container">No213vel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-          <div class="kT-container">Novasdfel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-          <div class="kT-container">Nosdfasdvel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-          <div class="kT-container">Nodfsvel <br>Charlotte's Web on Pop's Bridge</div><div class="kT-container">Grammar<br>Articles</div>
-          <div class="kT-container" >Into Reading 3.3<br>Pop's Bridge</div><div class="kT-container">Debate<br>Winning an argument</div>
-        </div>
-        -->
-      </div>
-
-    `);
+      `;
+    toInnerHTML(form, monthTemplateHTML); 
+    
     const kContainer = document.getElementById('k-Container'); 
     attachColorScroll(kContainer); // manually triggers it
     kContainer.style.display = 'block'; 
 
     const gridContainer = document.querySelector(".grid-container");
     gridContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
+    gridContainer.style.marginInline = "24px";
+    gridContainer.style.gridTemplateColumns = "repeat(auto-fill, minmax(270px, 1fr))";
 
 
-    document.querySelectorAll("#HBv-BTN").forEach(element => {
+    document.querySelectorAll(".futuristic-btn").forEach(element => {
       element.addEventListener("click", async () => {
         const value = parseInt(element.textContent.replace(/\D+/g, ''), 10);        
-        console.log(value);
         if (!Number.isInteger(value)) return;
 
         try {
@@ -620,7 +603,16 @@ form.addEventListener('click', (e) => {
 
           const data = await response.json();
           console.log('Server OK:', data);
+          if (value === 1) data = [...data, ...data, ...data, ...data, ...data];
 
+          // build the inner grid items only (no opening <div>)
+          gridItemsHTML = '';
+          data.forEach(item => {
+            gridItemsHTML += `<div class="kT-container">${item}</div>`;
+          });      
+          toInnerHTML(gridContainer, gridItemsHTML);
+          attachColorScroll(kContainer); //must re-initialize the scroll to match the new size of the data
+            
         } catch (err) {
           console.error(err);
           toInnerHTML(magSent, `<p>📡 Network Error. 🔌<br>Please check your connection.</p>`);
