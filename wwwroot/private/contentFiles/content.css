@@ -3043,6 +3043,7 @@ img {
   box-sizing: border-box;
   overflow: hidden; /* or auto / scroll */
   min-height: 0;
+  border-radius: 6px;
 
 }
 
@@ -3520,9 +3521,11 @@ img {
   padding-right: 5px;
 }
 
-.mult-choices:hover {
-  border-color: #007BFF;
+.mult-choices:hover, .kT-container:hover {
+  border-color: hsl(210, 100%, 55%);
   background-color: hsl(210, 96%, 13%);
+  transition: background-color 0.72s ease, border-color 0.72s ease;
+
 }
 
 .mult-choices.selected {
