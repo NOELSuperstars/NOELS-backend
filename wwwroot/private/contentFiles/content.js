@@ -579,10 +579,6 @@ form.addEventListener('click', (e) => {
         </div>
       `;
     toInnerHTML(form, monthTemplateHTML); 
-   
-    const kContainer = document.getElementById('k-Container'); 
-    attachColorScroll(kContainer); // manually triggers it
-    kContainer.style.display = 'block'; //default is "grid"
 
     const gridContainer = document.querySelector(".grid-container");
     gridContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
