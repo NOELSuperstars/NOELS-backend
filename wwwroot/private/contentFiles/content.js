@@ -599,7 +599,7 @@ form.addEventListener('click', (e) => {
             body: JSON.stringify({ week: value })
           });
 
-          if (response.ok) {
+          if (!response.ok) {
             throw new Error(`Server error: ${response.status}`);
           }
 
