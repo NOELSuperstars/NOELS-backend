@@ -558,7 +558,7 @@ form.addEventListener('click', (e) => {
     let monthTemplateHTML = `<!--// build the full container with header, buttons, but without grid-->
       <div id="k-Container">
         <div class="month-header">
-          <img src="/private/contentFiles/${month}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
+          <img src="/private/contentFiles/${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
           <h2>${months[monthIndex]} ${year}</h2>
         </div>
         <div class="eachMonth-buttons-container">
