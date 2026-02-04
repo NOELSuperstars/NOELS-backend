@@ -52,7 +52,14 @@
 
 
 
- Vocabulary words/phrases can toggle to 1) the meaning embedded into the text, 2) synonyms, or 3) other languages, or anything else.
+ What: Vocabulary words/phrases can toggle to 1) the meaning embedded into the text, 2) synonyms, or 3) other languages, or anything else. Word can also mean phrases in this context.
+ How: An object is created that hold a vocabulary word's properties such as the word itself, part of speech, definition, synonym, antonym, and Korean. These properties are also paired with a 
+ boolean variable. For instace, the properties defintion, synonym, and Korean will have their partnered boolean variable. There will always be only one of the booleans set to be true while the rest are false.
+ These objects are store in an array and later when the word becomes a span element, attributes of that word will be stored in the span. Those attributes are the sentence number that word the appears in and the array index in which that word resides. 
+ Next, for each sentence,  every single index in the vocabulary array is iterated. With each iteration, it checks if the word's attribute which has the sentence number matches the current 
+ sentence. If there  is a match, then will become a span element attached with an event listener. Whenever it gets activated, the boolean variables from the vocabulary word's object's 
+ properties will toggle  from true to false and vice versa. The one that is true will mean it's paired/partnered word will be in the text. For instance, if the synonym boolean was set to true, 
+ then the syonymn property will be displayed to the user.
  When vocabulary word/phrases are clicked, a picture/gif is displayed within the entire text and other containers. Interact with the picture such as a click and audio plays related to the text
  With mousedown and hold, float tags appear above or below the vocabulary word/phrase with extra details of that word/phrase.
  Notes can be written on the margins of the text.
@@ -3841,7 +3848,39 @@ del {
   flex: 1; /* fills up the whole line of week buttons*/
 }
 
+.month-year {
+  display: flex;
+  justify-content: center; /* horizontal centering */
+  gap: 8px;              /* space between month and year */
+}
+.year-wrapper {
+  position: relative; /* anchor point */
+}
 
+
+#year-dropdown {
+  position: absolute;
+  margin-top: 4px;
+  padding: 0;
+  list-style: none;
+  background: transparent;
+  color: hsl(0 0% 72%);
+  top: 100%;              /* directly below the h2 */
+  left: 0;
+  z-index: 1000;
+}
+
+
+#year-dropdown li {
+  padding: 6px 12px;
+}
+#year-dropdown li:hover {
+  color: yellow;
+}
+
+.disappear {
+  display: none;
+}
 
 
 
