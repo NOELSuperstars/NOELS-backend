@@ -408,10 +408,14 @@ animateFlames();
 const totalStars = 270;
 
 const layers = [
-  { size: 1.6, percent: 0.36, twinkle: 1.2 },
-  { size: 1, percent: 0.45, twinkle: 1.2 },
-  { size: 2, percent: 0.17, twinkle: 1.2 },
-  { size: 2.4, percent: 0.2, twinkle: 1.2 }
+  { size: 0.9, percent: 0.18, twinkle: 1.8 },
+  { size: 1.2, percent: 0.22, twinkle: 1.44 },
+  { size: 2, percent: 0.08, twinkle: 0.96 },
+  { size: 2.4, percent: 0.01, twinkle: 2.7 },
+  { size: 1.6, percent: 0.18, twinkle: 3.6 },
+  { size: 1.8, percent: 0.23, twinkle: 1.08 },
+  { size: 2.1, percent: 0.09, twinkle: 1.28 },
+  { size: 2.7, percent: 0.01, twinkle: 2.88 }
 ];
 
 layers.forEach(layer => {
@@ -551,12 +555,25 @@ form.addEventListener('click', (e) => {
     thumb.classList.remove('pressed');
     //const gridTemplate = weeks.length === 4 ? 'repeat(auto-fill, minmax(180px, 1fr))' : 'repeat(auto-fill, minmax(144px, 1fr))'; //makes sure 4 or 5 weeks are in one row
     let gridItemsHTML = '';
-    
-    let monthTemplateHTML = `<!--// build the full container with header, buttons, but without grid-->
+   
+        let monthTemplateHTML = `<!--// build the full container with header, buttons, but without grid-->
       <div id="k-Container">
         <div class="month-header">
-          <img src="${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
-          <h2>${months[monthIndex]} ${year}</h2>
+          <img src="${months[monthIndex]}-transparent.png"
+              alt="${months[monthIndex]}"
+              class="month-header-img">
+
+          <div class="month-year">
+            <h2 id="month">${months[monthIndex]}</h2>
+
+            <div class="year-wrapper">
+              <h2 id="year-nextTo-month">${year} ▾</h2>
+
+              <ul id="year-dropdown" class="disappear">
+                <!-- years will be injected -->
+              </ul>
+            </div>
+          </div>
         </div>
         <div class="eachMonth-buttons-container">
           <div>
@@ -574,10 +591,42 @@ form.addEventListener('click', (e) => {
         </div>
       `;
     toInnerHTML(form, monthTemplateHTML); 
-    
     const kContainer = document.getElementById('k-Container'); 
     attachColorScroll(kContainer); // manually triggers it
-    kContainer.style.display = 'block'; 
+    kContainer.style.display = 'block'; //default is "grid"
+
+    const monthAndYear = document.getElementById('year-nextTo-month');
+    const yearDropdown = document.getElementById('year-dropdown');
+
+    const currentYear = new Date().getFullYear();
+    const yearsBack = 2;
+    const displayedYear = (Number(monthAndYear.textContent.match(/\d+/)[0]));
+
+    // populate years once
+    for (let y = (displayedYear === currentYear) ? currentYear-1 : currentYear; y >= currentYear - yearsBack; y--) {
+      const yearInList = document.createElement('li');
+      yearInList.textContent = y;
+
+      yearInList.addEventListener('click', () => {
+        monthAndYear.textContent = `${y} ▾`;
+        yearDropdown.classList.add('disappear');
+      });
+
+      yearDropdown.appendChild(yearInList);
+    }
+
+    // toggle yearDropdown
+    monthAndYear.addEventListener('click', () => {
+      yearDropdown.classList.toggle('disappear');
+    });
+
+    // close when clicking outside
+    document.addEventListener('click', (e) => {
+      if (!e.target.closest('#year-nextTo-month') &&
+          !e.target.closest('#year-dropdown')) {
+        yearDropdown.classList.add('disappear');
+      }
+    });
 
     const gridContainer = document.querySelector(".grid-container");
     gridContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
@@ -3585,6 +3634,7 @@ qBTN.addEventListener('mouseup', (event) => {
     qText.addEventListener('mousedown', event => attachFloatTagDOWN(event, Origin.qText));
 
     qText.addEventListener('mouseup', (event) => { 
+      mouseIsDown = false;
       if (event.target.closest('.vocab'))  { 
         traverseOrToggleUP(event, Origin.qText); 
       }
@@ -4032,7 +4082,6 @@ buttonContainerTop.addEventListener('click', function() {
   buttonContainerHorizontal = !buttonContainerHorizontal;
   //buttonContainer.style.transform = buttonContainerHorizontal ? 'rotateX(-90.1deg)' : 'rotateX(-12deg)';
   // 1368 - 288
-  console.log(buttonContainerHorizontal);
 
 
 
