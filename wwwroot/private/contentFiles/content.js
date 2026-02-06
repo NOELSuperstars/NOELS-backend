@@ -726,7 +726,7 @@ form.addEventListener('click', (e) => {
             if (weekNum === 1) data = [...data, ...data, ...data, ...data, ...data];
   
             // build the inner grid items only (no opening <div>)
-            gridItemsHTML = '';
+            let gridItemsHTML = '';
             data.forEach(item => {
               gridItemsHTML += `<div class="IT-title-container">${item}</div>`;
             });      
