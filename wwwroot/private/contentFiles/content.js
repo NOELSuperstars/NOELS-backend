@@ -639,7 +639,7 @@ form.addEventListener('click', (e) => {
     //const gridTemplate = weeks.length === 4 ? 'repeat(auto-fill, minmax(180px, 1fr))' : 'repeat(auto-fill, minmax(144px, 1fr))'; //makes sure 4 or 5 weeks are in one row
     let monthTemplateHTML = `<!--// build the full container with header, buttons, but without grid-->
       <div class="month-header">
-        <img src="${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
+        <img src="/private/contentFiles/${month}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
         <div class="month-year">
           <h2 id="month">${months[monthIndex]}</h2>
           <div class="year-wrapper">
