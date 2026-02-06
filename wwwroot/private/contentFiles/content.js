@@ -494,7 +494,7 @@ let educatorHTML = `<div id="grid-container">`;
 educators.forEach((name, index) => {
   educatorHTML += `
     <div class="thumbnail" data-type="educator" data-name="${name}">
-      <img src="${name}.png" alt="Educator ${index + 1}">
+      <img src="/private/contentFiles/${name}.png" alt="Educator ${index + 1}">
       <span class="label">${name.replace(/_/g, ' ')}</span>
     </div>
   `;
@@ -519,7 +519,7 @@ attachColorScroll(kContainer); // manually triggers it
 let gemstoneMonthsHTML = `
   <div class="go-back-container">
     <button class="thumbnail back-BTN" data-type="backTo-educators" aria-label="Go back">
-      <img src="go back.png" alt="">
+      <img src="/private/contentFiles/go back.png" alt="back">
     </button>
   </div>
   <div id="grid-container"> `;
