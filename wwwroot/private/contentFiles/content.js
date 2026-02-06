@@ -487,31 +487,23 @@ function getWeeksInMonth(year, monthIndex) {
 }
 
 
+const months =   ["January","February","March","April","May","June","July","August","September","October","November","December"];
+const educators = ["PeaI","Proud7","Twinkle","Avalon","CDL","Chungdahm April","DYB","ILE","Pagoda","YBM","Hackers","Francis_Parker","Groton","Envision","Swaton","Thinking","Sutton","iSpeak","Ember"];
 
-const months = ["January","February","March","April","May","June","July","August","September","October","November","December"];
-
-let gemstoneMonths = `<div id="k-Container">
-  <div class="go-back-container">
-    <button class="thumbnail go-back-btn" aria-label="Go back">
-      <img src="go back.png" alt="">
-    </button>
-  </div>
-  <div class="grid-container"> `;
- 
-months.forEach((month, index) => {
-  gemstoneMonths += `
-    <div class="thumbnail">
-      <!--<img src="${month}-transparent.png" alt="Birthstone ${index + 1}">-->
-      <img src="/private/contentFiles/${month}-transparent.png" alt="Birthstone ${index + 1}">
-      <span class="label">${month}</span>
+let educatorHTML = `<div id="grid-container">`;
+educators.forEach((name, index) => {
+  educatorHTML += `
+    <div class="thumbnail" data-type="educator" data-name="${name}">
+      <img src="${name}.png" alt="Birthstone ${index + 1}">
+      <span class="label">${name.replace(/_/g, ' ')}</span>
     </div>
   `;
 });
-gemstoneMonths += `</div></div>`;
-const form = document.querySelector("#myForm");
-toInnerHTML(form, gemstoneMonths);
+educatorHTML += `</div>`;
 
-
+const kContainer = document.getElementById('k-Container'); 
+toInnerHTML(kContainer, educatorHTML);
+kContainer.style.display = 'block'; //default is "grid"
 
 const attachColorScroll = (container) => {
   container.onscroll = () => { // onscroll instad of addeventListener because it Automatically replaces the previous one
@@ -519,159 +511,240 @@ const attachColorScroll = (container) => {
   };
   updateProgressBar(container, progressBarL, progressBarR);// initial sync
 };
+
 const progressBarL = document.getElementById('left');
 const progressBarR = document.getElementById('right')
-const kContainer = document.getElementById('k-Container'); 
 attachColorScroll(kContainer); // manually triggers it
 
+let gemstoneMonthsHTML = `
+  <div class="go-back-container">
+    <button class="thumbnail back-BTN" data-type="backTo-educators" aria-label="Go back">
+      <img src="go back.png" alt="">
+    </button>
+  </div>
+  <div id="grid-container"> `;
 
+months.forEach((month, index) => {
+  gemstoneMonthsHTML += `
+    <div class="thumbnail" data-type="month" data-month="${month}">
+      <img src="${month}-transparent.png" alt="Birthstone ${index + 1}">
+      <span class="label">${month}</span>
+    </div>
+  `;
+});
+gemstoneMonthsHTML += `</div>`;
 
+let selectedEducator;
 
+const form = document.querySelector("#myForm");
 form.addEventListener('click', (e) => {  
   const thumb = e.target.closest('.thumbnail');
-    if (thumb) hideCursor(thumb);
+  if (!thumb) return;
+  hideCursor(thumb);
 
+  const { thumbType } = thumb.dataset;
+  if (thumb.dataset.type === 'educator' || thumb.dataset.type === 'backTo-months') {
+    updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorHTML was set to "block" //default is "block"
+    if (thumb.dataset.type === 'educator'){
 
-  if (thumb?.classList.contains('go-back-btn')) {
-    toInnerHTML(form, gemstoneMonths);
-    toInnerHTML(magSent, '');
-    const kContainer = document.getElementById('k-Container'); 
-    kContainer.style.display = 'grid'; 
-    attachColorScroll(kContainer); // manually triggers it
+      selectedEducator = thumb.querySelector('.label')?.textContent?.trim();
+
+    } 
+    toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
+    adjustFontsize(magSent);
     return;
   }
-  const label = thumb?.querySelector('.label')?.textContent?.trim(); //If thumb exists, look inside it for an element with class .label
-  if (!label) return;
+  else if (thumb.dataset.type === 'backTo-educators') {
+    updateKcontainer(educatorHTML, 'block');
+    return;
+  }
+  function updateKcontainer(html, gridOrBlock){
+    toInnerHTML(kContainer, html);
+    kContainer.style.display = gridOrBlock;
+    attachColorScroll(kContainer); // manually triggers it
+  }
 
-
+  const monthLabel = thumb.querySelector('.label')?.textContent?.trim(); //thumb exists, look inside it for an element with class .label
+  if (!monthLabel) return;
   // 📅 Individual Month clicked
-  const monthIndex = months.indexOf(label);
+  const monthIndex = months.indexOf(monthLabel);
   if (monthIndex === -1) return;  //can be -1 any time the string you extracted does not exactly match one of the strings in months
 
-  const year = new Date().getFullYear(); //returns the current year as a number
-  const weeks = getWeeksInMonth(year, monthIndex);
-  thumb.classList.add('pressed');
+  const weeksByYear = {
+  2025: [
+    [ 1,  2,  3,  4    ],         // Jan
+    [ 5,  6,  7,  8    ],         // Feb
+    [ 9, 10, 11, 12, 13],  // Mar
+    [14, 15, 16, 17    ],     // Apr
+    [18, 19, 20, 21    ],     // May
+    [22, 23, 24, 25, 26], // Jun
+    [27, 28, 29, 30    ],     // Jul
+    [31, 32, 33, 34    ],     // Aug
+    [35, 36, 37, 38, 39], // Sep
+    [40, 41, 42, 43    ],     // Oct
+    [44, 45, 46, 47    ],     // Nov
+    [48, 49, 50, 51, 52]  // Dec
+  ],
+
+  2026: [
+    [ 1,  2,  3,  4    ],         // Jan
+    [ 5,  6,  7,  8    ],         // Feb
+    [ 9, 10, 11, 12, 13],  // Mar
+    [14, 15, 16, 17    ],     // Apr
+    [18, 19, 20, 21    ],     // May
+    [22, 23, 24, 25, 26], // Jun
+    [27, 28, 29, 30    ],     // Jul
+    [31, 32, 33, 34, 35], // Aug
+    [36, 37, 38, 39    ],     // Sep
+    [40, 41, 42, 43    ],     // Oct
+    [44, 45, 46, 47, 48], // Nov
+    [49, 50, 51, 52    ]      // Dec
+  ],
+
+  2027: [
+    [ 1,  2,  3,  4    ],         // Jan
+    [ 5,  6,  7,  8    ],         // Feb
+    [ 9, 10, 11, 12, 13],  // Mar
+    [14, 15, 16, 17    ],     // Apr
+    [18, 19, 20, 21, 22], // May
+    [23, 24, 25, 26    ],     // Jun
+    [27, 28, 29, 30    ],     // Jul
+    [31, 32, 33, 34, 35], // Aug
+    [36, 37, 38, 39    ],     // Sep
+    [40, 41, 42, 43    ],     // Oct
+    [44, 45, 46, 47, 48], // Nov
+    [49, 50, 51, 52    ]      // Dec
+  ],
+
+  2028: [
+    [ 1,  2,  3,  4, 5 ],  // Jan
+    [ 6,  7,  8,  9    ],  // Feb
+    [10, 11, 12, 13    ],  // Mar
+    [14, 15, 16, 17    ],  // Apr
+    [18, 19, 20, 21, 22],  // May
+    [23, 24, 25, 26    ],  // Jun
+    [27, 28, 29, 30, 31],  // Jul
+    [31, 32, 33, 34    ], // Aug
+    [35, 36, 37, 38    ],     // Sep
+    [40, 41, 42, 43, 44],     // Oct
+    [45, 46, 47, 48    ], // Nov
+    [49, 50, 51, 52    ]      // Dec
+  ],
+  };
+  const currentYear = new Date().getFullYear(); //returns the current year as a number
+
+  thumb.classList.add('pressed'); //thumbnail shrinks
   setTimeout(() => {
     thumb.classList.remove('pressed');
     //const gridTemplate = weeks.length === 4 ? 'repeat(auto-fill, minmax(180px, 1fr))' : 'repeat(auto-fill, minmax(144px, 1fr))'; //makes sure 4 or 5 weeks are in one row
-    let gridItemsHTML = '';
-   
-        let monthTemplateHTML = `<!--// build the full container with header, buttons, but without grid-->
-      <div id="k-Container">
-        <div class="month-header">
-          <img src="${months[monthIndex]}-transparent.png"
-              alt="${months[monthIndex]}"
-              class="month-header-img">
-
-          <div class="month-year">
-            <h2 id="month">${months[monthIndex]}</h2>
-
-            <div class="year-wrapper">
-              <h2 id="year-nextTo-month">${year} ▾</h2>
-
-              <ul id="year-dropdown" class="disappear">
-                <!-- years will be injected -->
-              </ul>
-            </div>
+    let monthTemplateHTML = `<!--// build the full container with header, buttons, but without grid-->
+      <div class="month-header">
+        <img src="${months[monthIndex]}-transparent.png" alt="${months[monthIndex]}" class="month-header-img">
+        <div class="month-year">
+          <h2 id="month">${months[monthIndex]}</h2>
+          <div class="year-wrapper">
+            <h2 id="year-nextTo-month">${currentYear} ▸</h2>
+            <ul id="years-dropdown" class="disappear"></ul> <!-- years will be injected, default is disappear -->
           </div>
         </div>
-        <div class="eachMonth-buttons-container">
-          <div>
-            <button class="thumbnail go-back-btn" aria-label="Go back">
-              <img src="go back.png" alt="">
-            </button>
-          </div>
-          <div class="weeks-container">
-            ${weeks.map(wk => `<button class="futuristic-btn">Week ${wk}</button>`).join('')}
-          </div>              
-        </div> 
-        <div class="grid-container">
-            ${gridItemsHTML}
-          </div>
+      </div>
+      <div class="eachMonth-buttons-container">
+        <div>
+          <button class="thumbnail back-BTN" data-type="backTo-months" aria-label="Go back">
+            <img src="go back.png" alt="">
+          </button>
         </div>
+        <div class="weeks-container"></div>  <!-- Week buttons will be injected -->             
+      </div> 
+      <div id="grid-container"></div>  <!-- IT-text titles will be injected -->
       `;
-    toInnerHTML(form, monthTemplateHTML); 
-    const kContainer = document.getElementById('k-Container'); 
-    attachColorScroll(kContainer); // manually triggers it
-    kContainer.style.display = 'block'; //default is "grid"
+    updateKcontainer(monthTemplateHTML, 'block');
 
-    const monthAndYear = document.getElementById('year-nextTo-month');
-    const yearDropdown = document.getElementById('year-dropdown');
-
-    const currentYear = new Date().getFullYear();
-    const yearsBack = 2;
-    const displayedYear = (Number(monthAndYear.textContent.match(/\d+/)[0]));
-
-    // populate years once
-    for (let y = (displayedYear === currentYear) ? currentYear-1 : currentYear; y >= currentYear - yearsBack; y--) {
-      const yearInList = document.createElement('li');
-      yearInList.textContent = y;
-
-      yearInList.addEventListener('click', () => {
-        monthAndYear.textContent = `${y} ▾`;
-        yearDropdown.classList.add('disappear');
-      });
-
-      yearDropdown.appendChild(yearInList);
-    }
-
-    // toggle yearDropdown
-    monthAndYear.addEventListener('click', () => {
-      yearDropdown.classList.toggle('disappear');
+    const yearNextToMonth = document.getElementById('year-nextTo-month');
+    const yearsDropdown = document.getElementById('years-dropdown');
+    yearNextToMonth.addEventListener('click', () => {
+      yearsDropdown.classList.toggle('disappear');// toggle yearsDropdown list
     });
 
-    // close when clicking outside
-    document.addEventListener('click', (e) => {
-      if (!e.target.closest('#year-nextTo-month') &&
-          !e.target.closest('#year-dropdown')) {
-        yearDropdown.classList.add('disappear');
+    document.addEventListener('click', (e) => {// close when clicking outside
+      if (!e.target.closest('#year-nextTo-month')) {
+        yearsDropdown.classList.add('disappear');
       }
     });
 
-    const gridContainer = document.querySelector(".grid-container");
+    const gridContainer = document.getElementById("grid-container");
     gridContainer.style.marginTop = "72px"; // on this page it's a container for the lesson links
     gridContainer.style.marginInline = "24px";
     gridContainer.style.gridTemplateColumns = "repeat(auto-fill, minmax(270px, 1fr))";
 
+    attachYrListNbtnsNGrid(currentYear);
+    let prevWeekNum;
+    function attachYrListNbtnsNGrid(yr){
+      const yearsBack = 2;
+      const displayedYear = (Number(yearNextToMonth.textContent.match(/\d+/)[0]));
+      toInnerHTML(yearsDropdown, "");
 
-    document.querySelectorAll(".futuristic-btn").forEach(element => {
-      element.addEventListener("click", async () => {
-        toInnerHTML(magSent, '');
-        const value = parseInt(element.textContent.replace(/\D+/g, ''), 10);        
-        if (!Number.isInteger(value)) return;
+      for (let yrInList = currentYear; yrInList >= currentYear - yearsBack; yrInList--) {// populate years once into years list
+        if (yrInList === displayedYear) continue;
+        const yearInList = document.createElement('li');
+        yearInList.textContent = yrInList;
+        yearInList.addEventListener('click', () => {
+          yearNextToMonth.textContent = `${yrInList} ▸`;
+          attachYrListNbtnsNGrid(yrInList);
+        });
+        yearsDropdown.appendChild(yearInList);
+      }
 
-        try {
-          const response = await fetch('/weekClicked', {
-            method: 'POST',
-            headers: { 'Content-Type': 'application/json' },
-            credentials: 'include',
-            body: JSON.stringify({ week: value })
-          });
+      const weeksContainer = document.querySelector('.weeks-container');
+      const weeks = weeksByYear[yr]?.[monthIndex] ?? []; //?? [] (nullish coalescing) - If the left side is null or undefined, use an empty array instead (?? only falls back for null and undefined)
+      const wkButtons = weeks.map(wk => `<button class="futuristic-btn">Week ${wk}</button>`).join('');
+      toInnerHTML(weeksContainer, wkButtons);
+      toInnerHTML(gridContainer, "");
+      attachColorScroll(kContainer); //must re-initialize the scroll to match the new size of the data
 
-          if (!response.ok) {
-            throw new Error(`Server error: ${response.status}`);
+
+      document.querySelectorAll(".futuristic-btn").forEach(weekBtnObj => {
+        weekBtnObj.addEventListener("click", async () => {
+          const weekNum = parseInt(weekBtnObj.textContent.replace(/\D+/g, ''), 10);        
+          if (!Number.isInteger(weekNum)) return;
+          if (prevWeekNum === weekNum) return; // no need to update IT titles if the curren week was clicked
+          prevWeekNum = weekNum;
+ 
+          try {
+            const response = await fetch('/weekClicked', {
+              method: 'POST',
+              headers: { 'Content-Type': 'application/json' },
+              credentials: 'include',
+              body: JSON.stringify({ week: weekNum })
+            });
+            if (!response.ok) {
+              throw new Error(`Server error: ${response.status}`);
+            }
+  
+            let data = await response.json();
+            console.log('Server OK:', data);
+            if (weekNum === 1) data = [...data, ...data, ...data, ...data, ...data];
+  
+            // build the inner grid items only (no opening <div>)
+            gridItemsHTML = '';
+            data.forEach(item => {
+              gridItemsHTML += `<div class="IT-title-container">${item}</div>`;
+            });      
+            toInnerHTML(gridContainer, gridItemsHTML);
+            toInnerHTML(magSent, `<p>Educator: ${selectedEducator}<br>Week: ${weekNum}</p>`);
+            adjustFontsize(magSent);
+            attachColorScroll(kContainer); //must re-initialize the scroll to match the new size of the data
+  
+              
+          } catch (err) {
+            console.error(err);
+            const errMsg = `<p>📡 ${err.message || 'Network Error.'} 🔌<br>Please check your connection.</p>`;
+            toInnerHTML(magSent, errMsg);
+            adjustFontsize(magSent);
           }
-
-          let data = await response.json();
-          console.log('Server OK:', data);
-          if (value === 1) data = [...data, ...data, ...data, ...data, ...data];
-
-          // build the inner grid items only (no opening <div>)
-          gridItemsHTML = '';
-          data.forEach(item => {
-            gridItemsHTML += `<div class="kT-container">${item}</div>`;
-          });      
-          toInnerHTML(gridContainer, gridItemsHTML);
-          attachColorScroll(kContainer); //must re-initialize the scroll to match the new size of the data
-            
-        } catch (err) {
-          console.error(err);
-          const errMsg = `<p>📡 ${err.message || 'Network Error.'} 🔌<br>Please check your connection.</p>`;
-          toInnerHTML(magSent, errMsg);
-          adjustFontsize(magSent);
-        }
-      });
-    });
+       });
+     });
+    }
   }, 720);
 
 
