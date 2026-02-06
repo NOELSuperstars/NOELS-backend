@@ -519,7 +519,7 @@ attachColorScroll(kContainer); // manually triggers it
 let gemstoneMonthsHTML = `
   <div class="go-back-container">
     <button class="thumbnail back-BTN" data-type="backTo-educators" aria-label="Go back">
-      <img src="/private/contentFiles/go back.png" alt="back">
+      <img src="/private/contentFiles/go_back.png" alt="back">
     </button>
   </div>
   <div id="grid-container"> `;
@@ -651,7 +651,7 @@ form.addEventListener('click', (e) => {
       <div class="eachMonth-buttons-container">
         <div>
           <button class="thumbnail back-BTN" data-type="backTo-months" aria-label="Go back">
-            <img src="go back.png" alt="">
+            <img src="go_back.png" alt="">
           </button>
         </div>
         <div class="weeks-container"></div>  <!-- Week buttons will be injected -->             
