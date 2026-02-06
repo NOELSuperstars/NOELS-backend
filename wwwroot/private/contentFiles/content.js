@@ -494,7 +494,7 @@ let educatorHTML = `<div id="grid-container">`;
 educators.forEach((name, index) => {
   educatorHTML += `
     <div class="thumbnail" data-type="educator" data-name="${name}">
-      <img src="${name}.png" alt="Birthstone ${index + 1}">
+      <img src="${name}.png" alt="Educator ${index + 1}">
       <span class="label">${name.replace(/_/g, ' ')}</span>
     </div>
   `;
