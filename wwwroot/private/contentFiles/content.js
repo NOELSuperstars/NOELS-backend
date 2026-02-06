@@ -527,7 +527,7 @@ let gemstoneMonthsHTML = `
 months.forEach((month, index) => {
   gemstoneMonthsHTML += `
     <div class="thumbnail" data-type="month" data-month="${month}">
-      <img src="${month}-transparent.png" alt="Birthstone ${index + 1}">
+      <img src="/private/contentFiles/${month}-transparent.png" alt="Birthstone ${index + 1}">
       <span class="label">${month}</span>
     </div>
   `;
