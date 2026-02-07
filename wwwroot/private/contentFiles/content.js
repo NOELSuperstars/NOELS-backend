@@ -651,7 +651,7 @@ form.addEventListener('click', (e) => {
       <div class="eachMonth-buttons-container">
         <div>
           <button class="thumbnail back-BTN" data-type="backTo-months" aria-label="Go back">
-            <img src="go_back.png" alt="">
+            <img src="/private/contentFiles/go_back.png" alt="back">
           </button>
         </div>
         <div class="weeks-container"></div>  <!-- Week buttons will be injected -->             
