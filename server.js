@@ -1287,7 +1287,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid publicKeyB64 format')
     .custom(key => {
       if (!isValidTpmKey(key)) { //256 -> 162       from persistent to transient key
-        throw new Error('Invalid publicKeyB64 size');        
+        throw new Error('publicKeyB64 size');        
       }
       return true;
     }),
@@ -1303,7 +1303,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid HLAKPublicB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 300 || buf.length > 400) throw new Error('HLAKPublic size invalid');
+      if (buf.length < 250 || buf.length > 400) throw new Error(`HLAKPublic(${buf.length}) is invalid`);
       return true;
     }),
   body('windowsEkPublicPEM')
@@ -1311,7 +1311,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid windowsEkPublicPEM format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 256 || buf.length > 400) throw new Error('windowsEkPublicPEM size invalid');
+      if (buf.length < 250 || buf.length > 450) throw new Error(`windowsEkPublicPEM(${buf.length}) is invalid`);
       return true;
     }),
   body('srkNameB64')
@@ -1328,7 +1328,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('attestQbase64 invalid Base64');
-      if (buf.length < 110 || buf.length > 150) throw new Error('attestQbase64 size invalid');
+      if (buf.length < 100 || buf.length > 220) throw new Error(`attestQbase64(${buf.length}) is invalid`);
       return true;
     }),
   body('sigQbase64')
@@ -1352,7 +1352,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid rsaSignatureB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length !== 128) throw new Error('Invalid rsaSignatureB64 size: ' + buf.length);  // !== 256 -> !== 128      from persistent to transient key
+      if (buf.length !== 128) throw new Error(`rsaSignatureB64(${buf.length}) is invalid`);  // !== 256 -> !== 128      from persistent to transient key
       return true;  //nothing is added to the validationResult(req) array
     }),   
   body('hlakSigB64')
@@ -1633,7 +1633,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('certifyInfo invalid Base64');
-      if (buf.length < 64 || buf.length > 300) throw new Error('certifyInfo size invalid');
+      if (buf.length < 100 || buf.length > 200) throw new Error(`certifyInfo(${buf.length}) is invalid`);
       return true;  //nothing is added to the validationResult(req) array
     }),
   body('certifySig')
@@ -1650,7 +1650,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('certifyInfoEnd invalid Base64');
-      if (buf.length < 64 || buf.length > 300) throw new Error('certifyInfoEnd size invalid');
+      if (buf.length < 100 || buf.length > 200) throw new Error(`certifyInfoEnd(${buf.length}) is invalid`);
+
       return true;
     }),
   body('certifySigEnd')
@@ -1663,11 +1664,11 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     }),
   body('akPubBase64')
     .notEmpty().withMessage('akPubBase64 is required').bail()
-    .matches(base64Regex).withMessage('$$$Invalid akPubBase64 format')
+    .matches(base64Regex).withMessage('Invalid akPubBase64 format')
     .custom(key => {
       if (!isValidTpmKey(key)) { //actual size: 256
         console.log("Invalid TPM key detected:", key);
-        throw new Error('$$$$akPubBase64 size invalid');
+        throw new Error('akPubBase64 size invalid');
       }
       return true; //nothing is added to the validationResult(req) array
     }),
@@ -1676,7 +1677,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid HLAKPublicB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 300 || buf.length > 400) throw new Error('HLAKPublic size invalid');
+      if (buf.length < 250 || buf.length > 400) throw new Error(`HLAKPublic(${buf.length}) is invalid`);
       return true;
     }),
   body('creationDataB64')
@@ -1685,7 +1686,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('creationDataB64 invalid Base64');
-      if (buf.length < 20 || buf.length > 256) throw new Error('creationDataB64 size invalid');
+      if (buf.length < 70 || buf.length > 400) throw new Error(`creationDataB64(${buf.length}) is invalid`);
       return true;
     }),
   body('creationHashB64')
@@ -1708,7 +1709,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid creationTicketB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length !== 40) throw new Error('creationTicketB64 must be 40 bytes (SHA-256 TPMT_TK_CREATION)');
+      if (buf.length < 28 || buf.length > 72) throw new Error(`creationTicketB64(${buf.length}) is invalid`);
       return true;
     }),
   body('ekPublicPem')
@@ -1716,7 +1717,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid ekPublicPem format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 256 || buf.length > 400) throw new Error('ekPublicPem size invalid');
+      if (buf.length < 250 || buf.length > 450) throw new Error(`ekPublicPem${buf.length} is invalid`);
       return true;   //nothing is added to the validationResult(req) array
     }),
   body('windowsEkPublicPEM')
@@ -1724,7 +1725,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid windowsEkPublicPEM format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 256 || buf.length > 400) throw new Error('windowsEkPublicPEM size invalid');
+      if (buf.length < 250 || buf.length > 450) throw new Error(`windowsEkPublicPEM${buf.length} is invalid`);
       return true;
     }),
   body('publicKeyB64')
@@ -1759,7 +1760,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('attestQbase64 invalid Base64');
-      if (buf.length < 110 || buf.length > 150) throw new Error('attestQbase64 size invalid');
+      if (buf.length < 190 || buf.length > 220) throw new Error(`attestQbase64(${buf.length}) is invalid`);
       return true;
     }),
   body('sigQbase64')
@@ -1783,7 +1784,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid rsaSignatureB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length !== 128) throw new Error('Invalid rsaSignatureB64 size: ' + buf.length);  // !== 256 -> !== 128      from persistent to transient key
+      if (buf.length !== 128) throw new Error(`rsaSignatureB64(${buf.length}) is invalid`);  // !== 256 -> !== 128      from persistent to transient key
       return true;  //nothing is added to the validationResult(req) array
     }),  
 ],
@@ -2391,6 +2392,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
