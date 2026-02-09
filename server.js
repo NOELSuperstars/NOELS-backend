@@ -858,10 +858,12 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
     });
     console.log("keyObj.asymmetricKeyType", keyObj.asymmetricKeyType);  
     if (keyObj.asymmetricKeyType !== 'rsa') return false;
-    console.log("details.modulusLength", details.modulusLength);  
-    console.log("details", details);  
+ 
 
     const details = keyObj.asymmetricKeyDetails;
+
+        console.log("details.modulusLength", details.modulusLength);  
+    console.log("details", details); 
     if (!details || details.modulusLength < 2048)
       return false;    
     return true; // valid key
@@ -2398,6 +2400,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
