@@ -851,11 +851,17 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
       return false;
 
     // Try parsing as DER-encoded public key (SPKI)
-    crypto.createPublicKey({
+    const keyObj = crypto.createPublicKey({
       key: keyBuffer,
       format: 'der',
       type: 'spki'
     });
+    if (keyObj.asymmetricKeyType !== 'rsa') return false;
+    if (details.modulusLength !== 2048)     return false;
+
+    const details = keyObj.asymmetricKeyDetails;
+    if (!details || details.modulusLength < 2048)
+      return false;    
     return true; // valid key
   } catch {
     return false; // invalid key
@@ -1257,7 +1263,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('certifyHMACB64 invalid Base64');
-      if (buf.length < 64 || buf.length > 300) throw new Error('certifyHMACB64 size invalid');
+      if (buf.length < 32 || buf.length > 1024) throw new Error('certifyHMACB64 size invalid');
       return true;  //nothing is added to the validationResult(req) array
     }),
   body('certifyHMACSigB64')
@@ -1265,7 +1271,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid certifyHMACSigB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length !== 256) throw new Error('certifyHMACSigB64 must be 256 bytes');
+      if (buf.length < 128 || buf.length > 512) throw new Error(`certifyHMACSigB64(${buf.length}) is invalid`);
       return true;
     }),
   body('appHashB64')
@@ -1287,7 +1293,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid publicKeyB64 format')
     .custom(key => {
       if (!isValidTpmKey(key)) { //256 -> 162       from persistent to transient key
-        throw new Error('publicKeyB64 size');        
+        throw new Error('publicKeyB64 is invalid');        
       }
       return true;
     }),
@@ -1303,7 +1309,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid HLAKPublicB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 250 || buf.length > 400) throw new Error(`HLAKPublic(${buf.length}) is invalid`);
+      if (buf.length < 128 || buf.length > 1024) throw new Error(`HLAKPublic(${buf.length}) is invalid`);
       return true;
     }),
   body('windowsEkPublicPEM')
@@ -1328,7 +1334,8 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('attestQbase64 invalid Base64');
-      if (buf.length < 100 || buf.length > 220) throw new Error(`attestQbase64(${buf.length}) is invalid`);
+      if (buf.length < 64 || buf.length > 2048)
+        throw new Error(`attestQbase64(${buf.length}) is invalid`);
       return true;
     }),
   body('sigQbase64')
@@ -1336,7 +1343,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid sigQbase64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length !== 256) throw new Error('sigQbase64 must be 256 bytes');
+      if (buf.length < 128 || buf.length > 512) throw new Error(`sigQbase64(${buf.length}) is invalid`);
       return true;
     }),
   body('hmacB64')
@@ -1352,7 +1359,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid rsaSignatureB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length !== 128) throw new Error(`rsaSignatureB64(${buf.length}) is invalid`);  // !== 256 -> !== 128      from persistent to transient key
+      if (buf.length < 128 || buf.length > 512) throw new Error(`rsaSignatureB64(${buf.length}) is invalid`);  // !== 256 -> !== 128      from persistent to transient key
       return true;  //nothing is added to the validationResult(req) array
     }),   
   body('hlakSigB64')
@@ -1360,12 +1367,10 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .matches(base64Regex).withMessage('Invalid hlakSigB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length !== 256) throw new Error('Invalid hlakSigB64 size: ' + buf.length);  
+      if (buf.length < 128 || buf.length > 512) throw new Error(`hlakSigB64(${buf.length}) is invalid`);  
       return true;  //nothing is added to the validationResult(req) array
     }), 
-],
-
-
+  ],
 
   async (req, res) => {
     const errors = validationResult(req);
@@ -1379,8 +1384,6 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       const                 { certifyHMACB64, certifyHMACSigB64, appHashB64, pcrHashB64, publicKeyB64, decryptedText, HLAKPublicB64, windowsEkPublicPEM, srkNameB64, attestQbase64, sigQbase64, hmacB64, hlakSigB64, rsaSignatureB64 } = req.body;
       const packageFields = { certifyHMACB64, certifyHMACSigB64, appHashB64, pcrHashB64, publicKeyB64, decryptedText, HLAKPublicB64, windowsEkPublicPEM, srkNameB64, attestQbase64, sigQbase64, hmacB64, hlakSigB64 };
           console.log("======================= LOGIN END ==================================");
-
-
 
       // --- 0) Run signature verifications on the whole package ---
       const jsonBytes = Buffer.from(JSON.stringify(packageFields), 'utf8');//turn the object to a string, then it can be converted into bytes// JavaScript object (packageFields) → JSON string (JSON.stringify(packageFields)) → UTF-8 bytes (Buffer.from(..., 'utf8')).
@@ -1398,7 +1401,6 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       const tempUserData = JSON.parse(tempUserJson);
       const { secretNonce, createdAt, email } = tempUserData;// Extract what you need    
       // { email, device_fingerprint, createdAt, tempDeviceId, nonceBase64, tpm_key, secretNonce };
-
 
       const MAX_AGE_MS = 24 * 1000;// Example: verify nonce within 1 minutes (60,000 ms)
       const now = new Date();
@@ -1635,7 +1637,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('certifyInfo invalid Base64');
-      if (buf.length < 100 || buf.length > 200) throw new Error(`certifyInfo(${buf.length}) is invalid`);
+      if (buf.length < 80 || buf.length > 256) throw new Error(`certifyInfo(${buf.length}) is invalid`);
       return true;  //nothing is added to the validationResult(req) array
     }),
   body('certifySig')
@@ -1652,7 +1654,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('certifyInfoEnd invalid Base64');
-      if (buf.length < 100 || buf.length > 200) throw new Error(`certifyInfoEnd(${buf.length}) is invalid`);
+      if (buf.length < 80 || buf.length > 256) throw new Error(`certifyInfoEnd(${buf.length}) is invalid`);
 
       return true;
     }),
@@ -1670,7 +1672,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(key => {
       if (!isValidTpmKey(key)) { //actual size: 256
         console.log("Invalid TPM key detected:", key);
-        throw new Error('akPubBase64 size invalid');
+        throw new Error('akPubBase64 is invalid'); //size is invalid
       }
       return true; //nothing is added to the validationResult(req) array
     }),
@@ -1679,7 +1681,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid HLAKPublicB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 250 || buf.length > 400) throw new Error(`HLAKPublic(${buf.length}) is invalid`);
+      if (buf.length < 128 || buf.length > 1024) throw new Error(`HLAKPublic(${buf.length}) is invalid`);
       return true;
     }),
   body('creationDataB64')
@@ -1688,7 +1690,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('creationDataB64 invalid Base64');
-      if (buf.length < 50 || buf.length > 150) throw new Error(`creationDataB64(${buf.length}) is invalid`);
+      if (buf.length < 50 || buf.length > 256) throw new Error(`creationDataB64(${buf.length}) is invalid`);
       return true;
     }),
   body('creationHashB64')
@@ -1711,7 +1713,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid creationTicketB64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
-      if (buf.length < 28 || buf.length > 72) throw new Error(`creationTicketB64(${buf.length}) is invalid`);
+      if (buf.length < 24 || buf.length > 128) throw new Error(`creationTicketB64(${buf.length}) is invalid`);
       return true;
     }),
   body('ekPublicPem')
@@ -1735,7 +1737,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid publicKeyB64 format')
     .custom(key => {
       if (!isValidTpmKey(key)) { //256 -> 162       from persistent to transient key
-        throw new Error('Invalid publicKeyB64 size');        
+        throw new Error('Invalid publicKeyB64');        //size is invalid
       }
       return true;
     }),
@@ -1752,7 +1754,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .matches(base64Regex).withMessage('Invalid hlakPubBase64 format')
     .custom(key => {
       if (!isValidTpmKey(key)) { //256 -> 162       from persistent to transient key
-        throw new Error('hlakPubBase64 size invalid');        
+        throw new Error('hlakPubBase64 is invalid');        // size is invalid
       }
       return true;  //nothing is added to the validationResult(req) array
     }),
@@ -2394,6 +2396,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
