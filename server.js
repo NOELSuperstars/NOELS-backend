@@ -758,6 +758,7 @@ noels.post('/loginStart', // Use DB to verify user then send nonce. Hash tpm_key
   }
 );
   
+  
 //res.json({ certToken });
 //res.json({ accessToken });  // Even though it's not in the JSON response, refreshToken is sent to the client via an HTTP-only cookie
 //res.json({ status: 'Login and token generation successful', accessToken });// ✅ Also send it in the response (for mobile apps to store)
@@ -2392,7 +2393,6 @@ function storeChallenge(email, challenge) {
     }
   );
 }
-
 
 
 
