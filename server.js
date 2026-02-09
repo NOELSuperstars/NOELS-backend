@@ -1249,7 +1249,7 @@ function parseAttestCertify(attestBytes) {
               
 noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the tpmKey, then send cookie.
   whitelist([  // calls this function when server starts and middleware is loaded. Middleware is triggered when endpoint is activated
-      'certifyHMACB64', 'certifyHMACSigB64', 'appHashB64', 'pcrHashB64', 'windowsEkPublicPEM', 'srkNameB64', 'publicKeyB64', 'decryptedText', 'HLAKPublicB64', 'attestQbase64', 'sigQbase64', 'rsaSignatureB64', 'hmacB64', 'hlakSigB64'
+      'certifyHMACB64', 'certifyHMACSigB64', 'appHashB64', 'pcrHashB64', 'windowsEkPublicPEM', 'srkNameB64', 'publicKeyB64', 'decryptedText', 'HLAKPublicB64', '', 'sigQbase64', 'rsaSignatureB64', 'hmacB64', 'hlakSigB64'
     ]),
   body('certifyHMACB64')  //next() is implicitly inside body
     .notEmpty().withMessage('certifyHMACB64 is required').bail()
@@ -1322,9 +1322,9 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       if (buf.length !== 34) throw new Error('srkNameB64 size invalid');
       return true;
     }),
-  body('attestQbase64')
-    .notEmpty().withMessage('attestQbase64 is required').bail()
-    .matches(base64Regex).withMessage('Invalid attestQbase64 format')
+  body('')
+    .notEmpty().withMessage(' is required').bail()
+    .matches(base64Regex).withMessage('Invalid  format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('attestQbase64 invalid Base64');
@@ -1686,7 +1686,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('creationDataB64 invalid Base64');
-      if (buf.length < 70 || buf.length > 400) throw new Error(`creationDataB64(${buf.length}) is invalid`);
+      if (buf.length < 50 || buf.length > 150) throw new Error(`creationDataB64(${buf.length}) is invalid`);
       return true;
     }),
   body('creationHashB64')
@@ -1760,7 +1760,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('attestQbase64 invalid Base64');
-      if (buf.length < 190 || buf.length > 220) throw new Error(`attestQbase64(${buf.length}) is invalid`);
+      if (buf.length < 100 || buf.length > 220) throw new Error(`attestQbase64(${buf.length}) is invalid`);
       return true;
     }),
   body('sigQbase64')
@@ -2392,6 +2392,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
