@@ -1249,7 +1249,7 @@ function parseAttestCertify(attestBytes) {
               
 noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the tpmKey, then send cookie.
   whitelist([  // calls this function when server starts and middleware is loaded. Middleware is triggered when endpoint is activated
-      'certifyHMACB64', 'certifyHMACSigB64', 'appHashB64', 'pcrHashB64', 'windowsEkPublicPEM', 'srkNameB64', 'publicKeyB64', 'decryptedText', 'HLAKPublicB64', '', 'sigQbase64', 'rsaSignatureB64', 'hmacB64', 'hlakSigB64'
+      'certifyHMACB64', 'certifyHMACSigB64', 'appHashB64', 'pcrHashB64', 'windowsEkPublicPEM', 'srkNameB64', 'publicKeyB64', 'decryptedText', 'HLAKPublicB64', 'attestQbase64', 'sigQbase64', 'rsaSignatureB64', 'hmacB64', 'hlakSigB64'
     ]),
   body('certifyHMACB64')  //next() is implicitly inside body
     .notEmpty().withMessage('certifyHMACB64 is required').bail()
