@@ -845,7 +845,7 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
   try {
     // Decode Base64
     const keyBuffer = Buffer.from(tpmKeyB64, 'base64');
-
+    console.log("keyBuffer.length", keyBuffer.length);
     // Check decoded length range
     if (keyBuffer.length < minLength || keyBuffer.length > maxLength)
       return false;
@@ -856,7 +856,10 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
       format: 'der',
       type: 'spki'
     });
+    console.log("keyObj.asymmetricKeyType", keyObj.asymmetricKeyType);  
     if (keyObj.asymmetricKeyType !== 'rsa') return false;
+    console.log("details.modulusLength", details.modulusLength);  
+    console.log("details", details);  
 
     const details = keyObj.asymmetricKeyDetails;
     if (!details || details.modulusLength < 2048)
@@ -2395,6 +2398,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
