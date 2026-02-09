@@ -662,7 +662,7 @@ noels.post('/loginStart', // Use DB to verify user then send nonce. Hash tpm_key
       .matches(/^[A-Za-z0-9+/=\s]+$/).withMessage('Invalid RSA key format')
       .isLength(216).withMessage('Unexpected RSA key length')   // 392 for persistent, 216 for transient
       .custom((key) => {
-        if (!isValidTpmKey(key)) { // decoded byte length is 162, not 216
+        if (!isValidTpmKey(key, undefined, undefined, "tpmKey 660")) { // decoded byte length is 162, not 216
           throw new Error('RSA key failed validation');
         }
         return true;
@@ -841,11 +841,10 @@ function whitelist(fields) {
 const base64Regex = /^[A-Za-z0-9+/=]+$/;
 const hexRegex    = /^[a-fA-F0-9]+$/;
 
-function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
+function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400, keyname) {
   try {
     // Decode Base64
     const keyBuffer = Buffer.from(tpmKeyB64, 'base64');
-    console.log("keyBuffer.length", keyBuffer.length);
     // Check decoded length range
     if (keyBuffer.length < minLength || keyBuffer.length > maxLength)
       return false;
@@ -856,14 +855,12 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
       format: 'der',
       type: 'spki'
     });
-    console.log("keyObj.asymmetricKeyType", keyObj.asymmetricKeyType);  
     if (keyObj.asymmetricKeyType !== 'rsa') return false;
  
 
     const details = keyObj.asymmetricKeyDetails;
 
-        console.log("details.modulusLength", details.modulusLength);  
-    console.log("details", details); 
+        console.log("details.modulusLength", details.modulusLength, keyname);  
     if (!details || details.modulusLength < 1024)
       return false;    
     return true; // valid key
@@ -908,7 +905,7 @@ noels.post('/regisStart',  // get user data and send nonce so user can certify A
       .matches(/^[A-Za-z0-9+/=\s]+$/).withMessage('Invalid RSA key format')
       .isLength(216).withMessage('Unexpected RSA key length')   // 392 for persistent, 216 for transient
       .custom((key) => {
-        if (!isValidTpmKey(key)) { // decoded byte length is 162, not 216
+        if (!isValidTpmKey(key, undefined, undefined, "tpmKey 903")) { // decoded byte length is 162, not 216
           throw new Error('RSA key failed validation');
         }
         return true;
@@ -1296,7 +1293,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
     .notEmpty().withMessage('publicKeyB64 is required').bail()
     .matches(base64Regex).withMessage('Invalid publicKeyB64 format')
     .custom(key => {
-      if (!isValidTpmKey(key)) { //256 -> 162       from persistent to transient key
+      if (!isValidTpmKey(key, undefined, undefined, "publicKeyB64 1296")) { //256 -> 162       from persistent to transient key
         throw new Error('publicKeyB64 is invalid');        
       }
       return true;
@@ -1674,7 +1671,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .notEmpty().withMessage('akPubBase64 is required').bail()
     .matches(base64Regex).withMessage('Invalid akPubBase64 format')
     .custom(key => {
-      if (!isValidTpmKey(key)) { //actual size: 256
+      if (!isValidTpmKey(key, undefined, undefined, "akPubBase64 1670")) { //actual size: 256
         console.log("Invalid TPM key detected:", key);
         throw new Error('akPubBase64 is invalid'); //size is invalid
       }
@@ -1740,7 +1737,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .notEmpty().withMessage('publicKeyB64 is required').bail()
     .matches(base64Regex).withMessage('Invalid publicKeyB64 format')
     .custom(key => {
-      if (!isValidTpmKey(key)) { //256 -> 162       from persistent to transient key
+      if (!isValidTpmKey(key, undefined, undefined, "publicKeyB64 1736")) { //256 -> 162       from persistent to transient key
         throw new Error('Invalid publicKeyB64');        //size is invalid
       }
       return true;
@@ -1757,7 +1754,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
     .notEmpty().withMessage('hlakPubBase64 is required').bail()
     .matches(base64Regex).withMessage('Invalid hlakPubBase64 format')
     .custom(key => {
-      if (!isValidTpmKey(key)) { //256 -> 162       from persistent to transient key
+      if (!isValidTpmKey(key, undefined, undefined, "hlakPuBase64 1757")) { //256 -> 162       from persistent to transient key
         throw new Error('hlakPubBase64 is invalid');        // size is invalid
       }
       return true;  //nothing is added to the validationResult(req) array
@@ -2400,6 +2397,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
