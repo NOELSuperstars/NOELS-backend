@@ -857,7 +857,6 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
       type: 'spki'
     });
     if (keyObj.asymmetricKeyType !== 'rsa') return false;
-    if (details.modulusLength !== 2048)     return false;
 
     const details = keyObj.asymmetricKeyDetails;
     if (!details || details.modulusLength < 2048)
@@ -2396,6 +2395,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
