@@ -1323,9 +1323,9 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       if (buf.length !== 34) throw new Error('srkNameB64 size invalid');
       return true;
     }),
-  body('')
-    .notEmpty().withMessage(' is required').bail()
-    .matches(base64Regex).withMessage('Invalid  format')
+  body('attestQbase64')
+    .notEmpty().withMessage('attestQbase64 is required').bail()
+    .matches(base64Regex).withMessage('Invalid attestQbase64 format')
     .custom(value => {
       const buf = Buffer.from(value, 'base64');
       if (!buf.length) throw new Error('attestQbase64 invalid Base64');
@@ -2393,6 +2393,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
