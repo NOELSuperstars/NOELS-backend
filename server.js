@@ -864,7 +864,7 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400) {
 
         console.log("details.modulusLength", details.modulusLength);  
     console.log("details", details); 
-    if (!details || details.modulusLength < 2048)
+    if (!details || details.modulusLength < 1024)
       return false;    
     return true; // valid key
   } catch {
@@ -2400,6 +2400,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
