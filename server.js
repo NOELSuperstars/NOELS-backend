@@ -859,10 +859,7 @@ function isValidTpmKey(tpmKeyB64, minLength = 150, maxLength = 400, keyname) {
  
 
     const details = keyObj.asymmetricKeyDetails;
-
-        console.log("details.modulusLength", details.modulusLength, keyname);  
-    if (!details || details.modulusLength < 1024)
-      return false;    
+    if ( !details || details.modulusLength < 1024 || details.modulusLength > 4096 ) return false; 
     return true; // valid key
   } catch {
     return false; // invalid key
@@ -2397,6 +2394,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
