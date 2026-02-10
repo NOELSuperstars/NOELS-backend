@@ -1400,7 +1400,7 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
       const { secretNonce, createdAt, email } = tempUserData;// Extract what you need    
       // { email, device_fingerprint, createdAt, tempDeviceId, nonceBase64, tpm_key, secretNonce };
 
-      const MAX_AGE_MS = 24 * 1000;// Example: verify nonce within 1 minutes (60,000 ms)
+      const MAX_AGE_MS = 96 * 1000;// Example: verify nonce within 1 minutes (60,000 ms)
       const now = new Date();
       if (now - createdAt > MAX_AGE_MS) { throw new Error('Time period expired, please try again.'); }  //nonce expired
 
@@ -1937,7 +1937,7 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       if (!tempUserJson)  { return res.status(400).json({ error: "Registration for this device has timed out.<br>Please try again." }); }
       const tempUserData = JSON.parse(tempUserJson);
       const { tpm_key, secretNonce, createdAt, credentialBlobNonce } = tempUserData;// Extract what you need    
-      const MAX_AGE_MS = 45 * 1000;// Example: verify nonce within 1 minutes (60000 ms)
+      const MAX_AGE_MS = 96 * 1000;// Example: verify nonce within 1 minutes (60000 ms)
       const now = new Date();
       if (now - createdAt > MAX_AGE_MS) { throw new Error('Time period expired, please try again.'); }  //nonce expired
 
@@ -2254,7 +2254,7 @@ noels.post('/register/verify',
       // Verify signature safely
       let isValid;
       try { 
-        const MAX_AGE_MS = 10 * 60 * 1000;// Example: verify nonce within 10 minutes (600000 ms)
+        const MAX_AGE_MS = 10 * 96 * 1000;// Example: verify nonce within 10 minutes (600000 ms)
         const now = new Date();
         if (now - createdAt > MAX_AGE_MS) { throw new Error('Nonce expired'); }
         isValid = verifySignature(nonce, tpm_key, signedNonce);    // tpmKey is from the client and tpm_key is from the database
@@ -2394,6 +2394,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
