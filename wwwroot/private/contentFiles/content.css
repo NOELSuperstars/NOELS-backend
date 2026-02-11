@@ -301,30 +301,24 @@ html, body{
   justify-content: center; /* Horizontally center the body */ /* w/o flex, .box is slightly shifted down and #kUser-input is not centered in <body> */
   align-items: center;  /*Vertically center the body (optional) */
   border-radius: 1.2rem;
-  
   margin: 0;
 }
 
 body{   
   font-weight: 700; /* all child elements except button and #k-Container inherits this 700 bold font */
   position: relative; /* w/o this there's a gray background when you zoom out */
-  /* width: 100%;   already defined as 100vw vh
-  height: 100%; */
+  width: 100%;  
+  height: 100%;  /* already defined as 100vw vh
   max-width: 3600px;
   max-height: 2400px;
   width: 100vw;
-  height: 100vh;
+  height: 100vh;*/
   /*background: url('../../../Images/spacebg.jpg');    accesses it from the server*/
   /*background: url('https://content.app/spacebg.jpg'); accesses it from the local app
   background-image: url('spacebg.jpg');*/
   /*background: url('black.png'); */
-  
   overflow: hidden; /* Hides scrollbars */
-  
-  
-  margin: 0;
   background: black;
-
 }
 
 
