@@ -1402,7 +1402,8 @@ noels.post('/loginEnd', [ //verify quote, decrypted encryption of nonce with the
 
       const MAX_AGE_MS = 96 * 1000;// Example: verify nonce within 1 minutes (60,000 ms)
       const now = new Date();
-      if (now - createdAt > MAX_AGE_MS) { throw new Error('Time period expired, please try again.'); }  //nonce expired
+      //if (now - createdAt > MAX_AGE_MS) { throw new Error('Time period expired, please try again.'); }  //nonce expired
+        console.log("LOGIN END Time period: ", now - createdAt);
 
       const decryptedTextBytes = Buffer.from(decryptedText, 'hex');  //convert hex string to bytes
       if (!decryptedTextBytes.equals(Buffer.from(secretNonce, 'hex')))       { return res.status(403).json({ error: 'Device integrity check failed' }); }
@@ -1939,8 +1940,8 @@ noels.post('/regisEnd', [   // verify AK certifyCreation, quote, etc. If success
       const { tpm_key, secretNonce, createdAt, credentialBlobNonce } = tempUserData;// Extract what you need    
       const MAX_AGE_MS = 96 * 1000;// Example: verify nonce within 1 minutes (60000 ms)
       const now = new Date();
-      if (now - createdAt > MAX_AGE_MS) { throw new Error('Time period expired, please try again.'); }  //nonce expired
-
+      //if (now - createdAt > MAX_AGE_MS) { throw new Error('Time period expired, please try again.'); }  //nonce expired
+        console.log("REGIS END Time period: ", now - createdAt);
       const decryptedTextBytes = Buffer.from(decryptedText, 'hex'); //convert hex string to bytes
       const expectedNonce     = Buffer.from(secretNonce, 'hex');
 
@@ -2394,6 +2395,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
