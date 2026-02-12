@@ -490,19 +490,19 @@ function getWeeksInMonth(year, monthIndex) {
 const months =   ["January","February","March","April","May","June","July","August","September","October","November","December"];
 const educators = ["PeaI","Proud7","Twinkle","Avalon","CDL","Chungdahm_April","DYB","ILE","Pagoda","YBM","Hackers","Francis_Parker","Groton","Envision","Swaton","Thinking","Sutton","iSpeak","Ember"];
 
-let educatorHTML = `<div id="grid-container">`;
+let educatorsHTML = `<div id="grid-container">`;
 educators.forEach((name, index) => {
-  educatorHTML += `
-    <div class="thumbnail" data-type="educator" data-name="${name}">
+  educatorsHTML += `
+    <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
       <img src="/private/contentFiles/${name}.png" alt="Educator ${index + 1}">
       <span class="label">${name.replace(/_/g, ' ')}</span>
     </div>
   `;
 });
-educatorHTML += `</div>`;
+educatorsHTML += `</div>`;
 
 const kContainer = document.getElementById('k-Container'); 
-toInnerHTML(kContainer, educatorHTML);
+toInnerHTML(kContainer, educatorsHTML);
 kContainer.style.display = 'block'; //default is "grid"
 
 const attachColorScroll = (container) => {
@@ -518,7 +518,7 @@ attachColorScroll(kContainer); // manually triggers it
 
 let gemstoneMonthsHTML = `
   <div class="go-back-container">
-    <button class="thumbnail back-BTN" data-type="backTo-educators" aria-label="Go back">
+    <button class="thumbnail back-BTN" data-thumbtype="backTo-educators" aria-label="Go back">
       <img src="/private/contentFiles/go_back.png" alt="back">
     </button>
   </div>
@@ -542,20 +542,22 @@ form.addEventListener('click', (e) => {
   if (!thumb) return;
   hideCursor(thumb);
 
-  const { thumbType } = thumb.dataset;
-  if (thumb.dataset.type === 'educator' || thumb.dataset.type === 'backTo-months') {
-    updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorHTML was set to "block" //default is "block"
-    if (thumb.dataset.type === 'educator'){
-
+  const { thumbtype } = thumb.dataset;
+  if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
+    if (thumbtype === 'educator'){
+      //check if user has access
+      //if no access, return;
       selectedEducator = thumb.querySelector('.label')?.textContent?.trim();
 
     } 
+    updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
     toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
     adjustFontsize(magSent);
     return;
   }
-  else if (thumb.dataset.type === 'backTo-educators') {
-    updateKcontainer(educatorHTML, 'block');
+  else if (thumbtype === 'backTo-educators') {
+    updateKcontainer(educatorsHTML, 'block');
+    toInnerHTML(magSent, '');
     return;
   }
   function updateKcontainer(html, gridOrBlock){
@@ -650,7 +652,7 @@ form.addEventListener('click', (e) => {
       </div>
       <div class="eachMonth-buttons-container">
         <div>
-          <button class="thumbnail back-BTN" data-type="backTo-months" aria-label="Go back">
+          <button class="thumbnail back-BTN" data-thumbtype="backTo-months" aria-label="Go back">
             <img src="/private/contentFiles/go_back.png" alt="back">
           </button>
         </div>
