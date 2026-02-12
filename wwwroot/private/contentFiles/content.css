@@ -301,14 +301,17 @@ html, body{
   justify-content: center; /* Horizontally center the body */ /* w/o flex, .box is slightly shifted down and #kUser-input is not centered in <body> */
   align-items: center;  /*Vertically center the body (optional) */
   border-radius: 1.2rem;
+  width: 100%;
+    height: 100%; 
+
   margin: 0;
 }
 
 body{   
   font-weight: 700; /* all child elements except button and #k-Container inherits this 700 bold font */
   position: relative; /* w/o this there's a gray background when you zoom out */
-  width: 100%;  
-  height: 100%;  /* already defined as 100vw vh
+  width: 100%;   
+  height: 100%; /*
   max-width: 3600px;
   max-height: 2400px;
   width: 100vw;
@@ -319,6 +322,7 @@ body{
   /*background: url('black.png'); */
   overflow: hidden; /* Hides scrollbars */
   background: black;
+
 }
 
 
@@ -3132,13 +3136,13 @@ img {
   
 }
 
-@media (max-height: 1020px) {
+@media (max-height: 720px) {
   #text-container {
-      width: calc(80% + (1020px - 100vh) * 1.6);
+      width: calc(80% + (720px - 100vh) * 1.6);
 
   }
   .button-container {
-      width: calc(20% + (100vh - 1020px) * 0.3);
+      width: calc(20% + (100vh - 720px) * 0.3);
 
   }
 }
@@ -3259,7 +3263,7 @@ img {
 
 
 
-@media (max-height: 890px) or (max-width: 1280px) {
+@media (max-height: 720px) or (max-width: 890px) {
   .main-container {
     display: flex;
     flex-direction: column;
@@ -3278,7 +3282,7 @@ img {
 
   @keyframes animatePrismH   
   {  0%{transform: rotateY(45deg)  rotateX(360deg);} /*  0deg to 360deg to make it spin */
-  100%{transform: rotateY(45deg)  rotateX(0deg);}}
+  100%{transform: rotateY(45deg)  rotateX(360deg);}}
 
   .button-container{
     height: 100px;
@@ -3871,6 +3875,11 @@ del {
 .disappear {
   display: none;
 }
+
+
+
+
+
 
 
 
