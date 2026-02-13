@@ -367,12 +367,12 @@ noels.get('/getEducators', requireAuth, async (req, res) => {
   try {
     const userEmail = req.auth.userEmail;
     const sqlAllEducators = `SELECT id, name FROM educators ORDER BY id`;
-    const sqlApprovedEducators = `
-      SELECT e.id, e.name
+    const sqlUserEducators = `
+      SELECT e.id, e.name, em.status
       FROM educators e
       JOIN educator_members em ON e.id = em.educator_id
       JOIN users u ON em.user_id = u.id
-      WHERE u.email = ? AND em.status = 'approved'
+      WHERE u.email = ?
       ORDER BY e.id
     `;
     
