@@ -338,7 +338,6 @@ noels.get('/contentFiles', requireAuth, async (req, res) => {
     res.sendFile(path.join(__dirname, "wwwroot/private/contentFiles/logo.html")); 
 
 });
-
 /*
 noels.get('/getEducators', async (req, res) => {
   try {
@@ -352,23 +351,24 @@ noels.get('/getEducators', async (req, res) => {
     `;
     const educators = await query(sql, [userEmail]);* /
     const sql = `SELECT id, name FROM educators ORDER BY name`;
+    
+    
+    
     const educators = await query(sql);   
-    console.log("educators: ", educators);
     res.json(educators);
   } catch (error) {
     res.status(500).json({ error: 'Failed to fetch educators' });
   }
 });
 */
-
 noels.get('/getEducators', requireAuth, async (req, res) => {
   try {
     const userEmail = req.auth.userEmail;
     const sql = `SELECT id, name FROM educators ORDER BY id`;
-    console.log("About to execute query...");
+    
+      
     const educators = await query(sql);   
-    console.log("educators: ", educators);
-    console.log("Number of educators:", educators.length);
+    console.log(educators);
     res.json(educators);
   } catch (error) {
     console.error("ERROR in /getEducators:", error);
@@ -2432,6 +2432,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
