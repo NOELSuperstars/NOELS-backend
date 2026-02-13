@@ -517,7 +517,7 @@ educators.forEach(({ name }, index) => {
   educatorsHTML += `
     <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
       <img src="/private/contentFiles/${name}.png" alt="Educator ${index + 1}">
-      <span class="label">${name.replace(/_/g, ' ')}</span>
+      <span class="label">${name.replace(/\s/g, '-')}</span>     
     </div>
   `;
 });
