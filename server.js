@@ -364,7 +364,7 @@ noels.get('/getEducators', async (req, res) => {
 noels.get('/getEducators', requireAuth, async (req, res) => {
   try {
     const userEmail = req.auth.userEmail;
-    const sql = `SELECT id, name FROM educators ORDER BY name`;
+    const sql = `SELECT id, name FROM educators ORDER BY id`;
     console.log("About to execute query...");
     const educators = await query(sql);   
     console.log("educators: ", educators);
@@ -2432,6 +2432,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
