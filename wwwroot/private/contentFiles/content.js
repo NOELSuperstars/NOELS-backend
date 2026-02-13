@@ -512,9 +512,8 @@ educators.forEach(educator => {
   console.log(`${educator.id}: ${educator.name}`);
 });
 
-
 let educatorsHTML = `<div id="grid-container">`;
-educators.forEach((educator.name, index) => {
+educators.forEach(({ name }, index) => {
   educatorsHTML += `
     <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
       <img src="/private/contentFiles/${name}.png" alt="Educator ${index + 1}">
