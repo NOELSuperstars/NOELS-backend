@@ -512,9 +512,7 @@ allEducators.forEach(educator => {
   console.log(`${educator.id}: ${educator.name}`);
 });
 
-userContactedEducator.forEach(educator => {
-  console.log(`status: ${educator.status}`);
-});
+
 
 let educatorsHTML = `<div id="grid-container">`;
 allEducators.forEach(({ name, id }, index) => {
@@ -573,6 +571,11 @@ form.addEventListener('click', (e) => {
     if (thumbtype === 'educator'){
       //check if user has access
       //if no access, return;
+
+userContactedEducator.forEach(educator => {
+  console.log(`status: ${educator.status}`);
+});
+     
       selectedEducator = thumb.querySelector('.label')?.textContent?.trim();
 
     } 
