@@ -339,6 +339,28 @@ noels.get('/contentFiles', requireAuth, async (req, res) => {
 
 });
 
+
+noels.get('/getEducators', async (req, res) => {
+  try {
+    const userEmail = req.auth.userEmail;
+    /*const sql = `
+      SELECT e.id, e.name 
+      FROM educators e
+      JOIN educator_members em ON e.id = em.educator_id
+      WHERE em.user_id = ? AND em.status = 'approved'
+      ORDER BY e.name
+    `;
+    const educators = await query(sql, [userEmail]);*/
+    const sql = `SELECT id, name FROM educators ORDER BY name`;
+    const educators = await query(sql);   
+    console.log("educators: ", educators);
+    res.json(educators);
+  } catch (error) {
+    res.status(500).json({ error: 'Failed to fetch educators' });
+  }
+});
+
+
 noels.post('/weekClicked', requireAuth,
   [
     whitelist(['week']), //Allows only the week field from req.body
