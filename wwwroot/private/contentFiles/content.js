@@ -507,12 +507,17 @@ async function getEducators() {
 }
 
 await getEducators();
-educators.forEach(educator => {
+const {allEducators, userContactedEducator} = educators
+allEducators.forEach(educator => {
   console.log(`${educator.id}: ${educator.name}`);
 });
 
+userContactedEducator.forEach(educator => {
+  console.log(`status: ${educator.status}`);
+});
+
 let educatorsHTML = `<div id="grid-container">`;
-educators.forEach(({ name, id }, index) => {
+allEducators.forEach(({ name, id }, index) => {
   educatorsHTML += `
     <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
       <img src="/private/contentFiles/${name.replace(/\s/g, '-')}.png" alt="Educator ${index + 1}">
