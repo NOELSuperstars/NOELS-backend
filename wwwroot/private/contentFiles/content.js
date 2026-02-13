@@ -489,7 +489,7 @@ function getWeeksInMonth(year, monthIndex) {
 
 const months =   ["January","February","March","April","May","June","July","August","September","October","November","December"];
 //const educators = ["PeaI","Proud7","Twinkle","Avalon","CDL","Chungdahm_April","DYB","ILE","Pagoda","YBM","Hackers","Francis_Parker","Groton","Envision","Swaton","Thinking","Sutton","iSpeak","Ember"];
-
+let educators;
 async function getEducators() {
   try {
     const response = await fetch('/getEducators', {
@@ -498,7 +498,7 @@ async function getEducators() {
     if (!response.ok) {
       throw new Error(`Server error: ${response.status}`);
     }
-    const educators = await response.json();
+    educators = await response.json();
     console.log('Educators:', educators);
   } catch (err) {
     console.error(err);
@@ -507,12 +507,14 @@ async function getEducators() {
   }
 }
 
-getEducators();
-
+await getEducators();
+educators.forEach(educator => {
+  console.log(`${educator.id}: ${educator.name}`);
+});
 
 
 let educatorsHTML = `<div id="grid-container">`;
-educators.forEach((name, index) => {
+educators.forEach((educator.name, index) => {
   educatorsHTML += `
     <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
       <img src="/private/contentFiles/${name}.png" alt="Educator ${index + 1}">
