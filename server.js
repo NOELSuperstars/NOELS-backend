@@ -361,15 +361,29 @@ noels.get('/getEducators', async (req, res) => {
   }
 });
 */
+
+
 noels.get('/getEducators', requireAuth, async (req, res) => {
   try {
     const userEmail = req.auth.userEmail;
-    const sql = `SELECT id, name FROM educators ORDER BY id`;
+    const sqlAllEducators = `SELECT id, name FROM educators ORDER BY id`;
+    const sqlApprovedEducators = `
+      SELECT e.id, e.name
+      FROM educators e
+      JOIN educator_members em ON e.id = em.educator_id
+      JOIN users u ON em.user_id = u.id
+      WHERE u.email = ? AND em.status = 'approved'
+      ORDER BY e.id
+    `;
     
-      
-    const educators = await query(sql);   
-    console.log(educators);
-    res.json(educators);
+    const allEducators = await query(sqlAllEducators);
+    const approvedEducators = await query(sqlApprovedEducators, [userEmail]);
+    console.log(allEducators);
+    console.log(approvedEducators);
+    res.json({
+      allEducators: allEducators,
+      approvedEducators: approvedEducators
+    });
   } catch (error) {
     console.error("ERROR in /getEducators:", error);
     res.status(500).json({ error: 'Failed to fetch educators' });
@@ -2432,6 +2446,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
