@@ -360,7 +360,8 @@ noels.get('/getEducators', async (req, res) => {
   }
 });
 */
-noels.get('/getEducators', async (req, res) => {
+
+noels.get('/getEducators', requireAuth, async (req, res) => {
   try {
     const userEmail = req.auth.userEmail;
     const sql = `SELECT id, name FROM educators ORDER BY name`;
@@ -373,7 +374,7 @@ noels.get('/getEducators', async (req, res) => {
     console.error("ERROR in /getEducators:", error);
     res.status(500).json({ error: 'Failed to fetch educators' });
   }
-});    
+});
 
 noels.post('/weekClicked', requireAuth,
   [
