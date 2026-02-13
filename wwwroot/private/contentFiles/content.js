@@ -516,7 +516,7 @@ let educatorsHTML = `<div id="grid-container">`;
 educators.forEach(({ name }, index) => {
   educatorsHTML += `
     <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
-      <img src="/private/contentFiles/${name.replace(/\s/g, '-')}}.png" alt="Educator ${index + 1}">
+      <img src="/private/contentFiles/${name.replace(/\s/g, '-')}.png" alt="Educator ${index + 1}">
       <span class="label">${name}</span>     
     </div>
   `;
