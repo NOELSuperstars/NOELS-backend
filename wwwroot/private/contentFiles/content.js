@@ -488,7 +488,6 @@ function getWeeksInMonth(year, monthIndex) {
 
 
 const months =   ["January","February","March","April","May","June","July","August","September","October","November","December"];
-//const educators = ["PeaI","Proud7","Twinkle","Avalon","CDL","Chungdahm_April","DYB","ILE","Pagoda","YBM","Hackers","Francis_Parker","Groton","Envision","Swaton","Thinking","Sutton","iSpeak","Ember"];
 let educators;
 async function getEducators() {
   try {
@@ -513,11 +512,11 @@ educators.forEach(educator => {
 });
 
 let educatorsHTML = `<div id="grid-container">`;
-educators.forEach(({ name }, index) => {
+educators.forEach(({ name, id }, index) => {
   educatorsHTML += `
     <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
       <img src="/private/contentFiles/${name.replace(/\s/g, '-')}.png" alt="Educator ${index + 1}">
-      <span class="label">${name}</span>     
+      <span class="label">${name}(ID: ${id})</span>     
     </div>
   `;
 });
