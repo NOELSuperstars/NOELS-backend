@@ -378,7 +378,7 @@ noels.get('/getEducators', requireAuth, async (req, res) => {
     
     const allEducators = await query(sqlAllEducators);
     const userContactedEducator = await query(sqlUserContactedEducator, [userEmail]);
-    console.log("ALL " + allEducators);
+    console.log("ALL ", allEducators);
           console.log("NEWLINE ");
 
     console.log("userContactedEducator ", userContactedEducator);
@@ -2445,6 +2445,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
