@@ -367,7 +367,7 @@ noels.get('/getEducators', requireAuth, async (req, res) => {
   try {
     const userEmail = req.auth.userEmail;
     const sqlAllEducators = `SELECT id, name FROM educators ORDER BY id`;
-    const sqlUserEducators = `
+    const sqlOnlyUserEducators = `
       SELECT e.id, e.name, em.status
       FROM educators e
       JOIN educator_members em ON e.id = em.educator_id
@@ -377,15 +377,12 @@ noels.get('/getEducators', requireAuth, async (req, res) => {
     `;
     
     const allEducators = await query(sqlAllEducators);
-    const approvedEducators = await query(sqlApprovedEducators, [userEmail]);
+    const onlyUserEducators = await query(sqlOnlyUserEducators, [userEmail]);
     console.log("ALL " + allEducators);
           console.log("NEWLINE ");
 
-    console.log("APPROVED ", approvedEducators);
-    res.json({
-      allEducators: allEducators,
-      approvedEducators: approvedEducators
-    });
+    console.log("APPROVED ", userEducators);
+    res.json({allEducators, onlyUserEducators});
   } catch (error) {
     console.error("ERROR in /getEducators:", error);
     res.status(500).json({ error: 'Failed to fetch educators' });
@@ -2448,6 +2445,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
