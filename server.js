@@ -378,8 +378,10 @@ noels.get('/getEducators', requireAuth, async (req, res) => {
     
     const allEducators = await query(sqlAllEducators);
     const approvedEducators = await query(sqlApprovedEducators, [userEmail]);
-    console.log(allEducators);
-    console.log(approvedEducators);
+    console.log("ALL " + allEducators);
+          console.log("NEWLINE ");
+
+    console.log("APPROVED ", approvedEducators);
     res.json({
       allEducators: allEducators,
       approvedEducators: approvedEducators
@@ -2446,6 +2448,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
