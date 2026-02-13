@@ -490,19 +490,24 @@ function getWeeksInMonth(year, monthIndex) {
 const months =   ["January","February","March","April","May","June","July","August","September","October","November","December"];
 //const educators = ["PeaI","Proud7","Twinkle","Avalon","CDL","Chungdahm_April","DYB","ILE","Pagoda","YBM","Hackers","Francis_Parker","Groton","Envision","Swaton","Thinking","Sutton","iSpeak","Ember"];
 
-try {
-  const response = await fetch('/getEducators', {
-    credentials: 'include'
-  });
-  if (!response.ok) {
-    throw new Error(`Server error: ${response.status}`);
+async function getEducators() {
+  try {
+    const response = await fetch('/getEducators', {
+      credentials: 'include'
+    });
+    if (!response.ok) {
+      throw new Error(`Server error: ${response.status}`);
+    }
+    const educators = await response.json();
+    console.log('Educators:', educators);
+  } catch (err) {
+    console.error(err);
+    const errMsg = `<p>📡 ${err.message || 'Network Error.'} 🔌<br>Please check your connection.</p>`;
+    console.log(errMsg);
   }
-  const educators = await response.json();
-  console.log('Server OK:', data);
-} catch (err) {
-  console.error(err);
-  const errMsg = `<p>📡 ${err.message || 'Network Error.'} 🔌<br>Please check your connection.</p>`;
 }
+
+getEducators();
 
 
 
