@@ -576,18 +576,19 @@ form.addEventListener('click', (e) => {
        toInnerHTML(magSent, `<p>Contact ${selectedEducator} to gain access.</p>`);
        adjustFontsize(magSent);
        return;
-     }
-     updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
-     toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
-     adjustFontsize(magSent);
-     return;
-   }
-   else if (thumbtype === 'backTo-educators') {
-     updateKcontainer(educatorsHTML, 'block');
-     toInnerHTML(magSent, '');
-     return;
+    }
+    console.log("580");
+    updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
+    toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
+    adjustFontsize(magSent);
+    return;
    }
   }
+  else if (thumbtype === 'backTo-educators') {
+   updateKcontainer(educatorsHTML, 'block');
+   toInnerHTML(magSent, '');
+   return;
+ }
   function updateKcontainer(html, gridOrBlock){
     toInnerHTML(kContainer, html);
     kContainer.style.display = gridOrBlock;
