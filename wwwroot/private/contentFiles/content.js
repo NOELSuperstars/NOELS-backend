@@ -561,28 +561,26 @@ form.addEventListener('click', (e) => {
   hideCursor(thumb); 
 
   const { thumbtype, selectedEducator } = thumb.dataset;
-  console.log(thumbtype);
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
-     const educatorFound = contactedEducator.find(edu => selectedEducator === edu.name);
-     if (educatorFound) {
-       if (educatorFound.status !== 'approved') {
-         toInnerHTML(magSent, `<p>${selectedEducator}<br>Status: ${educatorFound.status}</p>`);
-         adjustFontsize(magSent);
-         return;
-       }
-     }
-     else if (!educatorFound){
-       toInnerHTML(magSent, `<p>Contact ${selectedEducator} to gain access.</p>`);
-       adjustFontsize(magSent);
-       return;
+      const educatorFound = contactedEducator.find(edu => selectedEducator === edu.name);
+      if (educatorFound) {
+        if (educatorFound.status !== 'approved') {
+          toInnerHTML(magSent, `<p>${selectedEducator}<br>Status: ${educatorFound.status}</p>`);
+          adjustFontsize(magSent);
+          return;
+        }
+      }
+      else if (!educatorFound){
+        toInnerHTML(magSent, `<p>Contact ${selectedEducator} to gain access.</p>`);
+        adjustFontsize(magSent);
+        return;
+      }
     }
-    console.log("580");
     updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
     toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
     adjustFontsize(magSent);
     return;
-   }
   }
   else if (thumbtype === 'backTo-educators') {
    updateKcontainer(educatorsHTML, 'block');
