@@ -517,7 +517,7 @@ allEducators.forEach(educator => {
 let educatorsHTML = `<div id="grid-container">`;
 allEducators.forEach(({ name, id }, index) => {
   educatorsHTML += `
-    <div class="thumbnail" data-thumbtype="educator" data-name="${name}">
+    <div class="thumbnail" data-thumbtype="educator" data-selected-educator="${name}">
       <img src="/private/contentFiles/${name.replace(/\s/g, '-')}.png" alt="Educator ${index + 1}">
       <span class="label">${name}<br>(id: ${id})</span>     
     </div>
@@ -558,7 +558,6 @@ months.forEach((month, index) => {
 });
 gemstoneMonthsHTML += `</div>`;
 
-let selectedEducator;
 
 const form = document.querySelector("#myForm");
 form.addEventListener('click', (e) => {  
@@ -568,18 +567,17 @@ form.addEventListener('click', (e) => {
 
 
  
-  const { thumbtype, name } = thumb.dataset;
+  const { thumbtype, selectedEducator } = thumb.dataset;
+   
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
      contactedEducator.forEach(educator => {      
-      const selectedEducator = name;
-      console.log(`Clicked Educator: ${selectedEducator}    ${educator.name} status: ${educator.status}`);  
-      
-      if (name === educator.name) console.log(`MATCHES: ${selectedEducator}`);  
+      if (name === educator.name && educator.status !== 'approved') {
+       toInnerHTML(magSent, `<p>${selectedEducator}<br>Status: ${educator.status}</p>`);
+       adjustFontsize(magSent);
+       return;
+      }
      }); 
-
-     
-
     } 
     updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
     toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
