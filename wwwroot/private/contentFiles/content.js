@@ -566,24 +566,19 @@ form.addEventListener('click', (e) => {
   if (!thumb) return;
   hideCursor(thumb); 
 
-  contactedEducator.forEach(educator => {      
-   const name = thumb.dataset.name;
-   console.log(`Clicked Educator: ${name}    ${educator.name} status: ${educator.status}`);  
-   
-   if (name === educator.name) console.log(`MATCHES: ${name}`);  
-  }); 
+
  
-  const { thumbtype } = thumb.dataset;
+  const { thumbtype, name } = thumb.dataset;
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
-      //check if user has access
-      //if no access, return;
-    /*contactedEducator.forEach(educator => {
-      console.log(`status: ${educator.status}`);
-    });*/
+     contactedEducator.forEach(educator => {      
+      const selectedEducator = name;
+      console.log(`Clicked Educator: ${selectedEducator}    ${educator.name} status: ${educator.status}`);  
+      
+      if (name === educator.name) console.log(`MATCHES: ${selectedEducator}`);  
+     }); 
 
      
-      selectedEducator = thumb.querySelector('.label')?.textContent?.trim();
 
     } 
     updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
