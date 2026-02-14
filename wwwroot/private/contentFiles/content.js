@@ -552,7 +552,7 @@ months.forEach((month, index) => {
   `;
 });
 gemstoneMonthsHTML += `</div>`;
-
+let selectedEducator;
 
 const form = document.querySelector("#myForm");
 form.addEventListener('click', (e) => {  
@@ -560,9 +560,10 @@ form.addEventListener('click', (e) => {
   if (!thumb) return;
   hideCursor(thumb); 
 
-  const { thumbtype, selectedEducator } = thumb.dataset;
+  const { thumbtype } = thumb.dataset;
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
+      ({ selectedEducator } = thumb.dataset);
       const educatorFound = contactedEducator.find(edu => selectedEducator === edu.name);
       if (educatorFound) {
         if (educatorFound.status !== 'approved') {
