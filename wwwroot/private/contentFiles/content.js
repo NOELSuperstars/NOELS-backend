@@ -564,30 +564,29 @@ form.addEventListener('click', (e) => {
    
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
-      
-    const educatorFound = contactedEducator.find(edu => selectedEducator === edu.name);
-    if (educatorFound) {
-      if (educatorFound.status !== 'approved') {
-        toInnerHTML(magSent, `<p>${selectedEducator}<br>Status: ${educatorFound.status}</p>`);
-        adjustFontsize(magSent);
-        return;
-      }
-    }
-    else{
-      toInnerHTML(magSent, `<p>Contact ${selectedEducator} to gain access.</p>`);
-      adjustFontsize(magSent);
-      return;
-    }
-      
-    updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
-    toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
-    adjustFontsize(magSent);
-    return;
-  }
-  else if (thumbtype === 'backTo-educators') {
-    updateKcontainer(educatorsHTML, 'block');
-    toInnerHTML(magSent, '');
-    return;
+     const educatorFound = contactedEducator.find(edu => selectedEducator === edu.name);
+     if (educatorFound) {
+       if (educatorFound.status !== 'approved') {
+         toInnerHTML(magSent, `<p>${selectedEducator}<br>Status: ${educatorFound.status}</p>`);
+         adjustFontsize(magSent);
+         return;
+       }
+     }
+     else{
+       toInnerHTML(magSent, `<p>Contact ${selectedEducator} to gain access.</p>`);
+       adjustFontsize(magSent);
+       return;
+     }
+     updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
+     toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
+     adjustFontsize(magSent);
+     return;
+   }
+   else if (thumbtype === 'backTo-educators') {
+     updateKcontainer(educatorsHTML, 'block');
+     toInnerHTML(magSent, '');
+     return;
+   }
   }
   function updateKcontainer(html, gridOrBlock){
     toInnerHTML(kContainer, html);
@@ -782,6 +781,7 @@ form.addEventListener('click', (e) => {
 
 
 
+   
 
 });
 
