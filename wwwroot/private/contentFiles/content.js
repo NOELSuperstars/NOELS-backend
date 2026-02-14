@@ -564,7 +564,7 @@ const form = document.querySelector("#myForm");
 form.addEventListener('click', (e) => {  
   const thumb = e.target.closest('.thumbnail');
   if (!thumb) return;
-  hideCursor(thumb);
+  hideCursor(thumb); 
 
   contactedEducator.forEach(educator => {      
    const name = thumb.dataset.name;
