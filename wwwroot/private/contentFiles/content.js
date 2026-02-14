@@ -508,11 +508,6 @@ async function getEducators() {
 
 await getEducators();
 const {allEducators, contactedEducator} = educators
-allEducators.forEach(educator => {
-  console.log(`${educator.id}: ${educator.name}`);
-});
-
-
 
 let educatorsHTML = `<div id="grid-container">`;
 allEducators.forEach(({ name, id }, index) => {
@@ -565,20 +560,25 @@ form.addEventListener('click', (e) => {
   if (!thumb) return;
   hideCursor(thumb); 
 
-
- 
   const { thumbtype, selectedEducator } = thumb.dataset;
    
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
-     contactedEducator.forEach(educator => {      
-      if (name === educator.name && educator.status !== 'approved') {
-       toInnerHTML(magSent, `<p>${selectedEducator}<br>Status: ${educator.status}</p>`);
-       adjustFontsize(magSent);
-       return;
+      
+    const educatorFound = contactedEducator.find(edu => selectedEducator === edu.name);
+    if (educatorFound) {
+      if (educatorFound.status !== 'approved') {
+        toInnerHTML(magSent, `<p>${selectedEducator}<br>Status: ${educatorFound.status}</p>`);
+        adjustFontsize(magSent);
+        return;
       }
-     }); 
-    } 
+    }
+    else{
+      toInnerHTML(magSent, `<p>Contact ${selectedEducator} to gain access.</p>`);
+      adjustFontsize(magSent);
+      return;
+    }
+      
     updateKcontainer(gemstoneMonthsHTML, 'grid');//educatorsHTML was set to "block" //default is "block"
     toInnerHTML(magSent, `<p>Educator: ${selectedEducator}</p>`);
     adjustFontsize(magSent);
