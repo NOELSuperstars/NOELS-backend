@@ -559,18 +559,20 @@ months.forEach((month, index) => {
 gemstoneMonthsHTML += `</div>`;
 
 let selectedEducator;
-contactedEducator.forEach(educator => {      
- console.log(`status: ${educator.status}`);  
- const name = thumb.dataset.name;
- console.log(`name: ${name}`);  
- if (name === educator.name) console.log(`MATCHES: ${name}`);  
-});
+
 const form = document.querySelector("#myForm");
 form.addEventListener('click', (e) => {  
   const thumb = e.target.closest('.thumbnail');
   if (!thumb) return;
   hideCursor(thumb);
-  console.log(thumb);
+
+  contactedEducator.forEach(educator => {      
+   console.log(`status: ${educator.status}`);  
+   const name = thumb.dataset.name;
+   console.log(`name: ${name}`);  
+   if (name === educator.name) console.log(`MATCHES: ${name}`);  
+  }); 
+ 
   const { thumbtype } = thumb.dataset;
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
