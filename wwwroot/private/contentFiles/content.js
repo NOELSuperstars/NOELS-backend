@@ -567,9 +567,9 @@ form.addEventListener('click', (e) => {
   hideCursor(thumb);
 
   contactedEducator.forEach(educator => {      
-   console.log(`status: ${educator.status}`);  
    const name = thumb.dataset.name;
-   console.log(`name: ${name}`);  
+   console.log(`Clicked Educator: ${name}    ${educator.name} status: ${educator.status}`);  
+   
    if (name === educator.name) console.log(`MATCHES: ${name}`);  
   }); 
  
