@@ -507,7 +507,7 @@ async function getEducators() {
 }
 
 await getEducators();
-const {allEducators, userContactedEducator} = educators
+const {allEducators, contactedEducator} = educators
 allEducators.forEach(educator => {
   console.log(`${educator.id}: ${educator.name}`);
 });
@@ -559,22 +559,23 @@ months.forEach((month, index) => {
 gemstoneMonthsHTML += `</div>`;
 
 let selectedEducator;
-
+contactedEducator.forEach(educator => {
+      console.log(`status: ${educator.status}`);
 const form = document.querySelector("#myForm");
 form.addEventListener('click', (e) => {  
   const thumb = e.target.closest('.thumbnail');
   if (!thumb) return;
   hideCursor(thumb);
-
+  console.log(thumb);
   const { thumbtype } = thumb.dataset;
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
       //check if user has access
       //if no access, return;
+    /*contactedEducator.forEach(educator => {
+      console.log(`status: ${educator.status}`);
+    });*/
 
-userContactedEducator.forEach(educator => {
-  console.log(`status: ${educator.status}`);
-});
      
       selectedEducator = thumb.querySelector('.label')?.textContent?.trim();
 
