@@ -377,12 +377,12 @@ noels.get('/getEducators', requireAuth, async (req, res) => {
     `;
     
     const allEducators = await query(sqlAllEducators);
-    const ContactedEducator = await query(sqlContactedEducator, [userEmail]);
+    const contactedEducator = await query(sqlContactedEducator, [userEmail]);
     console.log("ALL ", allEducators);
           console.log("NEWLINE ");
 
-    console.log("ContactedEducator ", ContactedEducator);
-    res.json({allEducators, ContactedEducator});
+    console.log("ContactedEducator ", contactedEducator);
+    res.json({allEducators, contactedEducator});
   } catch (error) {
     console.error("ERROR in /getEducators:", error);
     res.status(500).json({ error: 'Failed to fetch educators' });
@@ -2445,6 +2445,7 @@ function storeChallenge(email, challenge) {
     }
   );
 }
+
 
 
 
