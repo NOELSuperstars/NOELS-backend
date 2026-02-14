@@ -561,7 +561,7 @@ form.addEventListener('click', (e) => {
   hideCursor(thumb); 
 
   const { thumbtype, selectedEducator } = thumb.dataset;
-   
+  console.log(thumbtype);
   if (thumbtype === 'educator' || thumbtype === 'backTo-months') {
     if (thumbtype === 'educator'){
      const educatorFound = contactedEducator.find(edu => selectedEducator === edu.name);
@@ -572,7 +572,7 @@ form.addEventListener('click', (e) => {
          return;
        }
      }
-     else{
+     else if (!educatorFound){
        toInnerHTML(magSent, `<p>Contact ${selectedEducator} to gain access.</p>`);
        adjustFontsize(magSent);
        return;
