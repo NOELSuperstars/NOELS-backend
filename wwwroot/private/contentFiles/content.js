@@ -559,8 +559,7 @@ months.forEach((month, index) => {
 gemstoneMonthsHTML += `</div>`;
 
 let selectedEducator;
-contactedEducator.forEach(educator => {
-      console.log(`status: ${educator.status}`);
+contactedEducator.forEach(educator => {      console.log(`status: ${educator.status}`);  });
 const form = document.querySelector("#myForm");
 form.addEventListener('click', (e) => {  
   const thumb = e.target.closest('.thumbnail');
